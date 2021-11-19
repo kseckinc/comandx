@@ -62,7 +62,14 @@
           <el-table-column label="执行结果" align="center">
             <template slot-scope="{ row }">
               <span v-if="row.task_status === 'SUCCESS'" style="color: rgb(0,168,67)">成功</span>
-              <span v-else-if="row.task_status === 'FAILED'" style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">失败</span>
+              <el-tooltip v-else-if="row.task_status === 'FAILED'" placement="top">
+                <div slot="content">
+                  {{ row.fail_reason }}
+                </div>
+                <span v-clipboard:copy="row.fail_reason" v-clipboard:success="clipboardSuccess" style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">
+                  失败
+                </span>
+              </el-tooltip>
               <el-progress v-else :text-inside="true" :stroke-width="20" :percentage="getPercent(row.success_num, row.total_num)" />
             </template>
           </el-table-column>
@@ -159,9 +166,13 @@ import { clusterDescribeAll } from '@/api/cluster'
 import { taskDescribeAll, taskInstances } from '@/api/task'
 import { taskStatus } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
+import clipboard from '@/directive/clipboard/index'
 
 export default {
   name: 'TaskList',
+  directives: {
+    clipboard
+  },
   components: { Pagination },
   filters: {
     percentFilter(num) {
@@ -279,6 +290,9 @@ export default {
       }
       const percent = Math.round(success / total) * 100
       return percent > 100 ? 100 : percent
+    },
+    clipboardSuccess() {
+      this.$message.success('已复制到剪切板')
     }
   }
 }
@@ -349,5 +363,12 @@ export default {
       display: flex;
       justify-content: center;
     }
+  }
+</style>
+
+<style>
+  .el-tooltip__popper {
+    max-width: 400px;
+    line-height: 180%;
   }
 </style>
