@@ -21,6 +21,4 @@ WORKDIR /bridgx-fe/server
 COPY --from=0 /bridgx-fe/server /bridgx-fe/server
 RUN npm install  --registry=http://registry.npm.taobao.org
 
-EXPOSE 8899
-
 ENTRYPOINT NODE_ENV=production node app.js >> fe.log 2>&1
