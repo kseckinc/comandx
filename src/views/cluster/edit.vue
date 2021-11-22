@@ -577,6 +577,8 @@ export default {
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }
+      await this.loadCloud()
+      this.securityGroupsAddVisible = false
     }
   }
 }

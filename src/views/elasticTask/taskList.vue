@@ -25,8 +25,9 @@
       </div>
     </div>
     <div class="content">
-      <div class="buttons">
+      <div>
         <el-button size="medium" type="primary" @click="createTask">+新建</el-button>
+        <el-button size="medium" type="primary" style="float: right" @click="fetchData">刷新</el-button>
       </div>
       <div class="table">
         <el-table
@@ -58,7 +59,25 @@
               {{ scope.row.cluster_name }}
             </template>
           </el-table-column>
-          <el-table-column label="执行动作" align="center"><template slot-scope="{ row }">{{ row.task_action | parseTaskActionIcon }}</template></el-table-column>
+          <el-table-column label="执行动作" align="center">
+            <template slot-scope="{ row }">
+              <div v-if="row.task_action === 'EXPAND'" class="task-action-container">
+                扩容
+                <svg class="task-action-svg">
+                  <use xlink:href="#icon-upward" />
+                </svg>
+              </div>
+              <div v-else-if="row.task_action === 'SHRINK'" class="task-action-container">
+                缩容
+                <svg class="task-action-svg">
+                  <use xlink:href="#icon-downward" />
+                </svg>
+              </div>
+              <div v-else>
+                未知
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="执行结果" align="center">
             <template slot-scope="{ row }">
               <span v-if="row.task_status === 'SUCCESS'" style="color: rgb(0,168,67)">成功</span>
@@ -98,6 +117,7 @@
       <div class="detail-container">
         <div class="title">
           {{ taskDetail.task_name }}
+          <hr />
         </div>
         <div class="detail-content">
           <el-row>
@@ -222,11 +242,16 @@ export default {
         page_number: 1,
         page_size: 10
       },
-      instanceTotal: 0
+      instanceTotal: 0,
+      interval: null
     }
   },
   created() {
     this.fetchData()
+    this.interval = setInterval(this.fetchData, 15000)
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   },
   methods: {
     async fetchData() {
@@ -307,7 +332,7 @@ export default {
     background-color: rgb(240, 242, 245);
     .header {
       background-color: #ffffff;
-      padding: 20px;
+      padding: 20px 0;
       box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
       display: flex;
       flex-direction: row;
@@ -326,7 +351,7 @@ export default {
       }
       .buttons {
         display: flex;
-        width: 200px;
+        margin-right: 20px;
       }
     }
     .content {
@@ -348,7 +373,9 @@ export default {
     .title {
       font-weight: bolder;
       font-size: 20px;
-      padding: 0 10px 30px 10px;
+      hr {
+        margin-bottom: 20px;
+      }
     }
     .detail-content {
       padding: 10px;
@@ -362,6 +389,16 @@ export default {
     .detail-button {
       display: flex;
       justify-content: center;
+    }
+  }
+  .task-action-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    .task-action-svg {
+      height: 18px;
+      width: 18px;
     }
   }
 </style>

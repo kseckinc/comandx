@@ -269,10 +269,14 @@
         </div>
       </div>
       <div class="buttons">
-        <el-button v-if="step !== 0" type="primary" style="margin-top: 12px;" size="medium" @click="previous">上一步</el-button>
-        <el-button v-if="step !== 3" type="primary" style="margin-top: 12px;" size="medium" @click="next">下一步</el-button>
-        <el-button v-else style="margin-top: 12px;" size="medium" @click="submit">提交</el-button>
-        <el-button style="margin-top: 12px;" size="medium" type="info" @click="cancel">取消</el-button>
+        <div class="step-buttons">
+          <el-button v-if="step !== 0" type="primary" style="margin-top: 12px;" size="medium" @click="previous">上一步</el-button>
+          <el-button v-if="step !== 3" type="primary" style="margin-top: 12px;" size="medium" @click="next">下一步</el-button>
+        </div>
+        <div class="submit-buttons">
+          <el-button v-if="step===3" type="primary" style="margin-top: 12px;" size="medium" @click="submit">完成</el-button>
+          <el-button style="margin-top: 12px;" size="medium" type="info" plain @click="cancel">取消</el-button>
+        </div>
       </div>
     </div>
     <el-dialog :visible.sync="vpcAddVisible" title="添加VPC">
@@ -562,6 +566,8 @@ export default {
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }
+      await this.loadCloud()
+      this.securityGroupsAddVisible = false
     }
   }
 }
@@ -580,9 +586,17 @@ export default {
       padding: 20px;
     }
     .buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content:flex-end;
+      display: grid;
+      .step-buttons {
+        grid-column-start: 1;
+        grid-row-start: 1;
+        justify-self:center;
+      }
+      .submit-buttons {
+        grid-column-start: 1;
+        grid-row-start: 1;
+        justify-self: right;
+      }
     }
   }
   .form {

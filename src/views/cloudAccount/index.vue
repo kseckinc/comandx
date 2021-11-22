@@ -56,20 +56,20 @@
       <div class="form">
         <div class="form-container">
           <el-row>
-            <el-col :span="10"><div class="center-text">账户名 </div></el-col>
-            <el-col :span="14">
+            <el-col :span="8"><div class="center-text">账户名 </div></el-col>
+            <el-col :span="16">
               <el-input v-model="addForm.account_name" size="medium" placeholder="请填写账户名" maxlength="10" show-word-limit />
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="10"><div style="height: 16px" /></el-col>
-            <el-col :span="14"><div class="note">支持中文英文数字，限制10字符</div></el-col>
+            <el-col :span="8"><div style="height: 16px" /></el-col>
+            <el-col :span="16"><div class="note">支持中文英文数字，限制10字符</div></el-col>
           </el-row>
         </div>
         <div class="form-container">
           <el-row>
-            <el-col :span="10"><div class="center-text">云厂商 </div></el-col>
-            <el-col :span="14">
+            <el-col :span="8"><div class="center-text">云厂商 </div></el-col>
+            <el-col :span="16">
               <el-select v-model="addForm.provider" size="medium" style="width: 100%">
                 <el-option v-for="p in cloudProviders" :key="p.value" :value="p.value" :label="p.label" />
               </el-select>
@@ -78,8 +78,8 @@
         </div>
         <div class="form-container">
           <el-row>
-            <el-col :span="10"><div class="center-text">{{ keyLabel }} </div></el-col>
-            <el-col :span="12">
+            <el-col :span="8"><div class="center-text">{{ keyLabel }} </div></el-col>
+            <el-col :span="14">
               <el-input v-model="addForm.key" size="medium" :placeholder="'请输入'+keyLabel" />
             </el-col>
             <el-col :span="2"><el-button type="text" size="medium" style="margin-left: 5px" @click="gotoRam">获取</el-button></el-col>
@@ -87,11 +87,17 @@
         </div>
         <div class="form-container">
           <el-row>
-            <el-col :span="10"><div class="center-text">{{ secretLabel }} </div></el-col>
-            <el-col :span="14">
+            <el-col :span="8"><div class="center-text">{{ secretLabel }} </div></el-col>
+            <el-col :span="16">
               <el-input v-model="addForm.secret" size="medium" :placeholder="'请输入'+secretLabel" />
             </el-col>
           </el-row>
+        </div>
+        <div class="form-alarm">
+          <label>注意</label>
+          <span class="form-alarm-content">
+            请认真核对AK/SK信息填写是否正确，同时确认AK/SK 关联的云厂商账户已经完成<strong @click="gotoAuthc">实名认证</strong>，否则将无法进行扩缩容云服务器操作
+          </span>
         </div>
         <div class="form-container">
           <div class="buttons">
@@ -255,6 +261,9 @@ export default {
       } else {
         this.$message.error('请选择云厂商')
       }
+    },
+    gotoAuthc() {
+      window.open('https://account.console.aliyun.com/v2/#/authc/home')
     }
   }
 }
@@ -315,7 +324,7 @@ export default {
       margin-bottom: 20px;
       display: flex;
       flex-direction: column;
-      width: 60%;
+      width: 80%;
     }
     .center-text {
       font-size: 16px;
@@ -331,9 +340,27 @@ export default {
       color: rgb(170, 170,170);
     }
     .buttons {
+      margin-top: 20px;
       display: flex;
       flex-direction: row;
       justify-content:flex-end;
+    }
+    .form-alarm {
+      background-color: #eaeaea;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      label {
+        color: #f4516c;
+      }
+      .form-alarm-content {
+        padding: 20px;
+        strong {
+          cursor: pointer;
+          color: #0061e0;
+          text-decoration: underline;
+        }
+      }
     }
   }
 </style>

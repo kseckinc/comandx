@@ -40,11 +40,6 @@ const taskActionCode = {
   SHRINK: '缩容'
 }
 
-const taskActionCodeIcon = {
-  EXPAND: '扩容↑',
-  SHRINK: '缩容↓'
-}
-
 const instanceStatuses = {
   Undefined: '未定义',
   Pending: '初始化中',
@@ -57,10 +52,6 @@ const instanceStatuses = {
 
 export function parseTaskAction(action) {
   return _.get(taskActionCode, action, '未知')
-}
-
-export function parseTaskActionIcon(action) {
-  return _.get(taskActionCodeIcon, action, '未知')
 }
 
 export function parseTaskStatus(status) {
