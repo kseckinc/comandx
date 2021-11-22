@@ -11,6 +11,9 @@ export function filterCloudProvider(string) {
 }
 
 export function parseMin(second) {
+  if (second <= 60) {
+    return `${second}秒`
+  }
   return `${Math.floor(second / 60)}分${second % 60}秒`
 }
 

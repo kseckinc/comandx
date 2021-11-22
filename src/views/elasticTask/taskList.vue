@@ -117,14 +117,23 @@
       <div class="detail-container">
         <div class="title">
           {{ taskDetail.task_name }}
+          <div style="float: right">
+            <el-button size="mini" type="primary" @click="updateDetail">刷新</el-button>
+          </div>
           <hr />
         </div>
         <div class="detail-content">
           <el-row>
-            <el-col :span="4"><span class="detail-label">ID: </span></el-col>
-            <el-col :span="8"><div class="detail-value">{{ taskDetail.task_id }}</div></el-col>
             <el-col :span="4"><span class="detail-label">执行集群: </span></el-col>
             <el-col :span="8"><div class="detail-value">{{ taskDetail.cluster_name }}</div></el-col>
+            <el-col :span="4"><span class="detail-label">失败/成功/全量: </span></el-col>
+            <el-col :span="8">
+              <div class="detail-value">
+                <span style="color: #f4516c">{{ taskDetail.fail_num }}</span> /
+                <span style="color:rgb(0,168,67)">{{ taskDetail.success_num }}</span> /
+                <span style="color:black">{{ taskDetail.total_num }}</span>
+              </div>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="4"><span class="detail-label">变更动作: </span></el-col>
@@ -135,8 +144,8 @@
           <el-row>
             <el-col :span="4"><span class="detail-label">执行时间: </span></el-col>
             <el-col :span="8"><div class="detail-value">{{ taskDetail.create_at | formatMomentZone('YYYY-MM-DD HH:mm:ss') }}</div></el-col>
-            <el-col :span="4" />
-            <el-col :span="8" />
+            <el-col :span="4"><span class="detail-label">执行耗时</span></el-col>
+            <el-col :span="8"><div class="detail-value">{{ taskDetail.execute_time | parseMin }}</div></el-col>
           </el-row>
         </div>
         <div class="detail-button"><el-button type="primary" size="medium" @click="closeDetail">关闭</el-button></div>
@@ -183,7 +192,7 @@
 <script>
 import _ from 'lodash'
 import { clusterDescribeAll } from '@/api/cluster'
-import { taskDescribeAll, taskInstances } from '@/api/task'
+import { taskDescribe, taskDescribeAll, taskInstances } from '@/api/task'
 import { taskStatus } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
 import clipboard from '@/directive/clipboard/index'
@@ -279,9 +288,12 @@ export default {
     createTask() {
       this.$router.push({ name: 'createTask' })
     },
-    showDetail(task) {
+    async showDetail(task) {
       this.detailDialogVisible = true
-      this.taskDetail = task
+      this.taskDetail = await taskDescribe(task.task_id)
+    },
+    async updateDetail() {
+      this.taskDetail = await taskDescribe(this.taskDetail.task_id)
     },
     closeDetail() {
       this.detailDialogVisible = false
