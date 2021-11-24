@@ -49,10 +49,11 @@
       <div class="form">
         <div class="container">
           <el-row>
-            <el-col :span="5"><div class="center-text">集群当前机器数 </div></el-col>
-            <el-col :span="5">
+            <el-col :span="5"><div class="center-text">集群信息 </div></el-col>
+            <el-col :span="19">
               <div v-loading="instanceNumLoading" class="info-text">
-                <span style="color: #f4516c; font-weight: bolder">{{ instanceNum }}</span> 台
+                <span v-show="instanceTypeDesc !== ''" style="padding-right: 30px">{{ instanceTypeDesc }}</span>
+                运行中<span style="color: #f4516c; font-weight: bolder">{{ instanceNum }}</span> 台
               </div>
             </el-col>
           </el-row>
@@ -132,8 +133,7 @@
   </div>
 </template>
 <script>
-import { clusterExpand, clusterShrink, clusterDescribeAll } from '@/api/cluster'
-import { instanceNum } from '@/api/instance'
+import { clusterExpand, clusterShrink, clusterDescribeAll, clusterInstanceStat } from '@/api/cluster'
 import _ from 'lodash'
 
 export default {
@@ -142,6 +142,7 @@ export default {
     return {
       instanceNumLoading: false,
       instanceNum: 0,
+      instanceTypeDesc: '',
       expandNumRadios: [{
         label: 1,
         name: '+1'
@@ -190,7 +191,10 @@ export default {
     async loadInstanceNum() {
       this.instanceNumLoading = true
       try {
-        this.instanceNum = await instanceNum('', this.task.cluster_name)
+        const res = await clusterInstanceStat(this.task.cluster_name)
+        console.log(res)
+        this.instanceNum = _.get(res, 'instance_count', 0)
+        this.instanceTypeDesc = _.get(res, 'instance_type_desc', '')
       } catch (e) {
         // do nothing
       }

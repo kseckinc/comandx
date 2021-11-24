@@ -58,7 +58,7 @@ export const constantRoutes = [
     children: [{
       path: '/cluster/create',
       name: 'clusterCreate',
-      component: () => import('@/views/cluster/create'),
+      component: () => import('@/views/cluster/createOrEdit'),
       meta: { title: '创建集群', icon: '' }
     }, {
       path: '/cluster/list',
@@ -68,7 +68,7 @@ export const constantRoutes = [
     }, {
       path: '/cluster/edit/:name',
       name: 'clusterEdit',
-      component: () => import('@/views/cluster/edit'),
+      component: () => import('@/views/cluster/createOrEdit'),
       meta: { title: '编辑集群', icon: '' },
       hidden: true
     }, {

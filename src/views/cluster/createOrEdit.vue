@@ -1,19 +1,19 @@
 <template>
   <div class="cluster-container">
     <div class="step-container">
-      <el-steps :active="step" finish-status="success">
+      <el-steps :active="step" finish-status="success" align-center>
         <el-step title="云厂商" />
         <el-step title="网络配置" />
-        <el-step title="机器规格" />
-        <el-step title="磁盘" />
+        <el-step title="机器配置" />
+        <el-step title="系统配置" />
       </el-steps>
       <div style="padding-top: 10px">
         <div v-if="step === 0" class="form">
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">集群名称 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>集群名称 </div></el-col>
               <el-col :span="19">
-                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit disabled/>
+                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit />
               </el-col>
             </el-row>
             <el-row>
@@ -35,7 +35,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">云厂商 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云厂商 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.provider" size="medium" placeholder="请选择" @change="loadRegion">
                   <el-option
@@ -50,9 +50,9 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">云账号 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
               <el-col :span="19">
-                <el-select v-model="cluster.account_key" size="medium"  v-el-select-load-more="loadMore">
+                <el-select v-model="cluster.account_key" v-el-select-load-more="loadMore" size="medium">
                   <el-option v-for="p in accounts" :key="p.account" :label="p.account_name" :value="p.account">
                     <span>{{ p.account_name }}({{ p.account }})</span>
                   </el-option>
@@ -60,21 +60,9 @@
               </el-col>
             </el-row>
           </div>
-        </div>
-        <div v-if="step === 1" class="form">
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">网络类型 </div></el-col>
-              <el-col :span="19">
-                <div style="height:36px; display: flex; align-items: center">
-                  VPC
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="form-container">
-            <el-row>
-              <el-col :span="5"><div class="center-text">可用地域 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>地域 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.region_id" size="medium" placeholder="请选择" style="width: 400px" :disabled="cluster.provider === ''" @change="afterRegionSelected">
                   <el-option
@@ -86,10 +74,14 @@
                 </el-select>
               </el-col>
             </el-row>
+            <el-row>
+              <el-col :span="5"><div style="height: 18px" /></el-col>
+              <el-col :span="19"><div class="tips"><i class="el-icon-info" style="color: green; font-size: 16px" />云服务器实例所在的物理位置</div></el-col>
+            </el-row>
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">可用区 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>可用区 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.zone_id" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" placeholder="请选择" @change="loadInstanceTypes">
                   <el-option
@@ -99,12 +91,32 @@
                     :value="item.ZoneId"
                   />
                 </el-select>
+                <el-tooltip class="item" effect="light" placement="top">
+                  <div slot="content">
+                    可用区：同一地域内，电力和网络互相独立的物理区域<br>
+                    较高容灾能力：建议在同一地域的不同可用区内创建集群则<br>
+                    较低网络时延：建议将云服务器实例创建在相同的可用区内
+                  </div>
+                  <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+                </el-tooltip>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+        <div v-if="step === 1" class="form">
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>网络类型 </div></el-col>
+              <el-col :span="19">
+                <div style="height:36px; display: flex; align-items: center">
+                  专用网络VPC
+                </div>
               </el-col>
             </el-row>
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">专有网络-VPC </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>VPC </div></el-col>
               <el-col :span="19">
                 <el-select v-model="network_config.vpc" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" @change="loadCloud">
                   <el-option
@@ -114,13 +126,20 @@
                     :label="item.VpcName"
                   />
                 </el-select>
+                <el-tooltip class="item" effect="light" placement="top">
+                  <div slot="content">
+                    专有网络是您专有的云上私有网络，建议使用RFC私网地址<br>作为
+                    专有网络的网段如10.0.0.0/8，172.16.0.0/12，<br>192.168.0.0/16
+                  </div>
+                  <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+                </el-tooltip>
                 <el-button size="medium" type="primary" style="margin-left: 10px; width: 126px" :disabled="cluster.region_id === '' || cluster.account_key === ''" @click="addVpc">添加VPC</el-button>
               </el-col>
             </el-row>
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">专有网络-子网 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>子网 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="network_config.subnet_id" size="medium" :disabled="network_config.vpc === ''" style="width: 400px">
                   <el-option
@@ -130,13 +149,19 @@
                     :label="item.SwitchName"
                   />
                 </el-select>
+                <el-tooltip class="item" effect="light" placement="top">
+                  <div slot="content">
+                    子网的网段必须是其所属VPC网段的真子集且掩码需在16位<br>到29位之间，可提供8~65536个地址
+                  </div>
+                  <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+                </el-tooltip>
                 <el-button size="medium" type="primary" style="margin-left: 10px;" @click="addSubnet">添加网络子网</el-button>
               </el-col>
             </el-row>
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">安全组 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>安全组 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="network_config.security_group" size="medium" :disabled="network_config.vpc === ''" style="width: 400px">
                   <el-option
@@ -146,23 +171,37 @@
                     :label="item.SecurityGroupName"
                   />
                 </el-select>
+                <el-tooltip class="item" effect="light" placement="top">
+                  <div slot="content">
+                    安全组为虚拟防火墙，用于控制安全组内云服务器的入流量<br>和出流量
+                  </div>
+                  <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+                </el-tooltip>
                 <el-button size="medium" type="primary" style="margin-left: 10px;width: 126px" @click="addSecurityGroup">添加安全组</el-button>
               </el-col>
             </el-row>
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">公网带宽 </div></el-col>
+              <el-col :span="5"><div class="center-text">公网访问 </div></el-col>
               <el-col :span="19">
                 <div style="height: 36px; display: flex; align-items: center">
-                  <el-switch v-model="networkSwitch" active-color="#13ce66" inactive-color="#ff4949" />
-                  {{ networkSwitch ? '开启' : '关闭' }}
-                  <el-radio-group v-if="networkSwitch" v-model="network_config.internet_charge_type" size="mini" style="margin-left: 20px">
+                  <el-checkbox v-model="networkSwitch">需要公网访问</el-checkbox>
+                  <i class="el-icon-info" style="color: green; margin-left: 10px" /><span style="font-size: 14px;color: #8c939d;">系统将分配IPv4地址，支持公网访问</span>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5"><div style="height: 36px" /></el-col>
+              <el-col :span="19">
+                <div v-if="networkSwitch">
+                  <el-radio-group v-model="network_config.internet_charge_type" size="medium">
                     <el-radio-button label="PayByBandwidth">固定带宽</el-radio-button>
                     <el-radio-button label="PayByTraffic">按量付费</el-radio-button>
                   </el-radio-group>
-                  <span v-if="networkSwitch" style="display: inline-block; margin-left: 20px">带宽</span>
-                  <el-input-number v-if="networkSwitch" v-model="network_config.internet_max_bandwidth_out" style="margin-left: 10px" size="mini" :min="10" />
+                  <span style="display: inline-block; margin-left: 20px">带宽</span>
+                  <el-input-number v-model="network_config.internet_max_bandwidth_out" style="margin-left: 10px;width: 150px" size="medium" :min="10" />
+                  M
                 </div>
               </el-col>
             </el-row>
@@ -171,7 +210,7 @@
         <div v-if="step === 2" class="form">
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">机型 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>机器规格 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.instance_type" size="medium" :disabled="cluster.region_id === '' || cluster.zone_id === ''" style="width: 50%" filterable>
                   <el-option
@@ -186,7 +225,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">镜像 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>操作系统镜像 </div></el-col>
               <el-col :span="19">
                 <!--                <el-radio-group v-model="imageType" size="medium">-->
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
@@ -200,18 +239,8 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">初始密码 </div></el-col>
-              <el-col :span="19">
-                <el-input v-model="cluster.password" size="medium" style="width: 50%" />
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-        <div v-if="step === 3" class="form">
-          <div class="form-container" style="margin-bottom: 50px">
-            <el-row>
-              <el-col :span="3"><div class="center-text">系统盘类型 </div></el-col>
-              <el-col :span="8">
+              <el-col :span="5"><div class="center-text">系统盘类型 </div></el-col>
+              <el-col :span="3">
                 <el-select v-model="system_disk.category">
                   <el-option
                     v-for="item in aliyunDiskTypes"
@@ -236,8 +265,8 @@
           </div>
           <div v-for="(item, index) in data_disks" :key="index" class="form-container">
             <el-row>
-              <el-col :span="3"><div class="center-text">数据盘类型 </div></el-col>
-              <el-col :span="8">
+              <el-col :span="5"><div class="center-text">数据盘类型 </div></el-col>
+              <el-col :span="3">
                 <el-select v-model="item.category">
                   <el-option
                     v-for="t in aliyunDiskTypes"
@@ -267,12 +296,66 @@
             </el-row>
           </div>
         </div>
+        <div v-if="step === 3" class="form">
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5"><div class="center-text">初始登录名 </div></el-col>
+              <el-col :span="19">
+                <div style="height: 36px; display: flex; align-items: center">
+                  root
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>初始密码 </div></el-col>
+              <el-col :span="19">
+                <el-input v-model="cluster.password" size="medium" style="width: 50%" show-password @blur="checkPassword" />
+                <span v-if="passwordIllegal" style="color: #f4516c; font-size: 14px; margin-left: 5px">
+                  密码不合规
+                </span>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5"><div style="height: 16px" /></el-col>
+              <el-col :span="19">
+                <div style="color: #8c939d; font-size: 14px">
+                  {{ passwordTips }}
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>确认密码  </div></el-col>
+              <el-col :span="19">
+                <el-input v-model="againPassword" size="medium" style="width: 50%" show-password />
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5"><div style="height: 16px" /></el-col>
+              <el-col :span="19">
+                <div v-if="againPasswordIllegal" style="color: #f4516c; font-size: 14px">
+                  两次密码不一致
+                </div>
+                <div v-else style="color: #8c939d; font-size: 14px">
+                  {{ passwordWarning }}
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
       </div>
       <div class="buttons">
-        <el-button v-if="step !== 0" type="primary" style="margin-top: 12px;" size="medium" @click="previous">上一步</el-button>
-        <el-button v-if="step !== 3" type="primary" style="margin-top: 12px;" size="medium" @click="next">下一步</el-button>
-        <el-button v-else style="margin-top: 12px;" size="medium" @click="submit">提交</el-button>
-        <el-button style="margin-top: 12px;" size="medium" type="info" @click="cancel">取消</el-button>
+        <div class="step-buttons">
+          <el-button v-if="step !== 0" type="primary" style="margin-top: 12px;" size="medium" @click="previous">上一步</el-button>
+          <el-button v-if="step !== 3" type="primary" style="margin-top: 12px;" size="medium" :disabled="nextDisabled" @click="next">下一步</el-button>
+        </div>
+        <div class="submit-buttons">
+          <el-button v-if="step===3" type="primary" style="margin-top: 12px;" size="medium" :disabled="submitDisabled" @click="submit">完成</el-button>
+          <el-button style="margin-top: 12px;" size="medium" type="info" plain @click="cancel">取消</el-button>
+        </div>
       </div>
     </div>
     <el-dialog :visible.sync="vpcAddVisible" title="添加VPC">
@@ -291,22 +374,53 @@
       </el-form>
     </el-dialog>
     <el-dialog :visible.sync="subnetAddVisible" title="添加子网">
-      <el-form v-model="subnet" label-width="100px">
-        <el-form-item label="交换机名称">
-          <el-input v-model="subnet.switch_name" size="medium" />
-        </el-form-item>
-        <el-form-item label="所属VPC ">
-          <el-select v-model="subnet.vpc_id" size="medium">
-            <el-option v-for="item in vpcs" :key="item.VpcId" :value="item.VpcId" :label="item.VpcName" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="交换机网段">
-          <el-input v-model="subnet.cidr_block" size="medium" placeholder="172.16.0.0/24" />
-        </el-form-item>
+      <div>
+        <el-row style="padding-bottom: 20px">
+          <el-col :span="5">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
+              子网名称
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <el-input v-model="subnet.switch_name" size="medium" />
+          </el-col>
+        </el-row>
+        <el-row style="padding-bottom: 20px">
+          <el-col :span="5">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
+              所属VPC
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <el-select v-model="subnet.vpc_id" size="medium">
+              <el-option v-for="item in vpcs" :key="item.VpcId" :value="item.VpcId" :label="item.VpcName" />
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
+              交换机网段
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <el-input v-model="subnet.cidr_block" size="medium" placeholder="172.16.0.0/24" />
+          </el-col>
+        </el-row>
+        <el-row style="padding-bottom: 20px">
+          <el-col :span="5">
+            <div style="height: 36px" />
+          </el-col>
+          <el-col :span="19">
+            <div style="font-size: 14px;color: #8c939d;">
+              <i class="el-icon-info" style="color: green" />交换机的网段必须是其所属VPC网段的真子集且掩码需在16位到29位之间，可提供 8 ~ 65536 个地址
+            </div>
+          </el-col>
+        </el-row>
         <div style="display: flex; justify-content: center">
           <el-button type="primary" size="medium" @click="submitSubnet">保存</el-button>
         </div>
-      </el-form>
+      </div>
     </el-dialog>
     <el-dialog :visible.sync="securityGroupsAddVisible" title="添加安全组">
       <el-form v-model="securityGroup" label-width="100px">
@@ -340,6 +454,7 @@
 
 <script>
 import _ from 'lodash'
+import { passwordLegitimacy } from '@/utils'
 import { cloudProviders, aliyunDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
 import {
   securityGroupDescribe,
@@ -354,10 +469,9 @@ import {
   imageList,
   cloudAccountList
 } from '@/api/cloud'
-import { clusterDescribe, clusterEdit } from '@/api/cluster'
-
+import { clusterCreate, clusterDescribe, clusterEdit } from '@/api/cluster'
 const data_disk_item = {
-  category: '',
+  category: 'cloud_efficiency',
   size: 50,
   performance_level: ''
 }
@@ -369,7 +483,7 @@ const rule = {
   direction: 'ingress'
 }
 export default {
-  name: 'Edit',
+  name: 'CreateOrEdit',
   data() {
     return {
       vpcCidrOptions: ['172.16.0.0/12', '10.0.0.0/8', '192.168.0.0/16'],
@@ -405,14 +519,14 @@ export default {
       zones: [],
       cluster: {
         name: '',
-        provider: 'aliyun',
+        provider: 'AlibabaCloud',
         account_key: '',
         charge_type: 'PostPaid',
         region_id: '',
         zone_id: '',
         instance_type: '',
         image: '',
-        password: 'ASDqwe123'
+        password: ''
       },
       network_config: {
         vpc: '',
@@ -423,13 +537,13 @@ export default {
       },
       networkSwitch: false,
       system_disk: {
-        category: '',
+        category: 'cloud_efficiency',
         size: 50,
         performance_level: ''
       },
       data_disks: [{ ...data_disk_item }],
       data_disk_item: {
-        category: '',
+        category: 'cloud_efficiency',
         size: 0,
         performance_level: ''
       },
@@ -442,16 +556,43 @@ export default {
       accountQuery: {
         page_number: 1,
         page_size: 50
-      }
+      },
+      passwordTips: '8～30 个字符，必须同时包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;\'<>,.?/ 中的特殊符号），其中 Windows 实例不能以斜线号（/）开头',
+      passwordIllegal: false,
+      againPassword: '',
+      passwordWarning: '请牢记您所设置的密码'
     }
   },
-  mounted() {
-    if (this.$route.params.name === '') {
-      this.$message.error('请选择要编辑的集群!')
-      this.$router.push({ name: 'clusterList' })
+  computed: {
+    nextDisabled() {
+      switch (this.step) {
+        case 0:
+          return _.isEmpty(this.cluster.name) || _.isEmpty(this.cluster.provider) || _.isEmpty(this.cluster.account_key) || _.isEmpty(this.cluster.zone_id) || _.isEmpty(this.cluster.region_id)
+        case 1:
+          return _.isEmpty(this.network_config.vpc) || _.isEmpty(this.network_config.subnet_id) || _.isEmpty(this.network_config.security_group)
+        case 2:
+          return _.isEmpty(this.cluster.image) || _.isEmpty(this.cluster.instance_type)
+        default:
+      }
+      return true
+    },
+    submitDisabled() {
+      return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal
+    },
+    againPasswordIllegal() {
+      return this.cluster.password !== this.againPassword
     }
-    this.fetchData()
-    this.loadAccounts()
+  },
+  async mounted() {
+    if (this.$route.name === 'clusterEdit') {
+      if (this.$route.params.name === '') {
+        this.$message.error('请选择要编辑的集群!')
+        this.$router.push({ name: 'clusterList' })
+      }
+      await this.fetchData()
+    }
+    await this.loadRegion()
+    await this.loadAccounts()
   },
   methods: {
     previous() {
@@ -469,19 +610,26 @@ export default {
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
         this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
       }
-      await this.loadRegion()
+      this.againPassword = this.cluster.password
+    },
+    async loadRegion() {
+      this.regions = await regionList(this.cluster.provider)
+      if (this.cluster.zone_id !== '') {
+        await this.loadZoneAndVpc()
+        await this.loadCloud()
+      }
     },
     async loadAccounts() {
       const res = await cloudAccountList('', '', '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.get(res, 'account_list', [])
+      if (this.accounts.length === 1) {
+        this.cluster.account_key = _.get(this.accounts, '0.account', '')
+      }
     },
     async loadMore() {
       this.accountQuery.page_number++
       const res = await cloudAccountList('', '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.concat(this.accounts, ..._.get(res, 'account_list', []))
-    },
-    async loadRegion() {
-      this.regions = await regionList(this.cluster.provider)
     },
     async afterRegionSelected() {
       await this.loadZoneAndVpc()
@@ -498,7 +646,8 @@ export default {
     },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
-        this.instanceTypes = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id)
+        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id)
+        this.instanceTypes = _.orderBy(data, 'core')
       }
     },
     async submit() {
@@ -522,15 +671,24 @@ export default {
             system_disk: { ...this.system_disk },
             data_disk: this.data_disks
           }
-        },
-        cluster_name: this.cluster.name
+        }
       }
-      const res = await clusterEdit(data)
+      let res
+      let text = '创建成功'
+      if (this.$route.name === 'clusterCreate') {
+        res = await clusterCreate(data)
+      } else if (this.$route.name === 'clusterEdit') {
+        res = await clusterEdit(data)
+        text = '编辑成功'
+      } else {
+        this.$message.error('未知路由')
+      }
       if (res.data.code === 200) {
-        this.$message.success('编辑成功')
+        this.$message.success(text)
         this.createDialogVisible = false
         this.$router.push({ name: 'clusterList' })
       }
+      this.$router.push({ path: '/cluster/list' })
     },
     cancel() {
       this.$router.push({ name: 'clusterList' })
@@ -579,6 +737,9 @@ export default {
       }
       await this.loadCloud()
       this.securityGroupsAddVisible = false
+    },
+    checkPassword() {
+      this.passwordIllegal = !passwordLegitimacy(this.cluster.password)
     }
   }
 }
@@ -597,9 +758,17 @@ export default {
     padding: 20px;
   }
   .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content:flex-end;
+    display: grid;
+    .step-buttons {
+      grid-column-start: 1;
+      grid-row-start: 1;
+      justify-self:center;
+    }
+    .submit-buttons {
+      grid-column-start: 1;
+      grid-row-start: 1;
+      justify-self: right;
+    }
   }
 }
 .form {
@@ -612,6 +781,11 @@ export default {
     display: flex;
     flex-direction: column;
     width: 80%;
+    .tips {
+      margin-top: 5px;
+      color: #8c939d;
+      font-size: 14px;
+    }
   }
   .center-text {
     font-size: 16px;
@@ -621,6 +795,12 @@ export default {
     padding-right: 30px;
     justify-content: flex-end;
     align-items: center;
+    .asterisk {
+      display: flex;
+      align-items: center;
+      padding-right: 5px;
+      color: #f4516c;
+    }
   }
   .note {
     padding-top: 5px;

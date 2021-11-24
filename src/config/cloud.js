@@ -19,27 +19,27 @@ const ramUrl = {
 }
 
 const systemDiskSizes = [{
-  value: '50',
+  value: 50,
   label: '50G'
 }, {
-  value: '100',
+  value: 100,
   label: '100G'
 }, {
-  value: '200',
+  value: 200,
   label: '200G'
 }]
 
 const dataDiskSizes = [{
-  value: '50',
+  value: 50,
   label: '50G'
 }, {
-  value: '500',
+  value: 500,
   label: '500G'
 }, {
-  value: '1000',
+  value: 1000,
   label: '1T'
 }, {
-  value: '2000',
+  value: 2000,
   label: '2T'
 }]
 

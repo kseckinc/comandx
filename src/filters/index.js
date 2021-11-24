@@ -73,7 +73,7 @@ export function formatMoment(date, format) {
 }
 
 export function formatMomentZone(date, format) {
-  return moment(date).utc().zone(+6).format(format)
+  return moment(date).utcOffset(-6).format(format)
 }
 
 export function formatInstanceStatuses(status) {

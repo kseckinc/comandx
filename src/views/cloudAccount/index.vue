@@ -29,7 +29,7 @@
         <el-button size="medium" :disabled="selectAccounts.length < 1" @click="deleteAccounts">删除</el-button>
       </div>
       <div class="table">
-        <el-table v-loading="loading" :data="accounts" border @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="accounts" border @selection-change="handleSelectionChange" >
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="账户名" prop="account_name" align="center" />
           <el-table-column label="云厂商" align="center">
@@ -56,7 +56,7 @@
       <div class="form">
         <div class="form-container">
           <el-row>
-            <el-col :span="8"><div class="center-text">账户名 </div></el-col>
+            <el-col :span="8"><div class="center-text">账户描述 </div></el-col>
             <el-col :span="16">
               <el-input v-model="addForm.account_name" size="medium" placeholder="请填写账户名" maxlength="10" show-word-limit />
             </el-col>

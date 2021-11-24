@@ -3,10 +3,10 @@ const request = require('request-promise')
 const Router = require('koa-router')
 
 const routerApi = new Router({
-  prefix: '/api/v1'
+  prefix: '/api/v1/cluster'
 })
 
-routerApi.get('/cluster/describe_all', async(ctx) => {
+routerApi.get('/describe_all', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -21,7 +21,7 @@ routerApi.get('/cluster/describe_all', async(ctx) => {
   }
 })
 
-routerApi.get('/cluster/name/:cluster_name', async(ctx) => {
+routerApi.get('/name/:cluster_name', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -34,7 +34,7 @@ routerApi.get('/cluster/name/:cluster_name', async(ctx) => {
   }
 })
 
-routerApi.get('/cluster/num', async(ctx) => {
+routerApi.get('/num', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -50,7 +50,7 @@ routerApi.get('/cluster/num', async(ctx) => {
   }
 })
 
-routerApi.post('/cluster/create', async(ctx) => {
+routerApi.post('/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -66,7 +66,7 @@ routerApi.post('/cluster/create', async(ctx) => {
   }
 })
 
-routerApi.post('/cluster/edit', async(ctx) => {
+routerApi.post('/edit', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -82,7 +82,7 @@ routerApi.post('/cluster/edit', async(ctx) => {
   }
 })
 
-routerApi.post('/cluster/expand', async(ctx) => {
+routerApi.post('/expand', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -98,7 +98,7 @@ routerApi.post('/cluster/expand', async(ctx) => {
   }
 })
 
-routerApi.post('/cluster/shrink', async(ctx) => {
+routerApi.post('/shrink', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -114,7 +114,7 @@ routerApi.post('/cluster/shrink', async(ctx) => {
   }
 })
 
-routerApi.delete('/cluster/delete/:ids', async(ctx) => {
+routerApi.delete('/delete/:ids', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -122,6 +122,21 @@ routerApi.delete('/cluster/delete/:ids', async(ctx) => {
       },
       url: `${host.getHost()}/api/v1/cluster/delete/${ctx.params.ids}`,
       method: 'DELETE',
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/instance_stat', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}/api/v1/cluster/instance_stat`,
+      qs: ctx.query,
       json: true
     })
   } catch (e) {

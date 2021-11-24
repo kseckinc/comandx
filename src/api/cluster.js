@@ -111,3 +111,17 @@ export function clusterDelete(ids) {
     }
   })
 }
+
+export async function clusterInstanceStat(cluster_name) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/cluster/instance_stat',
+    params: {
+      cluster_name
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return _.get(res, 'data')
+}

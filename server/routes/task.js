@@ -3,10 +3,10 @@ const request = require('request-promise')
 const Router = require('koa-router')
 
 const routerApi = new Router({
-  prefix: '/api/v1'
+  prefix: '/api/v1/task'
 })
 
-routerApi.get('/task/describe_all', async(ctx) => {
+routerApi.get('/describe_all', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -21,7 +21,7 @@ routerApi.get('/task/describe_all', async(ctx) => {
   }
 })
 
-routerApi.get('/task/num', async(ctx) => {
+routerApi.get('/num', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -35,7 +35,7 @@ routerApi.get('/task/num', async(ctx) => {
   }
 })
 
-routerApi.get('/task/list', async(ctx) => {
+routerApi.get('/list', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -49,7 +49,7 @@ routerApi.get('/task/list', async(ctx) => {
   }
 })
 
-routerApi.get('/task/describe', async(ctx) => {
+routerApi.get('/describe', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
@@ -63,7 +63,7 @@ routerApi.get('/task/describe', async(ctx) => {
   }
 })
 
-routerApi.get('/task/instances', async(ctx) => {
+routerApi.get('/instances', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
