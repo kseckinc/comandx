@@ -3,7 +3,7 @@ import moment from 'moment'
 
 export function filterCloudProvider(string) {
   switch (string) {
-    case 'aliyun':
+    case 'AlibabaCloud':
       return '阿里云'
     default:
       return '未知云厂商'
@@ -73,7 +73,8 @@ export function formatMoment(date, format) {
 }
 
 export function formatMomentZone(date, format) {
-  return moment(date).utcOffset(-6).format(format)
+  const str = moment(date).utcOffset(-6).format(format)
+  return str === 'Invalid date' ? '--' : str
 }
 
 export function formatInstanceStatuses(status) {

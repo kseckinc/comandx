@@ -1,9 +1,9 @@
 const cloudProviders = [{
-  value: 'aliyun',
+  value: 'AlibabaCloud',
   label: '阿里云'
 }]
 
-const aliyunDiskTypes = [{
+const alibabaCloudDiskTypes = [{
   value: 'cloud_efficiency',
   label: '高效云盘'
 }, {
@@ -44,7 +44,7 @@ const dataDiskSizes = [{
 }]
 
 const aksk = {
-  aliyun: {
+  AlibabaCloud: {
     key: 'AccessKey',
     secret: 'AccessKey Secret'
   }
@@ -66,7 +66,7 @@ const taskStatus = [{
 
 export {
   cloudProviders,
-  aliyunDiskTypes,
+  alibabaCloudDiskTypes,
   aksk,
   taskStatus,
   systemDiskSizes,

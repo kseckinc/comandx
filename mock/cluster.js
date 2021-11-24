@@ -14,7 +14,7 @@ const data = Mock.mock({
 
 const clusters = Mock.mock({
   'cluster_list|25': [{
-    provider: 'aliyun',
+    provider: 'AlibabaCloud',
     account: '@sentence(1)',
     total_remainder: '8/200',
     cluster_name: '@sentence(1)',
@@ -29,7 +29,7 @@ const clusterDesc = Mock.mock({
   create_at: '@datetime',
   image_id: '@sentence(1)',
   instance_type: 'ecs.c6.4xlarge',
-  provider: 'aliyun',
+  provider: 'AlibabaCloud',
   storage_config: {
     system_disk_type: 'cloud_efficiency',
     system_disk_size: 40,

@@ -165,7 +165,7 @@ export default {
       total: 0,
       addForm: {
         account_name: '',
-        provider: 'aliyun',
+        provider: 'AlibabaCloud',
         key: '',
         secret: ''
       },

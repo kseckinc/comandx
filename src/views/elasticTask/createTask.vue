@@ -192,7 +192,6 @@ export default {
       this.instanceNumLoading = true
       try {
         const res = await clusterInstanceStat(this.task.cluster_name)
-        console.log(res)
         this.instanceNum = _.get(res, 'instance_count', 0)
         this.instanceTypeDesc = _.get(res, 'instance_type_desc', '')
       } catch (e) {

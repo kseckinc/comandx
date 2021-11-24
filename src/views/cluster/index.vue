@@ -14,7 +14,7 @@
         </div>
         <div class="search-item">
           <span class="label">Access Key</span>
-          <el-select v-model="search.ak" v-el-select-load-more="loadMore" size="medium" @change="fetchData">
+          <el-select v-model="search.ak" v-load-more="loadMore" size="medium" @change="fetchData">
             <el-option v-for="p in accounts" :key="p.account" :label="p.account_name" :value="p.account" />
           </el-select>
         </div>
@@ -178,15 +178,14 @@
 <script>
 import { clusterDescribeAll, clusterDelete } from '@/api/cluster'
 import { cloudAccountList } from '@/api/cloud'
-import { cloudProviders, aliyunDiskTypes } from '@/config/cloud'
-import waves from '@/directive/waves' // waves directive
+import { cloudProviders, alibabaCloudDiskTypes } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
+import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
 
 export default {
   name: 'Cluster',
   components: { Pagination },
-  directives: { waves },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -197,10 +196,13 @@ export default {
       return statusMap[status]
     }
   },
+  directives: {
+    loadMore
+  },
   data() {
     return {
       cloudProviders,
-      aliyunDiskTypes,
+      aliyunDiskTypes: alibabaCloudDiskTypes,
       providers: [{
         value: '',
         label: '全部'

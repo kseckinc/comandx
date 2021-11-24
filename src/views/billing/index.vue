@@ -3,7 +3,7 @@
     <div class="billing-filter">
       <div class="cluster-filter">
         <span style="margin-right: 20px">集群选择</span>
-        <el-select v-model="query.cluster_name" v-el-select-load-more="loadMore" size="medium" @change="fetchData">
+        <el-select v-model="query.cluster_name" v-load-more="loadMore" size="medium" @change="fetchData">
           <el-option v-for="item in clusters" :key="item.value" :value="item.value" :label="item.label" />
         </el-select>
       </div>
@@ -71,10 +71,14 @@ import { clusterDescribeAll } from '@/api/cluster'
 import { instanceUsageTotal, instanceUsageStatistics, instanceDetail } from '@/api/instance'
 import Pagination from '@/components/Pagination'
 import Detail from '@/views/instance/detail'
+import loadMore from '@/directive/el-select-load-more'
 
 export default {
   name: 'Index',
   components: { Pagination, Detail },
+  directives: {
+    loadMore
+  },
   data() {
     return {
       loading: false,

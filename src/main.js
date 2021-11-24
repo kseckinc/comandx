@@ -41,18 +41,6 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-Vue.directive('el-select-load-more', {
-  bind(el, binding) {
-    const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-    SELECTWRAP_DOM.addEventListener('scroll', function() {
-      const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
-      if (condition) {
-        binding.value()
-      }
-    })
-  }
-})
-
 Vue.config.productionTip = false
 
 new Vue({

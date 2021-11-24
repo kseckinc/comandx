@@ -52,7 +52,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
               <el-col :span="19">
-                <el-select v-model="cluster.account_key" v-el-select-load-more="loadMore" size="medium">
+                <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
                   <el-option v-for="p in accounts" :key="p.account" :label="p.account_name" :value="p.account">
                     <span>{{ p.account_name }}({{ p.account }})</span>
                   </el-option>
@@ -243,7 +243,7 @@
               <el-col :span="3">
                 <el-select v-model="system_disk.category">
                   <el-option
-                    v-for="item in aliyunDiskTypes"
+                    v-for="item in alibabaCloudDiskTypes"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -269,7 +269,7 @@
               <el-col :span="3">
                 <el-select v-model="item.category">
                   <el-option
-                    v-for="t in aliyunDiskTypes"
+                    v-for="t in alibabaCloudDiskTypes"
                     :key="t.value"
                     :label="t.label"
                     :value="t.value"
@@ -455,7 +455,8 @@
 <script>
 import _ from 'lodash'
 import { passwordLegitimacy } from '@/utils'
-import { cloudProviders, aliyunDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
+import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
+import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
   subnetDescribe,
@@ -484,6 +485,9 @@ const rule = {
 }
 export default {
   name: 'CreateOrEdit',
+  directives: {
+    loadMore
+  },
   data() {
     return {
       vpcCidrOptions: ['172.16.0.0/12', '10.0.0.0/8', '192.168.0.0/16'],
@@ -508,7 +512,7 @@ export default {
       }],
       step: 0,
       cloudProviders,
-      aliyunDiskTypes,
+      alibabaCloudDiskTypes,
       systemDiskSizes,
       dataDiskSizes,
       providers: [{

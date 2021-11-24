@@ -8,7 +8,7 @@
         </div>
         <div class="search-item">
           <span class="label">执行集群</span>
-          <el-select v-model="search.cluster" v-el-select-load-more="loadMore" size="medium" @change="fetchData">
+          <el-select v-model="search.cluster" v-load-more="loadMore" size="medium" @change="fetchData">
             <el-option v-for="item in clusterOptions" :key="item.value" :value="item.value" :label="item.label" />
           </el-select>
         </div>
@@ -196,11 +196,13 @@ import { taskDescribe, taskDescribeAll, taskInstances } from '@/api/task'
 import { taskStatus } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
 import clipboard from '@/directive/clipboard/index'
+import loadMore from '@/directive/el-select-load-more'
 
 export default {
   name: 'TaskList',
   directives: {
-    clipboard
+    clipboard,
+    loadMore
   },
   components: { Pagination },
   filters: {

@@ -8,7 +8,7 @@
     </el-row>
     <el-row :gutter="20" style="margin-top: 10px">
       <el-col :span="4"><b>云厂商</b></el-col>
-      <el-col :span="8"><div style="height: 35px">{{ detail.provider }}</div></el-col>
+      <el-col :span="8"><div style="height: 35px">{{ detail.provider | filterCloudProvider }}</div></el-col>
       <el-col :span="4"><b>镜像ID</b></el-col>
       <el-col :span="8"><div style="height: 35px">{{ detail.image_id }}</div></el-col>
     </el-row>
