@@ -36,10 +36,16 @@ export const constantRoutes = [
     meta: { title: '扩缩容任务', icon: 'task' },
     children: [
       {
-        path: '/task/create',
-        name: 'createTask',
-        component: () => import('@/views/elasticTask/createTask'),
-        meta: { title: '创建任务', icon: '' }
+        path: '/task/create/once',
+        name: 'createOnceTask',
+        component: () => import('@/views/elasticTask/createOnceTask'),
+        meta: { title: '立即扩缩容', icon: '' }
+      },
+      {
+        path: '/task/create/cron',
+        name: 'createCronTask',
+        component: () => import('@/views/elasticTask/createCronTask'),
+        meta: { title: '定时扩缩容', icon: '' }
       },
       {
         path: '/task/list',
@@ -86,15 +92,15 @@ export const constantRoutes = [
     name: '服务部署',
     meta: { title: '服务部署', icon: 'service' },
     children: [{
-      path: '/service/list',
-      name: 'serviceList',
-      component: () => import('@/views/service/list'),
-      meta: { title: '服务列表', icon: '' }
-    }, {
       path: '/service/create',
       name: 'serviceCreate',
       component: () => import('@/views/service/create'),
       meta: { title: '创建服务', icon: '' }
+    }, {
+      path: '/service/list',
+      name: 'serviceList',
+      component: () => import('@/views/service/list'),
+      meta: { title: '服务列表', icon: '' }
     }, {
       path: '/service/history/:service_name/:service_cluster_id',
       name: 'serviceHistory',

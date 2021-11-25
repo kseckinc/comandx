@@ -25,14 +25,14 @@
     </div>
     <div class="billing-content">
       <div class="billing-summary">
-        <span style="font-size: 20px">{{ date | formatMoment('YYYY-MM-DD') }} 使用时长</span>
+        <span style="font-size: 20px">{{ date | formatMoment('YYYY-MM-DD') }} 使用总时长</span>
         <div class="billing-index">
           <span class="cost">{{ instanceUsageHour }}</span>
           <span class="unit">小时</span>
         </div>
       </div>
       <div class="billing-table">
-        <div style="font-size: 20px; padding: 10px">{{ date | formatMoment('YYYY-MM-DD') }} 机器使用时长</div>
+        <div style="font-size: 20px; padding: 10px">{{ date | formatMoment('YYYY-MM-DD') }} 各云服务器使用时长</div>
         <div style="padding: 10px">
           <el-table v-loading="loading" :data="list" size="medium" border>
             <el-table-column label="序号" prop="id" align="center" />

@@ -60,7 +60,7 @@
       </el-table>
       <pagination v-show="total>0" :total="total" :page-sizes="[10,20,50]" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size" @pagination="getList" />
     </div>
-    <el-dialog :title="detailTitle" :visible.sync="dialogFormVisible">
+    <el-dialog title="机器详情" :visible.sync="dialogFormVisible">
       <detail :detail="detail" />
     </el-dialog>
   </div>
@@ -122,7 +122,6 @@ export default {
         ip_inner: ''
       },
       dialogFormVisible: false,
-      detailTitle: '机器详情',
       filterStatuses
     }
   },

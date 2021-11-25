@@ -9,7 +9,7 @@
         <div class="search-item">
           <span class="label">执行集群</span>
           <el-select v-model="search.cluster" v-load-more="loadMore" size="medium" @change="fetchData">
-            <el-option v-for="item in clusterOptions" :key="item.value" :value="item.value" :label="item.label" />
+            <el-option v-for="(item, idx) in clusterOptions" :key="idx" :value="item.value" :label="item.label" />
           </el-select>
         </div>
         <div class="search-item">
@@ -26,7 +26,7 @@
     </div>
     <div class="content">
       <div>
-        <el-button size="medium" type="primary" @click="createTask">+新建</el-button>
+        <el-button size="medium" type="primary" @click="createOnceTask">+新建</el-button>
         <el-button size="medium" type="primary" style="float: right" @click="fetchData">刷新</el-button>
       </div>
       <div class="table">
@@ -287,8 +287,8 @@ export default {
         status: ''
       }
     },
-    createTask() {
-      this.$router.push({ name: 'createTask' })
+    createOnceTask() {
+      this.$router.push({ name: 'createOnceTask' })
     },
     async showDetail(task) {
       this.detailDialogVisible = true
