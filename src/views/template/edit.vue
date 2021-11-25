@@ -23,7 +23,7 @@
             <el-row>
               <el-col
                 :span="5"
-              ><div class="center-text">关联模板</div></el-col>
+              ><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>关联模板</div></el-col>
               <el-col :span="19">
                 <el-select v-model="form.tmpl_info.bridgx_clusname" size="medium" placeholder="请选择">
                   <el-option
@@ -38,7 +38,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">模板名称</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>模板名称</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.tmpl_info.tmpl_name"
@@ -126,7 +126,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">镜像仓库地址</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>镜像仓库地址</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.image_url"
@@ -141,7 +141,7 @@
 
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">用户名</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>用户名</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.account"
@@ -165,7 +165,7 @@
 
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">登录密码</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>登录密码</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.password"
@@ -188,7 +188,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">服务端口</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>服务端口</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.port"
@@ -202,7 +202,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">服务启动命令</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>服务启动命令</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.cmd"
@@ -232,7 +232,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">SLB ID</div></el-col>
+              <el-col :span="5"><div class="center-text"><span class="is-required" style="color: #FF4C4C;">*</span>SLB ID</div></el-col>
               <el-col :span="19">
                 <el-input
                   v-model="form.mount.mount_value"

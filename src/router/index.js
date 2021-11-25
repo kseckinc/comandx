@@ -86,15 +86,15 @@ export const constantRoutes = [
     name: '服务部署',
     meta: { title: '服务部署', icon: 'service' },
     children: [{
-      path: '/service/list',
-      name: 'serviceList',
-      component: () => import('@/views/service/list'),
-      meta: { title: '服务列表', icon: '' }
-    }, {
       path: '/service/create',
       name: 'serviceCreate',
       component: () => import('@/views/service/create'),
       meta: { title: '创建服务', icon: '' }
+    }, {
+      path: '/service/list',
+      name: 'serviceList',
+      component: () => import('@/views/service/list'),
+      meta: { title: '服务列表', icon: '' }
     }, {
       path: '/service/history/:service_name/:service_cluster_id',
       name: 'serviceHistory',

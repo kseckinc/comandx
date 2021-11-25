@@ -12,6 +12,7 @@
                 <el-button
                   size="medium"
                   type="primary"
+                  :disabled="total>0"
                   @click="createTemplate"
                 >+新建</el-button>
                 <el-button
@@ -263,10 +264,6 @@ export default {
       this.selectTemplates = val
     },
     createTemplate() {
-      if (this.total > 0) {
-        this.$message.warning('仅允许添加一个扩缩容流程')
-        return
-      }
       this.$router.push({
         path: `/service/${this.service_name}/${this.service_cluster_id}/template-create`
       })
