@@ -206,8 +206,6 @@
               <el-col :span="19">
                 <el-input
                   v-model="form.service_env.cmd"
-                  type="textarea"
-                  :rows="5"
                   size="medium"
                   placeholder="请输入服务启动命令"
                   maxlength="500"

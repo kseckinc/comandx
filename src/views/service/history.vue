@@ -13,7 +13,6 @@
           highlight-current-row
           size="medium"
         >
-          <el-table-column type="selection" width="50px" />
           <el-table-column label="流水号" align="center">
             <template slot-scope="{ row }">
               <span>{{ row.task_id }}</span>
