@@ -15,7 +15,7 @@
         <div class="search-item">
           <span class="label">Access Key</span>
           <el-select v-model="search.ak" v-load-more="loadMore" size="medium" @change="fetchData">
-            <el-option v-for="p in accounts" :key="p.account" :label="p.account_name" :value="p.account" />
+            <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account" />
           </el-select>
         </div>
       </div>

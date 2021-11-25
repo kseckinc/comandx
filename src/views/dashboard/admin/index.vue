@@ -26,7 +26,7 @@
           工作台
         </div>
         <div class="divider" />
-        <div class="crafting-item" @click="goto('createTask')">
+        <div class="crafting-item" @click="goto('createOnceTask')">
           <svg class="crafting-svg">
             <use xlink:href="#icon-expand" />
           </svg>
