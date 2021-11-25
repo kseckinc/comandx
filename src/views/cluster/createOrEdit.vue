@@ -53,7 +53,7 @@
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
-                  <el-option v-for="p in accounts" :key="p.account" :label="p.account_name" :value="p.account">
+                  <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
                     <span>{{ p.account_name }}({{ p.account }})</span>
                   </el-option>
                 </el-select>
@@ -118,7 +118,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>VPC </div></el-col>
               <el-col :span="19">
-                <el-select v-model="network_config.vpc" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" @change="loadCloud">
+                <el-select v-model="network_config.vpc" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" @change="afterVpcChange">
                   <el-option
                     v-for="item in vpcs"
                     :key="item.VpcId"
@@ -200,7 +200,7 @@
                     <el-radio-button label="PayByTraffic">按量付费</el-radio-button>
                   </el-radio-group>
                   <span style="display: inline-block; margin-left: 20px">带宽</span>
-                  <el-input-number v-model="network_config.internet_max_bandwidth_out" style="margin-left: 10px;width: 150px" size="medium" :min="10" />
+                  <el-input-number v-model="network_config.internet_max_bandwidth_out" style="margin-left: 10px;width: 150px" size="medium" :min="1" />
                   M
                 </div>
               </el-col>
@@ -212,7 +212,14 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>机器规格 </div></el-col>
               <el-col :span="19">
-                <el-select v-model="cluster.instance_type" size="medium" :disabled="cluster.region_id === '' || cluster.zone_id === ''" style="width: 50%" filterable>
+                <el-select
+                  v-model="cluster.instance_type"
+                  size="medium"
+                  :disabled="cluster.region_id === '' || cluster.zone_id === ''"
+                  placeholder="可输入机器信息匹配"
+                  style="width: 50%"
+                  filterable
+                >
                   <el-option
                     v-for="item in instanceTypes"
                     :key="item.instance_type"
@@ -231,7 +238,7 @@
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
                 <!--                  <el-radio-button label="private">自定义镜像</el-radio-button>-->
                 <!--                </el-radio-group>-->
-                <el-select v-model="cluster.image" size="medium" style="width: 50%">
+                <el-select v-model="cluster.image" size="medium" style="width: 50%" filterable placeholder="可输入镜像信息匹配">
                   <el-option v-for="i in images" :key="i.ImageId" :value="i.ImageId" :label="i.OsName" />
                 </el-select>
               </el-col>
@@ -358,7 +365,7 @@
         </div>
       </div>
     </div>
-    <el-dialog :visible.sync="vpcAddVisible" title="添加VPC">
+    <el-dialog :visible.sync="vpcAddVisible" title="添加VPC" @close="closeVpc">
       <el-form v-model="vpc" label-width="80px">
         <el-form-item label="VPC名称 ">
           <el-input v-model="vpc.vpc_name" size="medium" />
@@ -373,7 +380,7 @@
         </div>
       </el-form>
     </el-dialog>
-    <el-dialog :visible.sync="subnetAddVisible" title="添加子网">
+    <el-dialog :visible.sync="subnetAddVisible" title="添加子网" @close="closeSubnet">
       <div>
         <el-row style="padding-bottom: 20px">
           <el-col :span="5">
@@ -422,7 +429,7 @@
         </div>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="securityGroupsAddVisible" title="添加安全组">
+    <el-dialog :visible.sync="securityGroupsAddVisible" title="添加安全组" @close="closeSecurityGroups">
       <el-form v-model="securityGroup" label-width="100px">
         <el-form-item label="安全组名称">
           <el-input v-model="securityGroup.security_group_name" size="medium" />
@@ -613,6 +620,7 @@ export default {
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
         this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
+        await this.loadInstanceTypes()
       }
       this.againPassword = this.cluster.password
     },
@@ -648,10 +656,15 @@ export default {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
       this.subnets = await subnetDescribe(this.network_config.vpc)
     },
+    async afterVpcChange() {
+      this.network_config.security_group = ''
+      this.network_config.subnet_id = ''
+      await this.loadCloud()
+    },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
         const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id)
-        this.instanceTypes = _.orderBy(data, 'core')
+        this.instanceTypes = _.orderBy(data, ['core', 'memory'])
       }
     },
     async submit() {
@@ -706,11 +719,32 @@ export default {
     addVpc() {
       this.vpcAddVisible = true
     },
+    closeVpc() {
+      this.vpc = {
+        vpc_name: '',
+        cidr_block: ''
+      }
+    },
     addSubnet() {
       this.subnetAddVisible = true
     },
+    closeSubnet() {
+      this.subnet = {
+        switch_name: '',
+        vpc_id: '',
+        cidr_block: ''
+      }
+    },
     addSecurityGroup() {
       this.securityGroupsAddVisible = true
+    },
+    closeSecurityGroups() {
+      this.securityGroup = {
+        security_group_name: ''
+      }
+      this.rules = [{
+        ...rule
+      }]
     },
     async submitVpc() {
       const res = await vpcCreate(this.cluster.provider, this.cluster.region_id, this.vpc.cidr_block, this.vpc.vpc_name, this.cluster.account_key)
@@ -793,7 +827,6 @@ export default {
   }
   .center-text {
     font-size: 16px;
-    font-weight: bolder;
     height: 36px;
     display: flex;
     padding-right: 30px;

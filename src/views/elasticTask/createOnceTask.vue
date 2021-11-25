@@ -21,8 +21,8 @@
           <el-row>
             <el-col :span="5"><div style="height: 16px" /></el-col>
             <el-col :span="19">
-              <div v-if="taskNameIllegal" class="note" style="color: #f4516c">请输入任务名</div>
-              <div v-else class="note">支持中文英文数字，限制40字符</div>
+              <div v-if="taskNameIllegal" class="note" style="color: #f4516c">任务名不合规</div>
+              <div v-else class="note">支持中文英文数字，限制2到40字符</div>
             </el-col>
           </el-row>
         </div>
@@ -118,7 +118,9 @@
           <el-row>
             <el-col :span="5"><div class="center-text">执行时间 </div></el-col>
             <el-col :span="19">
-              <el-button size="medium">立即执行</el-button>
+              <div class="info-text">
+                立即
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -137,7 +139,7 @@ import { clusterExpand, clusterShrink, clusterDescribeAll, clusterInstanceStat }
 import _ from 'lodash'
 
 export default {
-  name: 'CreateTask',
+  name: 'CreateOnceTask',
   data() {
     return {
       instanceNumLoading: false,
@@ -241,7 +243,7 @@ export default {
       this.$router.push({ name: 'clusterCreate' })
     },
     checkTaskName() {
-      this.taskNameIllegal = this.task.name === ''
+      this.taskNameIllegal = this.task.name === '' || this.task.name.length < 2
     }
   }
 }
@@ -257,23 +259,22 @@ export default {
     }
     .center-text {
       font-size: 16px;
-      font-weight: bolder;
       height: 36px;
       display: flex;
+      color: #333333;
       padding-right: 30px;
       flex-direction: row-reverse;
       align-items: center;
     }
     .info-text {
       font-size: 16px;
-      font-weight: bolder;
       height: 36px;
       display: flex;
       align-items: center;
     }
     .note {
       padding-top: 5px;
-      color: rgb(170, 170,170);
+      color: #aaaaaa;
     }
   }
 </style>
