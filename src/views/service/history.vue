@@ -1,10 +1,11 @@
 <template>
   <div class="container">
-    <div>
-      {{ service_name }}
-    </div>
     <div class="content">
-      <div class="table">
+      <div>
+        {{ service_name }}
+        <el-button size="medium" type="primary" style="float: right" @click="getList">刷新</el-button>
+      </div>
+      <div class="table" style="margin-top:25px">
         <el-table
           v-loading="listLoading"
           :data="historyList"
