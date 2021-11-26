@@ -51,6 +51,7 @@
           :disabled="selectServices.length !== 1"
           @click="handleEdit"
         >编辑</el-button>
+        <el-button size="medium" type="primary" style="float: right" @click="getList">刷新</el-button>
       </div>
       <div class="table">
         <el-table
@@ -190,15 +191,16 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="执行扩缩容" :visible="warningDialogVisible" width="20%" @close="cancelWarningDialogVisible">
+    <el-dialog title="执行扩缩容" :visible="warningDialogVisible" width="30%" @close="cancelWarningDialogVisible">
       <div style="font-size:25px;text-align:center">
         提示：不能进行扩缩容
       </div>
-      <div style="text-align:center">
-        当前服务尚未创建对应的扩缩容流程，请  <el-button
-          type="text"
-          @click="goTemplateCreate()"
-        >创建扩缩容流程</el-button>
+      <div style="text-align:center;margin-top:5px">
+        当前服务尚未创建对应的扩缩容流程，请</div>
+      <div style="text-align:center"><el-button
+        type="text"
+        @click="goTemplateCreate()"
+      >创建扩缩容流程</el-button>
       </div>
     </el-dialog>
   </div>
