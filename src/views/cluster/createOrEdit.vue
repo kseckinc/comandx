@@ -626,10 +626,11 @@ export default {
     },
     async loadRegion() {
       this.regions = await regionList(this.cluster.provider)
-      if (this.cluster.zone_id !== '') {
-        await this.loadZoneAndVpc()
-        await this.loadCloud()
+      if (this.cluster.region_id === '' && this.regions.length > 0) {
+        this.cluster.region_id = _.get(this.regions, '0.RegionId', '')
       }
+      await this.loadZoneAndVpc()
+      await this.loadCloud()
     },
     async loadAccounts() {
       const res = await cloudAccountList('', '', '', this.accountQuery.page_number, this.accountQuery.page_size)
@@ -649,6 +650,9 @@ export default {
     },
     async loadZoneAndVpc() {
       this.zones = await zoneList(this.cluster.provider, this.cluster.region_id)
+      if (this.cluster.zone_id === '' && this.zones.length > 0) {
+        this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
+      }
       this.vpcs = await vpcDescribe(this.cluster.region_id)
       this.images = await imageList(this.cluster.provider, this.cluster.region_id)
     },

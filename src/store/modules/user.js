@@ -6,8 +6,10 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    role: 'COMMON',
     avatar: '',
-    account: ''
+    account: '',
+    org: -1
   }
 }
 
@@ -22,6 +24,12 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+  },
+  SET_ORG: (state, org) => {
+    state.org = org
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -57,8 +65,10 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { username } = data
+        const { username, user_type, org_id } = data
         commit('SET_NAME', username)
+        commit('SET_ROLE', user_type)
+        commit('SET_ORG', org_id)
         // commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_AVATAR', 'http://mms0.baidu.com/it/u=3585539889,839097986&fm=253&app=138&f=JPEG?w=100&h=100')
         resolve(data)

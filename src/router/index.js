@@ -22,8 +22,8 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/dashboard',
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
+      path: '/dashboard',
+      name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
@@ -58,7 +58,7 @@ export const constantRoutes = [
   {
     path: '/cluster',
     component: Layout,
-    redirect: '/cluster',
+    redirect: '/cluster/list',
     name: '集群管理',
     meta: { title: '集群管理', icon: 'cluster' },
     children: [{
@@ -69,7 +69,7 @@ export const constantRoutes = [
     }, {
       path: '/cluster/list',
       name: 'clusterList',
-      component: () => import('@/views/cluster/index'),
+      component: () => import('@/views/cluster/list'),
       meta: { title: '集群列表', icon: '' }
     }, {
       path: '/cluster/edit/:name',
@@ -132,9 +132,9 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/instance',
     children: [{
-      path: 'instance',
+      path: '/instance',
       name: 'instanceList',
-      component: () => import('@/views/instance/index'),
+      component: () => import('@/views/instance/list'),
       meta: { title: '云服务器', icon: 'instance' }
     }]
   },
@@ -143,7 +143,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/provider',
     children: [{
-      path: 'provider',
+      path: '/provider',
       name: 'provider',
       component: () => import('@/views/cloudAccount/index'),
       meta: { title: '云厂商账户', icon: 'cloudAccount' }
@@ -154,7 +154,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/billing',
     children: [{
-      path: 'billing',
+      path: '/billing',
       name: 'billing',
       component: () => import('@/views/billing/index'),
       meta: { title: '费用管理', icon: 'billing' }

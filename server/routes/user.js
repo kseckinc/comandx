@@ -82,7 +82,7 @@ userRouter.post('/api/v1/user/create_ram_user', async(ctx) => {
       json: true
     })
   } catch (e) {
-    ctx.bodu = e.error
+    ctx.body = e.error
   }
 })
 
@@ -114,7 +114,36 @@ userRouter.post('/api/v1/user/enable_ram_user', async(ctx) => {
       json: true
     })
   } catch (e) {
-    ctx.bodu = e.error
+    ctx.body = e.error
+  }
+})
+
+userRouter.get('/api/v1/org/id/:id', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}/api/v1/org/id/${ctx.params.id}`
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+userRouter.post('/api/v1/org/edit', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      method: 'POST',
+      url: `${host.getHost()}/api/v1/org/edit`,
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
   }
 })
 

@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="title">星汉未来</div>
+      <div class="title">{{ orgName }}
+        <i v-if="isAdmin" class="el-icon-edit" style="font-size: 16px; display: inline-block; cursor: pointer" @click="editOrgName"></i>
+      </div>
       <div class="desc">
         <span style="color: #8c939d">账号:</span>  <span style="margin-left: 10px">{{name}}</span>
         <span style="color: #8c939d; margin-left: 200px">创建时间：</span> <span style="margin-left: 10px">2021-11-04 12:00:00</span>
@@ -9,7 +11,7 @@
     </div>
     <div class="content">
       <div style="font-size: 16px; font-weight: bolder; margin-bottom: 20px">子账号</div>
-      <div class="buttons">
+      <div v-if="isAdmin" class="buttons">
         <el-button size="medium" type="primary" @click="handleCreate">+创建子账号</el-button>
         <el-button size="medium" :disabled="selectUsers.length < 1" @click="batchDisable">禁用</el-button>
         <el-button size="medium" :disabled="selectUsers.length < 1" @click="batchEnable">启用</el-button>
@@ -28,6 +30,7 @@
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 size="mini"
+                :disabled="!isAdmin"
                 @change="handleStatus(row)"
               />{{ row.user_status | parseStatus }}
             </template>
@@ -52,11 +55,21 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :visible.sync="orgVisible" title="编辑组织">
+      <el-form label-width="100px">
+        <el-form-item label="组织名称">
+          <el-input v-model="newOrgName" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitOrgName">提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { userList, createRamUser, ramUserEnable } from '@/api/user'
+import { userList, createRamUser, ramUserEnable, orgInfo, orgEdit } from '@/api/user'
 import Pagination from '@/components/Pagination'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
@@ -101,7 +114,9 @@ export default {
       },
       total: 0,
       createVisible: false,
+      orgVisible: false,
       loading: false,
+      newOrgName: '',
       userForm: {
         username: '',
         pass: '',
@@ -118,13 +133,19 @@ export default {
           { validator: validatePassAgain, trigger: 'blur' }
         ]
       },
-      selectUsers: []
+      selectUsers: [],
+      orgName: ''
     }
   },
   computed: {
     ...mapGetters([
-      'name'
-    ])
+      'name',
+      'role',
+      'org'
+    ]),
+    isAdmin() {
+      return this.role === 'ADMIN'
+    }
   },
   mounted() {
     this.fetchData()
@@ -141,6 +162,8 @@ export default {
         status: i.user_status === 'enable'
       }))
       this.total = _.get(res, 'pager.total', 0)
+      const org = await orgInfo(this.org)
+      this.orgName = org.org_name
       this.loading = false
     },
     async handleStatus(row) {
@@ -180,6 +203,19 @@ export default {
         this.createVisible = false
         await this.fetchData()
       }
+    },
+    editOrgName() {
+      this.newOrgName = this.orgName
+      this.orgVisible = true
+    },
+    async submitOrgName() {
+      const res = await orgEdit(this.org, this.newOrgName)
+      if (res.code === 200) {
+        this.$message.success('创建成功')
+        this.newOrgName = ''
+      }
+      await this.fetchData()
+      this.orgVisible = false
     }
   }
 }

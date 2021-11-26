@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { getToken } from '@/utils/auth'
-import _ from "lodash";
+import _ from 'lodash'
 
 export function login(data) {
   return request({
@@ -92,6 +92,32 @@ export function ramUserEnable(usernames, action) {
     data: {
       usernames,
       action
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export async function orgInfo(id) {
+  const token = getToken()
+  const res = await request({
+    url: `/api/v1/org/id/${id}`,
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return _.get(res, 'data')
+}
+
+export function orgEdit(org_id, org_name) {
+  const token = getToken()
+  return request({
+    url: '/api/v1/org/edit',
+    method: 'post',
+    data: {
+      org_id,
+      org_name
     },
     headers: {
       Authorization: ` Bearer ${token}`
