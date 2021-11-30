@@ -2,10 +2,10 @@
   <div>
     <el-card>
       <el-tabs v-model="activeName">
-        <div style="margin-bottom: 20px; float: right">
-          <el-button size="medium" type="primary" :loading="downloading" @click="handleDownload">导出Excel</el-button>
-        </div>
         <el-tab-pane label="机器列表" name="instance">
+          <div style="margin-bottom: 20px; float: right">
+            <el-button size="medium" type="primary" :loading="downloading" @click="handleDownload">导出Excel</el-button>
+          </div>
           <el-table :data="instanceList" border>
             <el-table-column align="center" prop="instance_id" label="机器名" />
             <el-table-column align="center" label="IP">
@@ -43,7 +43,19 @@
         </el-tab-pane>
         <el-tab-pane label="系统镜像" name="image">系统镜像</el-tab-pane>
         <el-tab-pane label="扩缩容历史" name="el">扩缩容历史</el-tab-pane>
-        <el-tab-pane label="基础信息" name="fourth">基础信息</el-tab-pane>
+        <el-tab-pane label="基础信息" name="fourth">
+          <div class="info-title">
+            {{ cluster.name }}
+          </div>
+          <el-card>
+            <el-row>
+              <el-col :span="3" class="info-label">云厂商</el-col>
+              <el-col :span="9" class="info-content">{{ cluster.provider | filterCloudProvider }}</el-col>
+              <el-col :span="3" class="info-label">创建时间</el-col>
+              <el-col :span="9" class="info-content">{{ cluster.create_at | formatMomentZone }}</el-col>
+            </el-row>
+          </el-card>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -55,6 +67,7 @@ import Pagination from '@/components/Pagination'
 import { instanceDescribeAll } from '@/api/instance'
 import { filterStatuses } from '@/config/instance'
 import clipboard from '@/directive/clipboard/index'
+import { clusterDescribe } from '@/api/cluster'
 
 export default {
   name: 'Detail',
@@ -72,7 +85,8 @@ export default {
       },
       instanceTotal: 0,
       downloading: false,
-      filterStatuses
+      filterStatuses,
+      cluster: {}
     }
   },
   mounted() {
@@ -84,6 +98,8 @@ export default {
         const res = await instanceDescribeAll('', '', '', '', this.$route.params.name, filterStatuses, this.instanceListQuery.page_number, this.instanceListQuery.page_size)
         this.instanceList = _.get(res, 'instance_list', [])
         this.instanceTotal = _.get(res, 'pager.total', 0)
+        this.cluster = await clusterDescribe(this.$route.params.name)
+        console.log(this.cluster)
       }
     },
     clipboardSuccess() {
@@ -111,5 +127,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+  .info-title {
+    font-size: 20px;
+    padding: 10px;
+  }
+  .info-label {
+    color: #7f7f7f;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .info-content {
+    color: #333333;
+    padding-left: 20px;
+  }
 </style>

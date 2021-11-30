@@ -13,7 +13,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>集群名称 </div></el-col>
               <el-col :span="19">
-                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit />
+                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit style="width: 400px" />
               </el-col>
             </el-row>
             <el-row>
@@ -25,7 +25,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text">集群描述 </div></el-col>
               <el-col :span="19">
-                <el-input v-model="cluster.desc" size="medium" placeholder="请输入集群描述信息" maxlength="50" show-word-limit />
+                <el-input v-model="cluster.desc" size="medium" placeholder="请输入集群描述信息" maxlength="50" show-word-limit style="width: 400px" />
               </el-col>
             </el-row>
             <el-row>
@@ -275,7 +275,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="3"><div class="center-text">系统盘容量 </div></el-col>
+              <el-col :span="5"><div class="center-text">系统盘容量 </div></el-col>
               <el-col :span="8">
                 <el-select v-model="system_disk.size">
                   <el-option
@@ -301,7 +301,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="3"><div class="center-text">数据盘容量 </div></el-col>
+              <el-col :span="5"><div class="center-text">数据盘容量 </div></el-col>
               <el-col :span="8">
                 <el-select v-model="item.size">
                   <el-option
@@ -874,7 +874,7 @@ export default {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 90%;
     .tips {
       margin-top: 5px;
       color: #8c939d;
