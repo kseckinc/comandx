@@ -60,7 +60,7 @@ export default {
       this.list = res.task_list
     },
     getHeight() {
-      if (this.$refs.table !== null) {
+      if (this.$refs.table !== null && this.$refs.table.$el !== null) {
         this.height = this.$refs.table.$el.parentElement.parentElement.clientHeight > 200 ? this.$refs.table.$el.parentElement.parentElement.clientHeight - 50 : 50
       }
     },

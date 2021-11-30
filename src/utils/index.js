@@ -59,3 +59,47 @@ export function passwordLegitimacy(password) {
   })
   return typeNum > 2
 }
+
+export function justifySubnet(vpcCidr, subnetCidr) {
+  if (!cidrIsLegal(vpcCidr) || !cidrIsLegal(subnetCidr)) {
+    return false
+  }
+  const vpc = vpcCidr.split('/')
+  const vpcIp = ip2Binary(vpc[0])
+  const vpcMask = +vpc[1]
+  const vpcIpMask = ipMask(vpcIp, vpcMask)
+  const subnet = subnetCidr.split('/')
+  const subnetIpMask = ipMask(ip2Binary(subnet[0]), +subnet[1])
+  return vpcIpMask.slice(0, vpcMask) === subnetIpMask.slice(0, vpcMask)
+}
+
+function cidrIsLegal(cidr) {
+  const arr = cidr.split('/')
+  if (arr.length !== 2) {
+    return false
+  }
+  const ips = arr[0].split('.')
+  if (ips.length !== 4) {
+    return false
+  }
+  for (const ip of ips) {
+    if (+ip > 255 || +ip < 0) {
+      return false
+    }
+  }
+  const mask = arr[1]
+  return !(mask < 0 || mask > 32)
+}
+
+function ip2Binary(ip) {
+  let res = ''
+  ip.split('.').forEach((i) => {
+    const str = (+i).toString(2)
+    res += _.padStart(str, 8, '0')
+  })
+  return res
+}
+
+function ipMask(ip, mask) {
+  return _.padEnd(ip.slice(0, +mask), 32, '0')
+}

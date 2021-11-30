@@ -3,7 +3,7 @@
     <div class="header">
       {{ service_name }}
     </div>
-    <div class="container">
+    <div class="content">
       <div>
         <el-tabs v-model="activeName">
           <el-tab-pane label="扩缩容流程" name="first">
@@ -23,7 +23,7 @@
                 <el-button
                   size="medium"
                   :disabled="selectTemplates.length < 1"
-                  @click="deleteTemplates"
+                  @click="confirmDeleteTemplate"
                 >删除</el-button>
               </div>
               <div class="table">
@@ -156,6 +156,20 @@
         </el-tabs>
       </div>
     </div>
+    <el-dialog :visible="confirmDeleteTemplateDiglogVis" width="30%" @close="cancelDeleteTemplate">
+      <div style="font-size:25px;text-align:center">
+        确定要删除吗?
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <el-button
+          type="primary"
+          @click="deleteTemplates()"
+        >删除</el-button>
+        <el-button
+          @click="cancelDeleteTemplate()"
+        >取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -206,6 +220,7 @@ export default {
       templateList: [],
       service_name: '',
       service_cluster_id: '',
+      confirmDeleteTemplateDiglogVis: false,
       rules: {
         'tmpl_decision_rule.metric_value': [
           { required: true, message: '请输入QPS值', trigger: 'blur' }
@@ -273,12 +288,19 @@ export default {
         path: `/service/template-edit/${this.service_name}/${this.selectTemplates[0].tmpl_expand_id}`
       })
     },
+    confirmDeleteTemplate() {
+      this.confirmDeleteTemplateDiglogVis = true
+    },
+    cancelDeleteTemplate() {
+      this.confirmDeleteTemplateDiglogVis = false
+    },
     async deleteTemplates() {
       const data = {
         'tmpl_expand_id': this.selectTemplates.map(i => i.tmpl_expand_id)
       }
       const res = await templateDeletes(data)
       if (res.data.code === 200) {
+        this.cancelDeleteTemplate()
         this.$message.success('删除成功')
         this.getList()
       } else {
