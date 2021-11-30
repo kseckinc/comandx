@@ -15,7 +15,7 @@ const alibabaCloudDiskTypes = [{
 }]
 
 const ramUrl = {
-  aliyun: 'https://ram.console.aliyun.com/manage/ak'
+  AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak'
 }
 
 const systemDiskSizes = [{

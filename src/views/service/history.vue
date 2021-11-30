@@ -142,7 +142,6 @@ export default {
         ...this.listQuery
       }
       const res = await getHistoryList(params)
-      console.log(res)
       this.historyList = _.get(res, 'schedule_task_list', [])
       this.total = res.pager.total
       this.listLoading = false
