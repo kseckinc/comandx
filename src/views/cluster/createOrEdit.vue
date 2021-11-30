@@ -210,6 +210,24 @@
         <div v-if="step === 2" class="form">
           <div class="form-container">
             <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>付费方式 </div></el-col>
+              <el-col :span="19">
+                <el-radio-group v-model="charge_config.charge_type">
+                  <el-radio-button label="PrePaid">包年包月</el-radio-button>
+                  <el-radio-button label="PostPaid">按量付费</el-radio-button>
+                </el-radio-group>
+                <el-select v-if="charge_config.charge_type === 'PrePaid'" v-model="charge_config.period" style="width: 80px; margin-left: 20px">
+                  <el-option v-for="item in chargePeriodOptions" :key="item" :value="item" :label="item" />
+                </el-select>
+                <el-select v-if="charge_config.charge_type === 'PrePaid'" v-model="charge_config.period_unit" style="margin-left: 5px; width: 80px">
+                  <el-option label="周" value="Week" />
+                  <el-option label="月" value="Month" />
+                </el-select>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>机器规格 </div></el-col>
               <el-col :span="19">
                 <el-select
@@ -411,7 +429,7 @@
             </div>
           </el-col>
           <el-col :span="19">
-            <el-input v-model="subnet.cidr_block" size="medium" placeholder="172.16.0.0/24" />
+            <el-input v-model="subnet.cidr_block" size="medium" placeholder="172.16.0.0/24" @blur="checkCidr" />
           </el-col>
         </el-row>
         <el-row style="padding-bottom: 20px">
@@ -420,12 +438,12 @@
           </el-col>
           <el-col :span="19">
             <div style="font-size: 14px;color: #8c939d;">
-              <i class="el-icon-info" style="color: green" />交换机的网段必须是其所属VPC网段的真子集且掩码需在16位到29位之间，可提供 8 ~ 65536 个地址
+              <i class="el-icon-info" style="color: green" />{{ subnetNote }}
             </div>
           </el-col>
         </el-row>
         <div style="display: flex; justify-content: center">
-          <el-button type="primary" size="medium" @click="submitSubnet">保存</el-button>
+          <el-button type="primary" size="medium" :disabled="subnetDisabled" @click="submitSubnet">保存</el-button>
         </div>
       </div>
     </el-dialog>
@@ -439,7 +457,7 @@
             传输层协议
           </span>
           <el-select v-model="item.protocol" size="mini" style="width: 100px">
-            <el-option v-for="item in protocols" :key="item" :value="item" :label="item" />
+            <el-option v-for="i in protocols" :key="i" :value="i" :label="i" />
           </el-select>
           <span style="margin-left: 20px">端口范围</span>
           <el-input v-model="item.port_from" size="mini" style="width: 50px" /> / <el-input v-model="item.port_to" size="mini" style="width: 50px" />
@@ -461,7 +479,7 @@
 
 <script>
 import _ from 'lodash'
-import { passwordLegitimacy } from '@/utils'
+import { justifySubnet, passwordLegitimacy } from '@/utils'
 import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
@@ -532,12 +550,16 @@ export default {
         name: '',
         provider: 'AlibabaCloud',
         account_key: '',
-        charge_type: 'PostPaid',
         region_id: '',
         zone_id: '',
         instance_type: '',
         image: '',
         password: ''
+      },
+      charge_config: {
+        charge_type: 'PostPaid',
+        period: 1,
+        period_unit: 'Month'
       },
       network_config: {
         vpc: '',
@@ -571,10 +593,19 @@ export default {
       passwordTips: '8～30 个字符，必须同时包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;\'<>,.?/ 中的特殊符号），其中 Windows 实例不能以斜线号（/）开头',
       passwordIllegal: false,
       againPassword: '',
-      passwordWarning: '请牢记您所设置的密码'
+      passwordWarning: '请牢记您所设置的密码',
+      subnetDisabled: true,
+      subnetNote: '子网的网段必须是其所属VPC网段的真子集且掩码需在16位到29位之间，可提供 8 ~ 65536 个地址',
+      subnetVpc: {}
     }
   },
   computed: {
+    chargePeriodOptions() {
+      if (this.charge_config.period_unit === 'Week') {
+        return [1, 2, 3, 4]
+      }
+      return [1, 2, 3, 4, 6, 12, 24, 36, 48, 60]
+    },
     nextDisabled() {
       switch (this.step) {
         case 0:
@@ -604,6 +635,7 @@ export default {
     }
     await this.loadRegion()
     await this.loadAccounts()
+    await this.loadInstanceTypes()
   },
   methods: {
     previous() {
@@ -611,6 +643,16 @@ export default {
     },
     next() {
       if (this.step++ > 3) this.step = 0
+    },
+    checkCidr() {
+      const vpc = this.vpcs.find(i => i.VpcId === this.subnet.vpc_id)
+      if (vpc !== undefined && justifySubnet(vpc.CidrBlock, this.subnet.cidr_block)) {
+        this.subnetNote = '子网的网段必须是其所属VPC网段的真子集且掩码需在16位到29位之间，可提供 8 ~ 65536 个地址'
+        this.subnetDisabled = false
+      } else {
+        this.subnetNote = '子网网段不合法'
+        this.subnetDisabled = true
+      }
     },
     async fetchData() {
       const cluster = await clusterDescribe(this.$route.params.name)
@@ -620,16 +662,18 @@ export default {
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
         this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
+        this.charge_config = _.get(cluster, 'charge_config')
         await this.loadInstanceTypes()
       }
       this.againPassword = this.cluster.password
     },
     async loadRegion() {
       this.regions = await regionList(this.cluster.provider)
-      if (this.cluster.zone_id !== '') {
-        await this.loadZoneAndVpc()
-        await this.loadCloud()
+      if (this.cluster.region_id === '' && this.regions !== null && this.regions.length > 0) {
+        this.cluster.region_id = _.get(this.regions, '0.RegionId', '')
       }
+      await this.loadZoneAndVpc()
+      await this.loadCloud()
     },
     async loadAccounts() {
       const res = await cloudAccountList('', '', '', this.accountQuery.page_number, this.accountQuery.page_size)
@@ -649,6 +693,9 @@ export default {
     },
     async loadZoneAndVpc() {
       this.zones = await zoneList(this.cluster.provider, this.cluster.region_id)
+      if (this.cluster.zone_id === '' && this.zones !== null && this.zones.length > 0) {
+        this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
+      }
       this.vpcs = await vpcDescribe(this.cluster.region_id)
       this.images = await imageList(this.cluster.provider, this.cluster.region_id)
     },
@@ -680,6 +727,14 @@ export default {
           security_group: this.network_config.security_group
         }
       }
+      let charge_config
+      if (this.charge_config.charge_type === 'PrePaid') {
+        charge_config = { ...this.charge_config }
+      } else {
+        charge_config = {
+          charge_type: this.charge_config.charge_type
+        }
+      }
       const data = {
         ...this.cluster,
         network_config,
@@ -688,7 +743,8 @@ export default {
             system_disk: { ...this.system_disk },
             data_disk: this.data_disks
           }
-        }
+        },
+        charge_config
       }
       let res
       let text = '创建成功'

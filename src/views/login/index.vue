@@ -114,7 +114,6 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('错误的提交')
           return false
         }
       })
