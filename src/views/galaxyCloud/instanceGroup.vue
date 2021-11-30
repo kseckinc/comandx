@@ -165,10 +165,13 @@ export default {
     async reboot() {
 
     },
-    handleDelete() {
-      this.selectInstanceGroups.forEach((row) => {
-        galaxyCloudDelete(Number(row.Id))
-      })
+    async handleDelete() {
+      const res = await galaxyCloudDelete(this.selectInstanceGroups.map(i => i.Id))
+      if (res.data.Status === 'success') {
+        this.$message.success('删除成功')
+      } else {
+        this.$message.error('删除失败')
+      }
       this.fetchData()
     }
   }
