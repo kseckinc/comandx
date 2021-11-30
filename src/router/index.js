@@ -56,6 +56,39 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/galaxy-cloud',
+    component: Layout,
+    redirect: '/galaxy-cloud/list',
+    name: '星云集群',
+    meta: { title: '星云集群', icon: 'galaxy-cloud' },
+    children: [
+      {
+        path: '/galaxy-cloud/instance/apply',
+        name: 'galaxyCloudInstanceApply',
+        component: () => import('@/views/galaxyCloud/applyInstance'),
+        meta: { title: '申请实例', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/self',
+        name: 'galaxyCloudInstanceSelf',
+        component: () => import('@/views/galaxyCloud/selfInstance'),
+        meta: { title: '我的实例', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/group',
+        name: 'galaxyCloudInstanceGroup',
+        component: () => import('@/views/galaxyCloud/instanceGroup'),
+        meta: { title: '实例组', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/form',
+        name: 'galaxyCloudInstanceForm',
+        component: () => import('@/views/galaxyCloud/instanceForm'),
+        meta: { title: '实例申请单', icon: '' }
+      }
+    ]
+  },
+  {
     path: '/cluster',
     component: Layout,
     redirect: '/cluster',
