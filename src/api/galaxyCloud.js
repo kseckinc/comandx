@@ -3,10 +3,10 @@ import http from '@/utils/http'
 import _ from 'lodash'
 import { getToken } from '@/utils/auth'
 
-export async function galaxyCloudCreate(data) {
+export async function galaxyCloudBatchCreate(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/eci/cluster',
+    url: '/api/v1/eci/cluster/batch/create',
     method: 'post',
     data,
     headers: {
@@ -16,11 +16,12 @@ export async function galaxyCloudCreate(data) {
   return res
 }
 
-export async function galaxyCloudDelete(id) {
+export async function galaxyCloudDelete(data) {
   const token = getToken()
   const res = await http({
-    url: `/api/v1/eci/cluster/delete/${id}`,
+    url: `/api/v1/eci/cluster/batch/delete`,
     method: 'delete',
+    data,
     headers: {
       Authorization: ` Bearer ${token}`
     }

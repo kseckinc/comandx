@@ -20,13 +20,13 @@ routerApi.get('/eci/cluster', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/cluster', async(ctx) => {
+routerApi.post('/eci/cluster/batch/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/eci/cluster`,
+      url: `${host.getKubeHost()}/api/v1/eci/cluster/batch/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -36,13 +36,13 @@ routerApi.post('/eci/cluster', async(ctx) => {
   }
 })
 
-routerApi.delete('/eci/cluster/delete/:id', async(ctx) => {
+routerApi.delete('/eci/cluster/batch/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/eci/cluster/delete/${ctx.params.id}`,
+      url: `${host.getKubeHost()}/api/v1/eci/cluster/batch/delete`,
       method: 'DELETE',
       body: ctx.request.body,
       json: true

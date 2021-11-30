@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { getGalaxyClusters } from '@/api/galaxyCloud'
+import { galaxyCloudBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
 import _ from 'lodash'
 
 export default {
@@ -66,6 +66,7 @@ export default {
     return {
       rowArrList: [
         {
+          kubernetesId: 0,
           name: '',
           cpu: '',
           memory: '',
@@ -107,8 +108,17 @@ export default {
         count: ''
       })
     },
-    submit() {
-
+    async submit() {
+      this.rowArrList.map(i => {
+        i.kubernetesId = this.selectCluster
+      })
+      const res = await galaxyCloudBatchCreate(this.rowArrList)
+      if (res.data.Status === 'success') {
+        this.$message.success('创建成功')
+        this.$router.push({ name: 'galaxyCloudInstanceGroup' })
+      } else {
+        this.$message.error('创建失败')
+      }
     },
     cancel() {
 
