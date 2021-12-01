@@ -5,6 +5,21 @@ const routerApi = new Router({
   prefix: '/api/v1'
 })
 
+routerApi.get('/kubernetes', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}/api/v1/kubernetes`,
+      method: 'GET',
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
 routerApi.get('/eci/cluster', async(ctx) => {
   try {
     ctx.body = await request({
@@ -13,6 +28,7 @@ routerApi.get('/eci/cluster', async(ctx) => {
       },
       url: `${host.getKubeHost()}/api/v1/eci/cluster`,
       method: 'GET',
+      qs: ctx.query,
       json: true
     })
   } catch (e) {
@@ -36,14 +52,14 @@ routerApi.post('/eci/cluster/batch/create', async(ctx) => {
   }
 })
 
-routerApi.delete('/eci/cluster/batch/delete', async(ctx) => {
+routerApi.post('/eci/cluster/batch/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
       url: `${host.getKubeHost()}/api/v1/eci/cluster/batch/delete`,
-      method: 'DELETE',
+      method: 'POST',
       body: ctx.request.body,
       json: true
     })

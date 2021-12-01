@@ -3,35 +3,36 @@
     <div class="header" style="font-size: 30px;">
       资源申请
     </div>
-    <div>
-      <span>星云集群</span>
+    <div class="select">
+      <span class="is-required" style="color: #FF4C4C;">* </span><span>星云集群</span>
       <el-select
         v-model="selectCluster"
         placeholder="请选择实例所属的星云集群"
-        style="width: 400px"
+        style="width: 400px; margin-left:10px"
       >
         <el-option
           v-for="item in galaxyClusters"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
         />
       </el-select>
     </div>
-    <div class="content-part" align="center">
+    <div class="content-part">
+
       <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
         <i v-if="rowArrList.length >= 2" class="el-icon-delete" @click="deleteInstance(index)" />
         <p>
           <span>{{ index + 1 }}</span>
           <span>实例组 <el-input v-model="item.name" style="width: 180px" placeholder="请输入实例名" /></span>
           <span class="input" />
-          <span>CPU <el-input v-model="item.cpu" style="width: 120px" placeholder="0.000" />核</span>
+          <span>CPU <el-input v-model="item.cpu" style="width: 120px" placeholder="0.000" /> 核</span>
           <span class="input" />
           <span>内存 <el-input v-model="item.memory" style="width: 120px" placeholder="0.000" /> G</span>
           <span class="input" />
           <span>硬盘 <el-input v-model="item.disk" style="width: 120px" placeholder="0.000" /> G</span>
           <span class="input" />
-          <span>数量 <el-input v-model="item.count" style="width: 120px" placeholder="0" /> 台</span>
+          <span>数量 <el-input v-model="item.instance_count" style="width: 120px" placeholder="0" /> 台</span>
         </p>
       </div>
       <div class="buttons" align="center"><el-button
@@ -66,12 +67,12 @@ export default {
     return {
       rowArrList: [
         {
-          kubernetesId: 0,
+          kubernetes_id: 0,
           name: '',
           cpu: '',
           memory: '',
           disk: '',
-          count: ''
+          instance_count: ''
         }
       ],
       galaxyClusters: [],
@@ -84,10 +85,10 @@ export default {
   methods: {
     async getSelectList() {
       const res = await getGalaxyClusters()
-      if (res.Status === 'success') {
-        this.galaxyClusters = _.get(res, 'Clusters', [])
+      if (res.status === 'success') {
+        this.galaxyClusters = _.get(res, 'clusters', [])
       } else {
-        this.$message.error(res.Message)
+        this.$message.error(res.message)
       }
     },
     deleteInstance(index) {
@@ -105,15 +106,16 @@ export default {
         cpu: '',
         memory: '',
         disk: '',
-        count: ''
+        instance_count: ''
       })
     },
     async submit() {
       this.rowArrList.map(i => {
-        i.kubernetesId = this.selectCluster
+        i.kubernetes_id = this.selectCluster
+        i.instance_count = Number(i.instance_count)
       })
       const res = await galaxyCloudBatchCreate(this.rowArrList)
-      if (res.data.Status === 'success') {
+      if (res.data.status === 'success') {
         this.$message.success('创建成功')
         this.$router.push({ name: 'galaxyCloudInstanceGroup' })
       } else {
@@ -141,6 +143,11 @@ export default {
     box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: row;
+  }
+  .select {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
   }
   .content-part {
     margin: 0 auto;

@@ -15,7 +15,6 @@
     <div class="content">
       <div class="buttons">
         <el-button size="medium" type="primary" @click="applyInstance">+申请实例</el-button>
-        <el-button size="medium" :disabled="selectInstanceGroups.length !== 1" @click="reboot">重启</el-button>
         <el-button size="medium" :disabled="selectInstanceGroups.length < 1" @click="handleDelete">删除</el-button>
       </div>
       <div class="table">
@@ -29,15 +28,15 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
-          <el-table-column label="ID" prop="Id" align="center" />
+          <el-table-column label="ID" prop="id" align="center" />
           <el-table-column label="实例组名" min-width="100px" align="center">
             <template slot-scope="{row}">
-              {{ row.Name }}
+              {{ row.name }}
             </template>
           </el-table-column>
           <el-table-column label="实例组机型" width="150px" align="center">
             <template slot-scope="{row}">
-              {{ row.Cpu }}核/ {{ row.Memory }}G /{{ row.Disk }}G
+              {{ row.cpu }}核/ {{ row.memory }}G /{{ row.disk }}G
             </template>
           </el-table-column>
           <el-table-column label="运行实例数" width="150px" align="center">
@@ -57,6 +56,37 @@
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size" @pagination="fetchData" />
       </div>
     </div>
+
+    <el-dialog title="实例组伸缩" :visible="dialogVisible" width="20%" @close="cancelDialog">
+      <div>
+        <el-form
+          ref="dialogForm"
+          :model="dialogForm"
+          label-width="120px"
+          label-position="right"
+          style="margin-left:50px"
+        >
+          <el-form-item label="实例组名">
+            <span>{{ name }}</span>
+          </el-form-item>
+          <el-form-item label="运行实例数">
+            <div>
+              <el-input
+                v-model="dialogForm.instance_count"
+                prop="instance_count"
+                style="width: 120px"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <div><el-button type="primary" @click="submitDialog">提交</el-button>
+              <el-button @click="cancelDialog">取消</el-button></div>
+          </el-form-item>
+        </el-form>
+
+      </div>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -109,7 +139,7 @@
 </style>
 
 <script>
-import { getGalaxyClusters, galaxyCloudDelete } from '@/api/galaxyCloud'
+import { getInstanceGroup, instanceGroupDelete } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -133,7 +163,12 @@ export default {
         page_number: 1,
         page_size: 10
       },
-      selectInstanceGroups: []
+      selectInstanceGroups: [],
+      name: '',
+      dialogVisible: false,
+      dialogForm: {
+        instance_count: 0
+      }
     }
   },
   created() {
@@ -142,17 +177,26 @@ export default {
   methods: {
     async fetchData() {
       this.listLoading = true
-      const res = await getGalaxyClusters()
-      if (res.Status === 'success') {
-        this.list = _.get(res, 'Clusters', [])
+      const params = {
+        ...this.listQuery,
+        ...this.search
+      }
+      const res = await getInstanceGroup(params)
+      if (res.status === 'success') {
+        this.list = _.get(res, 'clusters', [])
+        this.total = res.pager.total
       } else {
-        this.$message.error(res.Message)
+        this.$message.error(res.message)
       }
       this.listLoading = false
     },
     resetSearch() {
       this.search = {
         name: ''
+      }
+      this.listQuery = {
+        page_num: 1,
+        page_size: 10
       }
     },
     handleSelectionChange(val) {
@@ -166,13 +210,27 @@ export default {
 
     },
     async handleDelete() {
-      const res = await galaxyCloudDelete(this.selectInstanceGroups.map(i => i.Id))
-      if (res.data.Status === 'success') {
+      const params = {
+        'ids': this.selectInstanceGroups.map(i => Number(i.id))
+      }
+      const res = await instanceGroupDelete(params)
+      if (res.data.status === 'success') {
         this.$message.success('删除成功')
       } else {
         this.$message.error('删除失败')
       }
       this.fetchData()
+    },
+    process(row) {
+      this.name = row.name
+      this.dialogForm.instance_count = row.instance_count
+      this.dialogVisible = true
+    },
+    cancelDialog() {
+      this.dialogVisible = false
+    },
+    submitDialog() {
+      this.dialogVisible = false
     }
   }
 }
