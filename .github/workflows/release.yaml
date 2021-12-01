@@ -15,7 +15,7 @@ jobs:
 
 
       - uses: actions/checkout@main
-      - name: Build & Publish API to Registry
+      - name: Build & Publish FE to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: galaxyfuture/bridgx-fe
