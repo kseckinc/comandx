@@ -16,11 +16,11 @@ export async function galaxyCloudBatchCreate(data) {
   return res
 }
 
-export async function galaxyCloudDelete(data) {
+export async function instanceGroupDelete(data) {
   const token = getToken()
   const res = await http({
-    url: `/api/v1/eci/cluster/batch/delete`,
-    method: 'delete',
+    url: '/api/v1/eci/cluster/batch/delete',
+    method: 'post',
     data,
     headers: {
       Authorization: ` Bearer ${token}`
@@ -32,8 +32,21 @@ export async function galaxyCloudDelete(data) {
 export async function getGalaxyClusters() {
   const token = getToken()
   const res = await request({
+    url: '/api/v1/kubernetes',
+    method: 'get',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return res
+}
+
+export async function getInstanceGroup(params) {
+  const token = getToken()
+  const res = await request({
     url: '/api/v1/eci/cluster',
     method: 'get',
+    params: params,
     headers: {
       Authorization: ` Bearer ${token}`
     }
