@@ -3,10 +3,10 @@ import http from '@/utils/http'
 import _ from 'lodash'
 import { getToken } from '@/utils/auth'
 
-export async function galaxyCloudCreate(data) {
+export async function galaxyCloudBatchCreate(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/eci/cluster',
+    url: '/api/v1/eci/cluster/batch/create',
     method: 'post',
     data,
     headers: {
@@ -16,11 +16,12 @@ export async function galaxyCloudCreate(data) {
   return res
 }
 
-export async function galaxyCloudDelete(id) {
+export async function instanceGroupDelete(data) {
   const token = getToken()
   const res = await http({
-    url: `/api/v1/eci/cluster/delete/${id}`,
-    method: 'delete',
+    url: '/api/v1/eci/cluster/batch/delete',
+    method: 'post',
+    data,
     headers: {
       Authorization: ` Bearer ${token}`
     }
@@ -31,8 +32,21 @@ export async function galaxyCloudDelete(id) {
 export async function getGalaxyClusters() {
   const token = getToken()
   const res = await request({
+    url: '/api/v1/kubernetes',
+    method: 'get',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return res
+}
+
+export async function getInstanceGroup(params) {
+  const token = getToken()
+  const res = await request({
     url: '/api/v1/eci/cluster',
     method: 'get',
+    params: params,
     headers: {
       Authorization: ` Bearer ${token}`
     }
@@ -63,4 +77,3 @@ export async function instanceShrink(params) {
     }
   })
 }
-
