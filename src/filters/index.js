@@ -28,7 +28,8 @@ const taskStatusRoughlyCode = {
   SUCCESS: '执行完毕',
   RUNNING: '执行中',
   INIT: '待执行',
-  FAILED: '执行完毕'
+  FAILED: '执行完毕',
+  PARTIAL_SUCCESS: '部分成功'
 }
 
 const taskResult = {
@@ -62,6 +63,11 @@ export function parsePaidType(type) {
   return _.get(paidTypes, type, '未知')
 }
 
+const gclusterNodeStatuses = {
+  common: '正常',
+  error: '异常'
+}
+
 export function parseTaskAction(action) {
   return _.get(taskActionCode, action, '未知')
 }
@@ -88,4 +94,20 @@ export function formatMomentZone(date, format) {
 
 export function formatInstanceStatuses(status) {
   return _.get(instanceStatuses, status, '未知')
+}
+
+export function formatPercent(value, precision) {
+  const tmp = 10 ** precision
+  return `${Math.round(value * 100 * tmp) / tmp}%`
+}
+
+export function generateNodeStatus(status) {
+  return _.get(gclusterNodeStatuses, status, '未知')
+}
+
+export function formatDisk(storage) {
+  if (storage >= 1000) {
+    return `${(storage / 1000).toFixed(2)}T`
+  }
+  return `${storage}G`
 }
