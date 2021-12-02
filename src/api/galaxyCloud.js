@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 import http from '@/utils/http'
-import _ from 'lodash'
 import { getToken } from '@/utils/auth'
 
 export async function galaxyCloudBatchCreate(data) {
@@ -77,3 +76,93 @@ export async function instanceShrink(params) {
     }
   })
 }
+
+export function clustersSummary(page_number, page_size) {
+  const token = getToken()
+  return request({
+    url: '/api/v1/galaxy_cloud/cluster/summary',
+    params: {
+      page_number,
+      page_size
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export function clusterAvailable(page_number, page_size, ip, cluster_name) {
+  const token = getToken()
+  return request({
+    url: '/api/v1/galaxy_cloud/cluster/bridgx/available_clusters',
+    params: {
+      page_number,
+      page_size,
+      ip,
+      cluster_name
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export function clusterCreate(cluster_name, bridgx_cluster_name, type) {
+  const token = getToken()
+  return request({
+    url: '/api/v1/galaxy_cloud/cluster',
+    method: 'post',
+    data: {
+      cluster_name,
+      bridgx_cluster_name,
+      type
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export function clusterSummary(id) {
+  const token = getToken()
+  return request({
+    url: `/api/v1/galaxy_cloud/cluster/summary/${id}`,
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export function clusterNodes(id, page_number, page_size, node_ip, cluster_name, role) {
+  const token = getToken()
+  return request({
+    url: `/api/v1/galaxy_cloud/cluster/nodes/${id}`,
+    params: {
+      page_number,
+      page_size,
+      node_ip,
+      cluster_name,
+      role
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export function clusterPods(id, page_number, page_size, node_ip, pod_ip) {
+  const token = getToken()
+  return request({
+    url: `/api/v1/galaxy_cloud/cluster/pods/${id}`,
+    params: {
+      page_number,
+      page_size,
+      node_ip,
+      pod_ip
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+

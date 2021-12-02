@@ -60,6 +60,10 @@ export function passwordLegitimacy(password) {
   return typeNum > 2
 }
 
+export function isIPv4(str) {
+  return /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/.test(str)
+}
+
 export function justifySubnet(vpcCidr, subnetCidr) {
   if (!cidrIsLegal(vpcCidr) || !cidrIsLegal(subnetCidr)) {
     return false
