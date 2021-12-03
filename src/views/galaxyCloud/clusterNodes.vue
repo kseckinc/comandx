@@ -8,7 +8,7 @@
           <el-input v-model="search.node_ip" size="medium" style="width: 200px" placeholder="输入IP搜索" clearable @blur="fetchData" />
           <div class="label">所属集群</div>
           <div class="content">
-            <el-select v-model="search.cluster_name" size="medium" @change="fetchData">
+            <el-select v-model="search.cluster_name" v-load-more="loadMore" size="medium" @change="fetchData">
               <el-option value="" label="全部" />
               <el-option v-for="(c, idx) in clusterOptions" :key="idx" :value="c.cluster_name" :label="c.cluster_name" />
             </el-select>
@@ -19,8 +19,8 @@
           </el-select>
         </div>
         <div class="cluster-nodes-button">
-          <el-button size="medium" type="primary">查询</el-button>
-          <el-button size="medium">重置</el-button>
+          <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
+          <el-button size="medium" @click="reset">重置</el-button>
         </div>
       </div>
       <div class="cluster-nodes-list">
@@ -44,13 +44,13 @@
           </el-table-column>
           <el-table-column label="机型" align="center">
             <template slot-scope="{ row }">
-              <span>{{ row.all_cpu_cores }}核/{{ row.all_memory_gi }}G/{{ row.all_disk_gi | formatDisk }}</span>
+              <span>{{ row.all_cpu_cores }}核/{{ row.all_memory_gi }}G/{{ row.all_disk_gi | formatStorage }}</span>
               <span v-if="row.machine_type !== ''" style="display: inline-block; margin-left: 5px">({{ row.machine_type }})</span>
             </template>
           </el-table-column>
           <el-table-column label="剩余资源" align="center">
             <template slot-scope="{ row }">
-              <span>{{ row.free_cpu_cores }}核</span>/<span>{{ row.free_memory_gi }}G</span>/{{ row.free_disk_gi | formatDisk }}
+              <span>{{ row.free_cpu_cores }}核</span>/<span>{{ row.free_memory_gi }}G</span>/{{ row.free_disk_gi | formatStorage }}
             </template>
           </el-table-column>
           <el-table-column label="所属云厂商" align="center">
@@ -71,17 +71,21 @@
 </template>
 
 <script>
-import clusterInfo from '@/views/galaxyCloud/components/clusterInfo'
-import Pagination from '@/components/Pagination'
+import _ from 'lodash'
 import { rolesOption } from '@/config/galaxyCloud'
 import { clusterAvailable, clusterNodes } from '@/api/galaxyCloud'
-import _ from 'lodash'
+import clusterInfo from '@/views/galaxyCloud/components/clusterInfo'
+import Pagination from '@/components/Pagination'
+import loadMore from '@/directive/el-select-load-more'
 
 export default {
   name: 'ClusterMachine',
   components: {
     clusterInfo,
     Pagination
+  },
+  directives: {
+    loadMore
   },
   data() {
     return {
@@ -93,7 +97,8 @@ export default {
       rolesOption,
       clusterQuery: {
         page_number: 1,
-        page_size: 50
+        page_size: 50,
+        total: 0
       },
       clusterOptions: [],
       nodeQuery: {
@@ -106,6 +111,7 @@ export default {
   },
   mounted() {
     if (!_.isNumber(this.$route.params.clusterId || this.$route.params.clusterId < 1)) {
+      this.$message.error('clusterId不合法!')
       this.$router.push({ name: 'galaxyCloudClusterList' })
       return
     }
@@ -126,11 +132,23 @@ export default {
       const res = await clusterAvailable(this.clusterQuery.page_number, this.clusterQuery.page_size, '', '')
       this.clusterOptions = _.get(res, 'clusters', [])
     },
+    async loadMore() {
+      this.clusterQuery.page_number++
+      const res = await clusterAvailable(this.clusterQuery.page_number, this.clusterQuery.page_size, '', '')
+      this.clusterOptions = _.concat(this.clusterOptions, ..._.get(res, 'clusters', []))
+    },
     transformToPods(name, ip) {
-      this.$router.push({ name, params: { ip }})
+      this.$router.push({ name, params: { clusterId: this.$route.params.clusterId, nodeIp: ip }})
     },
     transformToCluster(name, clusterName) {
       this.$router.push({ name, params: { name: clusterName }})
+    },
+    reset() {
+      this.search = {
+        node_ip: '',
+        cluster_name: '',
+        role: ''
+      }
     }
   }
 }

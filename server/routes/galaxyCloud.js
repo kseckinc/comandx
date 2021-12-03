@@ -360,7 +360,55 @@ routerApi.get('/cluster/pods/:clusterId', async(ctx) => {
   ctx.body = {
     success: 'success',
     message: '',
+    pager: {
+      total: 4,
+      page_number: 1,
+      page_size: 10
+    },
     pods: [{
+      node_name: '',
+      node_ip: '10.1.4.10',
+      pod_name: 'i-2ze3rehoi7mohouu2cgi',
+      pod_ip: '172.123.45.2',
+      allocated_cpu_cores: 1,
+      allocated_memory_gi: 1,
+      allocated_disk_gi: 10,
+      group_name: 'ItemGroup01',
+      running_time: '3天12小时24分11秒',
+      status: 'Running'
+    }, {
+      node_name: '',
+      node_ip: '10.1.4.12',
+      pod_name: 'i-2ze3rehoi7mohouu2cgi',
+      pod_ip: '172.123.45.3',
+      allocated_cpu_cores: 1,
+      allocated_memory_gi: 1,
+      allocated_disk_gi: 10,
+      group_name: 'ItemGroup01',
+      running_time: '3天12小时24分11秒',
+      status: 'Running'
+    }, {
+      node_name: '',
+      node_ip: '10.1.4.14',
+      pod_name: 'i-2ze3rehoi7mohouu2cgi',
+      pod_ip: '172.123.45.4',
+      allocated_cpu_cores: 0.25,
+      allocated_memory_gi: 0.5,
+      allocated_disk_gi: 0,
+      group_name: 'ItemGroup01',
+      running_time: '3天12小时24分11秒',
+      status: 'Running'
+    }, {
+      node_name: '',
+      node_ip: '10.1.4.16',
+      pod_name: 'i-2ze3rehoi7mohouu2cgi',
+      pod_ip: '172.123.45.5',
+      allocated_cpu_cores: 0.346,
+      allocated_memory_gi: 0.909,
+      allocated_disk_gi: 1.345,
+      group_name: 'ItemGroup01',
+      running_time: '3天12小时24分11秒',
+      status: 'Pending'
     }]
   }
   // try {
