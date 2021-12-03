@@ -58,10 +58,47 @@ export const constantRoutes = [
   {
     path: '/galaxy-cloud',
     component: Layout,
-    redirect: '/galaxy-cloud/list',
+    redirect: '/galaxy-cloud/cluster',
     name: '星云集群',
-    meta: { title: '星云集群', icon: 'galaxy-cloud' },
+    meta: { title: '星云集群', icon: 'galaxy' },
     children: [
+      {
+        path: '/galaxy-cloud/cluster',
+        name: 'galaxyCloudCluster',
+        redirect: '/galaxy-cloud/cluster/list',
+        component: () => import('@/views/galaxyCloud/admin'),
+        meta: { title: '星云集群列表', icon: '' },
+        children: [{
+          path: '/galaxy-cloud/cluster/list',
+          name: 'galaxyCloudClusterList',
+          component: () => import('@/views/galaxyCloud/clusterList'),
+          meta: { title: '星云集群列表', icon: '', breadcrumb: false }
+        }, {
+          path: '/galaxy-cloud/cluster/create',
+          name: 'galaxyCloudClusterCreate',
+          component: () => import('@/views/galaxyCloud/createCluster'),
+          meta: { title: '创建集群', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/node/list',
+          name: 'galaxyCloudClusterNodeList',
+          component: () => import('@/views/galaxyCloud/clusterNodes'),
+          meta: { title: '机器资源', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/pod/list',
+          name: 'galaxyCloudClusterPodList',
+          component: () => import('@/views/galaxyCloud/clusterPods'),
+          meta: { title: '实例资源', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/node/:nodeIp/pod/list',
+          name: 'galaxyCloudClusterPodList',
+          component: () => import('@/views/galaxyCloud/clusterPods'),
+          meta: { title: '实例资源', icon: '' },
+          hidden: true
+        }]
+      },
       {
         path: '/galaxy-cloud/instance/apply',
         name: 'galaxyCloudInstanceApply',

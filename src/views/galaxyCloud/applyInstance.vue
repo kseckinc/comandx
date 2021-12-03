@@ -6,15 +6,15 @@
     <div class="select">
       <span class="is-required" style="color: #FF4C4C;">* </span><span>星云集群</span>
       <el-select
-        v-model="selectCluster"
-        placeholder="请选择实例所属的星云集群"
-        style="width: 400px; margin-left:10px"
+          v-model="selectCluster"
+          placeholder="请选择实例所属的星云集群"
+          style="width: 400px; margin-left:10px"
       >
         <el-option
-          v-for="item in galaxyClusters"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
+            v-for="item in galaxyClusters"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
         />
       </el-select>
     </div>
@@ -36,21 +36,21 @@
         </p>
       </div>
       <div class="buttons" align="center"><el-button
-        size="medium"
-        type="primary"
-        @click="addInstance"
+          size="medium"
+          type="primary"
+          @click="addInstance"
       >添加实例组
       </el-button></div>
     </div>
     <div class="buttons" align="center" style="margin-top:100px">
       <el-button
-        size="medium"
-        type="primary"
-        @click="submit"
+          size="medium"
+          type="primary"
+          @click="submit"
       >提 交</el-button>
       <el-button
-        size="medium"
-        @click="cancel"
+          size="medium"
+          @click="cancel"
       >取 消</el-button>
     </div>
   </div>
@@ -59,7 +59,6 @@
 <script>
 import { galaxyCloudBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
 import _ from 'lodash'
-
 export default {
   name: 'ApplyInstance',
   //   directives: { waves },
@@ -123,9 +122,7 @@ export default {
       }
     },
     cancel() {
-
     }
-
   }
 }
 </script>
@@ -158,28 +155,28 @@ export default {
     background: #fff;
     padding: 20px;
     .flex-part {
+      display: flex;
+      align-items: center;
+      i {
+        margin-right: 4px;
+      }
+      >p {
+        padding: 10px 0;
+        border: 1px solid #ccc;
         display: flex;
         align-items: center;
-        i {
-            margin-right: 4px;
+        >span:not(.input) {
+          margin: 0 10px;
         }
-        >p {
-           padding: 10px 0;
-            border: 1px solid #ccc;
-            display: flex;
-            align-items: center;
-            >span:not(.input) {
-                margin: 0 10px;
-            }
-        }
+      }
     }
     .input{
-        display: inline-block;
-        height: 30px;
-        line-height: 30px;
-        border-right: 1px solid #6097b8;
-        margin-right: 4px;
+      display: inline-block;
+      height: 30px;
+      line-height: 30px;
+      border-right: 1px solid #6097b8;
+      margin-right: 4px;
     }
-}
+  }
 }
 </style>

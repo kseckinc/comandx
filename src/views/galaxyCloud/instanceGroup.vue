@@ -19,13 +19,13 @@
       </div>
       <div class="table">
         <el-table
-          v-loading="listLoading"
-          :data="list"
-          border
-          fit
-          highlight-current-row
-          size="medium"
-          @selection-change="handleSelectionChange"
+            v-loading="listLoading"
+            :data="list"
+            border
+            fit
+            highlight-current-row
+            size="medium"
+            @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
           <el-table-column label="ID" prop="id" align="center" />
@@ -47,8 +47,8 @@
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
-                type="text"
-                @click="process(scope.row)"
+                  type="text"
+                  @click="process(scope.row)"
               >扩缩容</el-button>
             </template>
           </el-table-column>
@@ -60,11 +60,11 @@
     <el-dialog title="实例组伸缩" :visible="dialogVisible" width="20%" @close="cancelDialog">
       <div>
         <el-form
-          ref="dialogForm"
-          :model="dialogForm"
-          label-width="120px"
-          label-position="right"
-          style="margin-left:50px"
+            ref="dialogForm"
+            :model="dialogForm"
+            label-width="120px"
+            label-position="right"
+            style="margin-left:50px"
         >
           <el-form-item label="实例组名">
             <span>{{ name }}</span>
@@ -72,9 +72,9 @@
           <el-form-item label="运行实例数">
             <div>
               <el-input
-                v-model="dialogForm.instance_count"
-                prop="instance_count"
-                style="width: 120px"
+                  v-model="dialogForm.instance_count"
+                  prop="instance_count"
+                  style="width: 120px"
               />
             </div>
           </el-form-item>
@@ -91,51 +91,51 @@
 </template>
 
 <style lang="less" scoped>
-  .container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    padding: 10px 10px 0 10px;
-    background-color: rgb(240, 242, 245);
-    .header {
-      background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 0 10px;
+  background-color: rgb(240, 242, 245);
+  .header {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
+    display: flex;
+    flex-direction: row;
+    .search {
       display: flex;
-      flex-direction: row;
-      .search {
+      flex-basis: 100%;
+      .search-item {
         display: flex;
-        flex-basis: 100%;
-        .search-item {
+        margin-right: 40px;
+        .label {
           display: flex;
-          margin-right: 40px;
-          .label {
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-          }
+          align-items: center;
+          padding: 0 20px;
         }
-      }
-      .buttons {
-        display: flex;
-        width: 200px;
       }
     }
-    .content {
-      margin-top: 20px;
-      background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
-      .buttons {
-        button {
-          margin-right: 40px;
-        }
-      }
-      .table {
-        margin-top: 10px;
-      }
+    .buttons {
+      display: flex;
+      width: 200px;
     }
   }
+  .content {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
+    .buttons {
+      button {
+        margin-right: 40px;
+      }
+    }
+    .table {
+      margin-top: 10px;
+    }
+  }
+}
 </style>
 
 <script>
@@ -143,7 +143,6 @@ import { getInstanceGroup, instanceGroupDelete } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
-
 export default {
   name: 'InstanceGroup',
   components: { Pagination },
@@ -202,12 +201,10 @@ export default {
     handleSelectionChange(val) {
       this.selectInstanceGroups = val
     },
-
     applyInstance() {
       this.$router.push({ name: 'galaxyCloudInstanceApply' })
     },
     async reboot() {
-
     },
     async handleDelete() {
       const params = {
