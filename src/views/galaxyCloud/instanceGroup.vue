@@ -67,7 +67,7 @@
           style="margin-left:50px"
         >
           <el-form-item label="实例组名">
-            <span>{{ name }}</span>
+            <span>{{ curRowName }}</span>
           </el-form-item>
           <el-form-item label="运行实例数">
             <div>
@@ -139,7 +139,7 @@
 </style>
 
 <script>
-import { getInstanceGroup, instanceGroupDelete } from '@/api/galaxyCloud'
+import { getInstanceGroup, instanceGroupDelete, instanceExpandOrShrink } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -164,7 +164,8 @@ export default {
         page_size: 10
       },
       selectInstanceGroups: [],
-      name: '',
+      curRowName: '',
+      curRowId: '',
       dialogVisible: false,
       dialogForm: {
         instance_count: 0
@@ -222,15 +223,27 @@ export default {
       this.fetchData()
     },
     process(row) {
-      this.name = row.name
+      this.curRowName = row.name
+      this.curRowId = row.id
       this.dialogForm.instance_count = row.instance_count
       this.dialogVisible = true
     },
     cancelDialog() {
       this.dialogVisible = false
     },
-    submitDialog() {
-      this.dialogVisible = false
+    async submitDialog() {
+      const data = {
+        'cluster_id': Number(this.curRowId),
+        'count': Number(this.dialogForm.instance_count)
+      }
+      const res = await instanceExpandOrShrink(data)
+      if (res.status === 'success') {
+        this.$message.success('提交成功')
+        this.dialogVisible = false
+        this.fetchData()
+      } else {
+        this.$message.error('提交失败')
+      }
     }
   }
 }
