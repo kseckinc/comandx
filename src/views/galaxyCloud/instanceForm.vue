@@ -4,7 +4,7 @@
       <div class="search">
         <div class="search-item">
           <span class="label">流水号</span>
-          <el-input v-model="search.name" size="medium" placeholder="请输入流水号搜索" clearable style="width: 200px" @change="fetchData" />
+          <el-input v-model="search.id" size="medium" placeholder="请输入流水号搜索" clearable style="width: 200px" @change="fetchData" />
         </div>
       </div>
       <div class="buttons">
@@ -23,10 +23,15 @@
           size="medium"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column label="执行状态" prop="id" align="center" />
-          <el-table-column label="流水号" min-width="100px" align="center">
+          <el-table-column label="执行状态" min-width="100px" align="center">
             <template slot-scope="{row}">
-              {{ row.name }}
+              {{ row.execute_status }}
+            </template>
+          </el-table-column>
+          <el-table-column label="流水号" prop="id" align="center" />
+          <el-table-column label="实例组" min-width="100px" align="center">
+            <template slot-scope="{row}">
+              {{ row.instance_group }}
             </template>
           </el-table-column>
           <el-table-column label="实例配置" width="150px" align="center">
@@ -36,22 +41,22 @@
           </el-table-column>
           <el-table-column label="变更实例数" width="150px" align="center">
             <template slot-scope="{row}">
-              {{ row.instance_count }}
+              {{ row.updated_instance_count }}
             </template>
           </el-table-column>
           <el-table-column label="执行耗时" width="150px" align="center">
             <template slot-scope="{row}">
-              {{ row.instance_count }}
+              {{ row.host_time }}
             </template>
           </el-table-column>
           <el-table-column label="申请人" width="150px" align="center">
             <template slot-scope="{row}">
-              {{ row.instance_count }}
+              {{ row.created_user_name }}
             </template>
           </el-table-column>
           <el-table-column label="申请时间" width="150px" align="center">
             <template slot-scope="{row}">
-              {{ row.instance_count }}
+              {{ row.created_time }}
             </template>
           </el-table-column>
         </el-table>
@@ -110,7 +115,7 @@
 </style>
 
 <script>
-import { getInstanceGroup, instanceGroupDelete } from '@/api/galaxyCloud'
+import { getInstanceFormList } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -128,7 +133,7 @@ export default {
       total: 0,
       listLoading: true,
       search: {
-        name: ''
+        id: ''
       },
       listQuery: {
         page_number: 1,
@@ -143,11 +148,17 @@ export default {
   methods: {
     async fetchData() {
       this.listLoading = true
-      const res = await getInstanceGroup()
-      if (res.Status === 'success') {
-        this.list = _.get(res, 'Clusters', [])
+      const params = {
+        ...this.listQuery,
+        ...this.search
+
+      }
+      const res = await getInstanceFormList(params)
+      if (res.status === 'success') {
+        this.list = _.get(res, 'instance_forms', [])
+        this.total = res.total
       } else {
-        this.$message.error(res.Message)
+        this.$message.error(res.message)
       }
       this.listLoading = false
     },
@@ -158,25 +169,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.selectInstanceGroups = val
-    },
-
-    applyInstance() {
-      this.$router.push({ name: 'galaxyCloudInstanceApply' })
-    },
-    async reboot() {
-
-    },
-    async handleDelete() {
-      const params = {
-        'ids': this.selectInstanceGroups.map(i => Number(i.id))
-      }
-      const res = await instanceGroupDelete(params)
-      if (res.data.status === 'success') {
-        this.$message.success('删除成功')
-      } else {
-        this.$message.error('删除失败')
-      }
-      this.fetchData()
     }
   }
 }

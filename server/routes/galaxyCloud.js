@@ -36,6 +36,22 @@ routerApi.get('/eci/cluster', async(ctx) => {
   }
 })
 
+routerApi.get('/eci/instance/form', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/form`,
+      method: 'GET',
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
 routerApi.get('/eci/instance/self', async(ctx) => {
   try {
     ctx.body = await request({
@@ -91,6 +107,38 @@ routerApi.post('/eci/instance/expand_shrink', async(ctx) => {
         authorization: ctx.header.authorization
       },
       url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/expand_shrink`,
+      method: 'POST',
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.post('/eci/instance/delete', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/delete`,
+      method: 'POST',
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.post('/eci/instance/restart', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/restart`,
       method: 'POST',
       body: ctx.request.body,
       json: true

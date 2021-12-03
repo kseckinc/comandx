@@ -53,6 +53,19 @@ export async function getInstanceGroup(params) {
   return res
 }
 
+export async function getInstanceFormList(params) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/galaxy_cloud/eci/instance/form',
+    method: 'get',
+    params: params,
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return res
+}
+
 export async function getInstanceBySelf(params) {
   const token = getToken()
   const res = await request({
@@ -70,6 +83,30 @@ export async function instanceExpandOrShrink(data) {
   const token = getToken()
   return await request({
     url: '/api/v1/galaxy_cloud/eci/instance/expand_shrink',
+    method: 'post',
+    data,
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export async function instanceDelete(data) {
+  const token = getToken()
+  return await request({
+    url: '/api/v1/galaxy_cloud/eci/instance/delete',
+    method: 'post',
+    data,
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+}
+
+export async function instanceRestart(data) {
+  const token = getToken()
+  return await request({
+    url: '/api/v1/galaxy_cloud/eci/instance/restart',
     method: 'post',
     data,
     headers: {

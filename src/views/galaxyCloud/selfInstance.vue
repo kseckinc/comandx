@@ -65,8 +65,6 @@
                 type="text"
                 @click="handleDelete(scope.row)"
               >删除</el-button>
-            </template>
-            <template slot-scope="scope">
               <el-button
                 type="text"
                 @click="handleRestart(scope.row)"
@@ -129,7 +127,7 @@
 </style>
 
 <script>
-import { getInstanceBySelf } from '@/api/galaxyCloud'
+import { getInstanceBySelf, instanceDelete, instanceRestart } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -168,7 +166,6 @@ export default {
         ...this.listQuery
       }
       const res = await getInstanceBySelf(params)
-      console.log(res)
       if (res.status === 'success') {
         this.list = _.get(res, 'pods', [])
         this.total = res.total
@@ -190,19 +187,30 @@ export default {
     applyInstance() {
       this.$router.push({ name: 'galaxyCloudInstanceApply' })
     },
-    async reboot() {
-
+    async handleDelete(row) {
+      const data = {
+        'cluster_id': Number(row.group_id),
+        'instance_name': row.pod_name
+      }
+      const res = await instanceDelete(data)
+      if (res.data.Status === 'success') {
+        this.$message.success('删除成功')
+      } else {
+        this.$message.error('删除失败')
+      }
+      this.fetchData()
     },
-    async handleDelete() {
-      // const params = {
-      //   'ids': this.selectInstanceGroups.map(i => Number(i.id))
-      // }
-      // const res = await instanceGroupDelete(params)
-      // if (res.data.Status === 'success') {
-      //   this.$message.success('删除成功')
-      // } else {
-      //   this.$message.error('删除失败')
-      // }
+    async handleRestart(row) {
+      const data = {
+        'cluster_id': Number(row.group_id),
+        'instance_name': row.pod_name
+      }
+      const res = await instanceRestart(data)
+      if (res.data.Status === 'success') {
+        this.$message.success('删除成功')
+      } else {
+        this.$message.error('删除失败')
+      }
       this.fetchData()
     }
   }
