@@ -91,6 +91,12 @@ export const constantRoutes = [
           component: () => import('@/views/galaxyCloud/clusterPods'),
           meta: { title: '实例资源', icon: '' },
           hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/node/:nodeIp/pod/list',
+          name: 'galaxyCloudClusterPodList',
+          component: () => import('@/views/galaxyCloud/clusterPods'),
+          meta: { title: '实例资源', icon: '' },
+          hidden: true
         }]
       },
       {

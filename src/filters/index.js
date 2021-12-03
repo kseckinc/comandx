@@ -96,7 +96,7 @@ export function generateNodeStatus(status) {
   return _.get(gclusterNodeStatuses, status, '未知')
 }
 
-export function formatDisk(storage) {
+export function formatStorage(storage) {
   if (storage >= 1000) {
     return `${(storage / 1000).toFixed(2)}T`
   }
