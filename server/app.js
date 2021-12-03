@@ -41,6 +41,6 @@ app.use(service.routes())
 app.use(galaxyCloud.routes())
 
 app.use(serve(path.join(__dirname, 'web'), { maxage: 1000 * 60 * 60 }))
-app.listen(8899)
+app.listen(80)
 
 module.exports = app
