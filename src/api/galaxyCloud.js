@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 export async function galaxyCloudBatchCreate(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/eci/cluster/batch/create',
+    url: '/api/v1/galaxy_cloud/eci/cluster/batch/create',
     method: 'post',
     data,
     headers: {
@@ -18,7 +18,7 @@ export async function galaxyCloudBatchCreate(data) {
 export async function instanceGroupDelete(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/eci/cluster/batch/delete',
+    url: '/api/v1/galaxy_cloud/eci/cluster/batch/delete',
     method: 'post',
     data,
     headers: {
@@ -31,7 +31,7 @@ export async function instanceGroupDelete(data) {
 export async function getGalaxyClusters() {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/kubernetes',
+    url: '/api/v1/galaxy_cloud/kubernetes',
     method: 'get',
     headers: {
       Authorization: ` Bearer ${token}`
@@ -43,7 +43,7 @@ export async function getGalaxyClusters() {
 export async function getInstanceGroup(params) {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/eci/cluster',
+    url: '/api/v1/galaxy_cloud/eci/cluster',
     method: 'get',
     params: params,
     headers: {
@@ -53,24 +53,25 @@ export async function getInstanceGroup(params) {
   return res
 }
 
-export async function instanceExpand(params) {
+export async function getInstanceBySelf(params) {
   const token = getToken()
-  return await request({
-    url: '/api/v1/eci/instance/expand',
+  const res = await request({
+    url: '/api/v1/galaxy_cloud/eci/instance/self',
     method: 'get',
     params: params,
     headers: {
       Authorization: ` Bearer ${token}`
     }
   })
+  return res
 }
 
-export async function instanceShrink(params) {
+export async function instanceExpandOrShrink(data) {
   const token = getToken()
   return await request({
-    url: '/api/v1/eci/instance/shrink',
-    method: 'get',
-    params: params,
+    url: '/api/v1/galaxy_cloud/eci/instance/expand_shrink',
+    method: 'post',
+    data,
     headers: {
       Authorization: ` Bearer ${token}`
     }
