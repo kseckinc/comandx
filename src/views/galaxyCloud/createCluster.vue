@@ -43,7 +43,7 @@
             </div>
             <div class="transfer-content">
               <el-input v-model="search" size="medium" placeholder="搜索集群名称或IP" @change="searchCluster" />
-              <div class="transfer-cluster-container">
+              <div v-loading="loading" class="transfer-cluster-container">
                 <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster">
                   <span class="transfer-cluster-provider">{{ item.cloud_type | filterCloudProvider }}</span>
                   <span class="transfer-cluster-name">{{ item.cluster_name }}</span>
@@ -156,7 +156,7 @@ export default {
       clusters: [],
       query: {
         page_number: 1,
-        page_size: 10,
+        page_size: 5,
         total: 0
       },
       selectCluster: {
@@ -168,7 +168,8 @@ export default {
       clusterConfigType: '',
       radio: '',
       search: '',
-      cluster_name: ''
+      cluster_name: '',
+      loading: false
     }
   },
   computed: {
@@ -187,13 +188,20 @@ export default {
   },
   methods: {
     async fetchData() {
+      this.loading = true
       const res = await clusterAvailable(this.query.page_number, this.query.page_size, '', '')
       this.clusters = _.get(res, 'clusters', []).map(i => ({ ...i, checked: false }))
+      if (res.status !== 'success') {
+        this.$message.error(`获取可用集群失败: ${res.message}`)
+      } else if (this.clusters.length === 0) {
+        this.$message.error('暂无可用集群')
+      }
       this.query = {
         page_number: _.get(res, 'page_number', 1),
         page_size: _.get(res, 'page_size', 10),
         total: _.get(res, 'total', 0)
       }
+      this.loading = false
     },
     async searchCluster() {
       const isIp = isIPv4(this.search)

@@ -107,7 +107,8 @@ export default {
         page_size: 10,
         total: 0
       },
-      nodes: []
+      nodes: [],
+      interval: null
     }
   },
   mounted() {
@@ -117,7 +118,11 @@ export default {
       return
     }
     this.fetchData()
+    this.interval = setInterval(this.fetchData, 15000)
     this.loadCluster()
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   },
   methods: {
     async fetchData() {

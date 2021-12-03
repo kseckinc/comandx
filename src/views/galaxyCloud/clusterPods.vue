@@ -5,9 +5,9 @@
       <div class="cluster-pods-header">
         <div class="cluster-pods-search">
           <div class="label" style="margin-left: 15px">Pod IP</div>
-          <el-input v-model="search.node_ip" size="medium" style="width: 200px" placeholder="输入IP搜索" clearable @blur="fetchData" />
-          <div class="label">宿主机IP</div>
           <el-input v-model="search.pod_ip" size="medium" style="width: 200px" placeholder="输入IP搜索" clearable @blur="fetchData" />
+          <div class="label">宿主机IP</div>
+          <el-input v-model="search.node_ip" size="medium" style="width: 200px" placeholder="输入IP搜索" clearable @blur="fetchData" />
         </div>
         <div class="cluster-pods-button">
           <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
@@ -69,7 +69,8 @@ export default {
         page_size: 10,
         total: 0
       },
-      pods: []
+      pods: [],
+      interval: null
     }
   },
   mounted() {
@@ -82,6 +83,10 @@ export default {
       this.search.node_ip = this.$route.params.nodeIp
     }
     this.fetchData()
+    this.interval = setInterval(this.fetchData, 15000)
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   },
   methods: {
     async fetchData() {
@@ -97,7 +102,7 @@ export default {
     },
     async restart(pod) {
       console.log(pod)
-      const res = await podRestart(this.$route.params.clusterId, pod.pod_name)
+      const res = await podRestart(pod.group_id, pod.pod_name)
       if (res.status === 'success') {
         this.$message.success('操作成功')
       } else {

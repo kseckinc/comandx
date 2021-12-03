@@ -101,52 +101,6 @@ routerApi.post('/eci/instance/expand_shrink', async(ctx) => {
 })
 
 routerApi.get('/cluster/summary', async(ctx) => {
-  // ctx.body = {
-  //   success: 'success',
-  //   message: '',
-  //   pager: {
-  //     total: 3,
-  //     page_size: 10,
-  //     page_number: 1
-  //   },
-  //   clusters: [{
-  //     cluster_id: 1,
-  //     cluster_name: 'BridgxCluster',
-  //     all_cpu_cores: 1000,
-  //     free_cpu_cores: 680,
-  //     all_memory_gi: 2000,
-  //     free_memory_gi: 1200,
-  //     all_disk_gi: 2,
-  //     free_disk_gi: 1.24,
-  //     max_unallocated_cpu_in_node: '',
-  //     max_unallocated_memory_in_node: '',
-  //     max_unallocated_storage_in_node: '',
-  //     pod_count: 20,
-  //     work_count: 3,
-  //     master_count: 3,
-  //     created_user: 'root',
-  //     created_time: '',
-  //     status: 'Running'
-  //   }, {
-  //     cluster_id: 2,
-  //     cluster_name: 'BridgxCluster',
-  //     all_cpu_cores: 1000,
-  //     free_cpu_cores: 650,
-  //     all_memory_gi: 2000,
-  //     free_memory_gi: 1240,
-  //     all_disk_gi: 2,
-  //     free_disk_gi: 1.24,
-  //     max_unallocated_cpu_in_node: '',
-  //     max_unallocated_memory_in_node: '',
-  //     max_unallocated_storage_in_node: '',
-  //     pod_count: 20,
-  //     work_count: 10,
-  //     master_count: 3,
-  //     created_user: 'root',
-  //     created_time: '',
-  //     status: 'Running'
-  //   }]
-  // }
   try {
     ctx.body = await request({
       headers: {

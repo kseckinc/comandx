@@ -1,5 +1,5 @@
 <template>
-  <div class="cluster-info-container">
+  <div v-loading="loading" class="cluster-info-container">
     <div class="cluster-info-header">
       <span class="cluster-info-status">{{ cluster.status }}</span>
       <span class="cluster-info-name">{{ cluster.cluster_name }}</span>
@@ -52,7 +52,8 @@ export default {
   name: 'ClusterInfo',
   data() {
     return {
-      cluster: {}
+      cluster: {},
+      loading: false
     }
   },
   mounted() {
@@ -60,6 +61,7 @@ export default {
   },
   methods: {
     async fetchData() {
+      this.loading = true
       if (!_.isNumber(+this.$route.params.clusterId) || +this.$route.params.clusterId < 1) {
         this.illegalClusterId()
         return
@@ -73,6 +75,7 @@ export default {
       this.cluster.cpuPercent = (this.cluster.all_cpu_cores - this.cluster.free_cpu_cores) / this.cluster.all_cpu_cores
       this.cluster.memPercent = (this.cluster.all_memory_gi - this.cluster.free_memory_gi) / this.cluster.all_memory_gi
       this.cluster.diskPercent = (this.cluster.all_disk_gi - this.cluster.free_disk_gi) / this.cluster.all_disk_gi
+      this.loading = false
     },
     illegalClusterId() {
       this.$message.error('非法的集群ID')
