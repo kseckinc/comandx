@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <introduction :content="note.content" :title="note.title"></introduction>
-    <div class="galaxy-cluster-container">
+    <introduction :content="note.content" :title="note.title" />
+    <div v-load-more="loadMore" class="galaxy-cluster-container">
       <div class="galaxy-cluster-title">
         <span style="font-size: 18px">
           星云集群
@@ -15,7 +15,7 @@
         <div v-if="isNoData">
           暂无集群
         </div>
-        <list-item v-for="(item, idx) in list" :key="idx" :item="item" @reload="fetchData"/>
+        <list-item v-for="(item, idx) in list" :key="idx" :item="item" @reload="fetchData" />
       </div>
     </div>
   </div>
@@ -33,15 +33,31 @@ export default {
     introduction,
     listItem
   },
+  directives: {
+    loadMore: {
+      bind(el, binding) {
+        const WRAP_DOM = el.querySelector('.galaxy-cluster-content')
+        if (WRAP_DOM !== null) {
+          WRAP_DOM.addEventListener('scroll', function() {
+            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
+            if (condition) {
+              binding.value()
+            }
+          })
+        }
+      }
+    }
+  },
   data() {
     return {
       note: {
         title: '星云集群介绍',
         content: '星云集群为平台独立定义的集群类别，其支持将任意类型物理机放入该集群，通过bridgX提供的容器化资源切割能力，向用户提供任意配置对的算力资源'
       },
-      listQuery: {
+      query: {
         page_number: 1,
-        page_size: 10
+        page_size: 50,
+        total: 0
       },
       list: []
     }
@@ -56,7 +72,12 @@ export default {
   },
   methods: {
     async fetchData() {
-      const res = await clustersSummary(this.listQuery.page_number, this.listQuery.page_size)
+      const res = await clustersSummary(this.query.page_number, this.query.page_size)
+      this.query = {
+        page_number: _.get(res, 'page_number', 1),
+        page_size: _.get(res, 'page_size', 50),
+        total: _.get(res, 'total', 0)
+      }
       if (res.status === 'success') {
         this.list = _.get(res, 'clusters', [])
       } else {
@@ -65,6 +86,23 @@ export default {
     },
     createGalaxyCluster() {
       this.$router.push({ name: 'galaxyCloudClusterCreate' })
+    },
+    async loadMore() {
+      if (this.list.length === this.query.total) {
+        return
+      }
+      this.query.page_number++
+      const res = await clustersSummary(this.query.page_number, this.query.page_size)
+      if (res.status === 'success') {
+        this.query = {
+          page_number: _.get(res, 'page_number'),
+          page_size: _.get(res, 'page_size'),
+          total: _.get(res, 'total')
+        }
+        if (!_.isEmpty(res.clusters) && res.clusters.length > 0) {
+          this.list = _.concat(this.list, ...res.clusters)
+        }
+      }
     }
   }
 }
@@ -82,7 +120,7 @@ export default {
   }
   .galaxy-cluster-container {
     padding: 0 10px;
-    height: 100%;
+    height: calc(~"100% - 120px");
     .galaxy-cluster-content {
       height: calc(~"100% - 180px");
       overflow-y: scroll;

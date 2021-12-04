@@ -3,7 +3,7 @@
     <div class="galaxy-cluster-name">
       <div class="name"><span>{{ cluster.cluster_name }}</span></div>
       <div>
-        <span class="status">{{ cluster.status }}</span>
+        <span class="status">{{ cluster.status | generateClusterStatus }}</span>
       </div>
     </div>
     <div class="galaxy-cluster-divider" />

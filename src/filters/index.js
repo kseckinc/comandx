@@ -63,9 +63,15 @@ export function parsePaidType(type) {
   return _.get(paidTypes, type, '未知')
 }
 
-const gclusterNodeStatuses = {
+const gClusterNodeStatuses = {
   Ready: '正常',
   notReady: '异常'
+}
+
+const gClusterStatuses = {
+  initialize: '初始化中',
+  running: '运行中',
+  failed: '初始化失败'
 }
 
 export function parseTaskAction(action) {
@@ -102,7 +108,11 @@ export function formatPercent(value, precision) {
 }
 
 export function generateNodeStatus(status) {
-  return _.get(gclusterNodeStatuses, status, '未知')
+  return _.get(gClusterNodeStatuses, status, '未知')
+}
+
+export function generateClusterStatus(status) {
+  return _.get(gClusterStatuses, status, '未知')
 }
 
 export function formatPrecision(value, precision) {
