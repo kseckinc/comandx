@@ -74,7 +74,7 @@ export default {
     }
   },
   mounted() {
-    if (!_.isNumber(this.$route.params.clusterId || this.$route.params.clusterId < 1)) {
+    if (+this.$route.params.clusterId < 1) {
       this.$message.error('clusterId不合法!')
       this.$router.push({ name: 'galaxyCloudClusterList' })
       return
@@ -101,7 +101,6 @@ export default {
       this.loading = false
     },
     async restart(pod) {
-      console.log(pod)
       const res = await podRestart(pod.group_id, pod.pod_name)
       if (res.status === 'success') {
         this.$message.success('操作成功')

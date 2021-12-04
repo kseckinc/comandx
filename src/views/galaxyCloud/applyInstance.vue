@@ -1,10 +1,16 @@
 <template>
   <div class="container">
-    <div class="header" style="font-size: 30px;">
-      资源申请
+    <div class="header">
+      <div class="statistic">
+        合计：<span class="num">{{ rowArrList.length }}</span>   实例
+      </div>
+      <div>
+        资源申请
+      </div>
+      <hr color="#80FAFF" />
     </div>
-    <div class="select">
-      <span class="is-required" style="color: #FF4C4C;">* </span><span>星云集群</span>
+    <div class="content">
+      <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>星云集群</span>
       <el-select
         v-model="selectCluster"
         placeholder="请选择实例所属的星云集群"
@@ -17,23 +23,27 @@
           :value="item.id"
         />
       </el-select>
-    </div>
-    <div class="content-part">
-
-      <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
-        <i v-if="rowArrList.length >= 2" class="el-icon-delete" @click="deleteInstance(index)" />
-        <p>
-          <span>{{ index + 1 }}</span>
-          <span>实例组 <el-input v-model="item.name" style="width: 180px" placeholder="请输入实例名" /></span>
-          <span class="input" />
-          <span>CPU <el-input v-model="item.cpu" style="width: 120px" placeholder="0.000" /> 核</span>
-          <span class="input" />
-          <span>内存 <el-input v-model="item.memory" style="width: 120px" placeholder="0.000" /> G</span>
-          <span class="input" />
-          <span>硬盘 <el-input v-model="item.disk" style="width: 120px" placeholder="0.000" /> G</span>
-          <span class="input" />
-          <span>数量 <el-input v-model="item.instance_count" style="width: 120px" placeholder="0" /> 台</span>
-        </p>
+      <div class="create-instance" @click="addInstance">
+        <span class="plus">+</span><span class="text">新建实例组</span>
+      </div>
+      <div class="content-part">
+        <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
+          <svg class="svg" style="cursor: pointer" @click="deleteInstance(index)">
+            <use xlink:href="#icon-ashbin" />
+          </svg>
+          <p>
+            <span class="index">{{ index + 1 }}</span>
+            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px" placeholder="请输入实例名" /></span>
+            <span class="input" />
+            <span class="config-item">CPU <el-input v-model="item.cpu" style="width: 120px; margin: 0 10px" placeholder="0.000" /> 核</span>
+            <span class="input" />
+            <span class="config-item">内存 <el-input v-model="item.memory" style="width: 120px; margin: 0 10px" placeholder="0.000" /> G</span>
+            <span class="input" />
+            <span class="config-item">硬盘 <el-input v-model="item.disk" style="width: 120px; margin: 0 10px" placeholder="0.000" /> G</span>
+            <span class="input" />
+            <span class="config-item">数量 <el-input v-model="item.instance_count" style="width: 120px; margin: 0 10px" placeholder="0" /> 台</span>
+          </p>
+        </div>
       </div>
       <div class="buttons" align="center"><el-button
         size="medium"
@@ -42,7 +52,7 @@
       >添加实例组
       </el-button></div>
     </div>
-    <div class="buttons" align="center" style="margin-top:100px">
+    <div class="buttons">
       <el-button
         size="medium"
         type="primary"
@@ -62,21 +72,19 @@ import _ from 'lodash'
 
 export default {
   name: 'ApplyInstance',
-  //   directives: { waves },
   data() {
     return {
-      rowArrList: [
-        {
-          kubernetes_id: 0,
-          name: '',
-          cpu: '',
-          memory: '',
-          disk: '',
-          instance_count: ''
-        }
-      ],
+      rowArrList: [],
       galaxyClusters: [],
-      selectCluster: null
+      selectCluster: null,
+      groupItem: {
+        kubernetes_id: 0,
+        name: '',
+        cpu: '',
+        memory: '',
+        disk: '',
+        instance_count: ''
+      }
     }
   },
   created() {
@@ -101,13 +109,7 @@ export default {
       if (this.rowArrList.length >= 100) {
         return
       }
-      this.rowArrList.push({
-        name: '',
-        cpu: '',
-        memory: '',
-        disk: '',
-        instance_count: ''
-      })
+      this.rowArrList.push({ ...this.groupItem })
     },
     async submit() {
       this.rowArrList.map(i => {
@@ -131,22 +133,25 @@ export default {
 <style lang="less" scoped>
 .container {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 10px 10px 0 10px;
-  background-color: rgb(240, 242, 245);
+  height: 98%;
+  width: calc(~"100% - 20px");
+  margin: 10px;
+  padding: 10px;
+  background-color: #ffffff;
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
   .header {
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: row;
+    padding: 10px;
+    font-size: 20px;
   }
-  .select {
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
+  .statistic {
+    float: right;
+    .num {
+      display: inline-block;
+      padding: 0 5px;
+      color: blue;
+    }
   }
+<<<<<<< HEAD
   .content-part {
     margin: 0 auto;
     display: flex;
@@ -179,5 +184,85 @@ export default {
         margin-right: 4px;
     }
 }
+=======
+  .content {
+    padding: 20px 0 20px 20px;
+    width: 100%;
+    height: calc(~"100% - 200px");
+    .create-instance {
+      display: flex;
+      width: calc(~"100% - 65px");
+      justify-content: center;
+      margin: 10px 0 0 40px;
+      padding: 10px;
+      border: 2px dashed #80FAFF;
+      border-radius: 5px;
+      color: #8080ff;
+      font-size: 16px;
+      cursor: pointer;
+      .plus {
+        display: inline-block;
+        padding: 0 10px;
+      }
+    }
+    .content-part {
+      margin-top: 10px;
+      height: calc(~"100% - 100px");
+      background: #fff;
+      overflow-y: scroll;
+      width: 100%;
+      .svg {
+        width: 40px;
+        padding: 5px;
+        height: 62px;
+      }
+      .flex-part {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        i {
+          margin-right: 4px;
+        }
+        >p {
+          width: calc(~"100% - 50px");
+          border: 1px solid #ccc;
+          box-shadow: 5px 5px 5px #b0afaf;
+          display: flex;
+          align-items: center;
+          .index {
+            width: 50px;
+            box-shadow: 5px 0 5px #b0afaf;
+            height: 82px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid #ccc;
+          }
+          .group {
+            flex-basis: 24%;
+            margin-left: 20px;
+          }
+          .config-item {
+            flex-basis: 19%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+      .input{
+        display: inline-block;
+        height: 60px;
+        line-height: 40px;
+        border-right: 1px solid #80FAFF;
+        // margin-right: 4px;
+        margin: 0 10px;
+      }
+    }
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>

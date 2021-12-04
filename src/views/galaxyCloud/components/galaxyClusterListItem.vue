@@ -129,9 +129,15 @@ export default {
   methods: {
     generateData() {
       this.cluster = { ...this.item }
-      this.cluster.cpuPercent = (this.cluster.all_cpu_cores - this.cluster.free_cpu_cores) / this.cluster.all_cpu_cores
-      this.cluster.memPercent = (this.cluster.all_memory_gi - this.cluster.free_memory_gi) / this.cluster.all_memory_gi
-      this.cluster.diskPercent = (this.cluster.all_disk_gi - this.cluster.free_disk_gi) / this.cluster.all_disk_gi
+      this.cluster.cpuPercent = this.getPercent(this.cluster.all_cpu_cores - this.cluster.free_cpu_cores, this.cluster.all_cpu_cores)
+      this.cluster.memPercent = this.getPercent(this.cluster.all_memory_gi - this.cluster.free_memory_gi, this.cluster.all_memory_gi)
+      this.cluster.diskPercent = this.getPercent(this.cluster.all_disk_gi - this.cluster.free_disk_gi, this.cluster.all_disk_gi)
+    },
+    getPercent(divisor, dividend) {
+      if (+dividend === 0) {
+        return 0
+      }
+      return (+divisor) / (+dividend)
     },
     routeTo(name, clusterId) {
       this.$router.push({ name, params: { clusterId }})

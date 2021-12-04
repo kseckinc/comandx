@@ -31,11 +31,7 @@
               <span v-else class="cluster-nodes-status error">{{ row.status | generateNodeStatus }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="IP" align="center">
-            <template slot-scope="{ row }">
-              <span class="cluster-nodes-ip" @click="transformToPods('galaxyCloudClusterPodList', row.ip_address)">{{ row.ip_address }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column label="IP" prop="ip_address" align="center" />
           <el-table-column label="机器名称" prop="host_name" align="center" />
           <el-table-column label="所属集群" align="center">
             <template slot-scope="{ row }">
@@ -46,6 +42,11 @@
             <template slot-scope="{ row }">
               <span>{{ row.all_cpu_cores | formatPrecision(2) }}核/{{ row.all_memory_gi | formatPrecision(2) }}G/{{ row.all_disk_gi | formatStorage }}</span>
               <span v-if="row.machine_type !== ''" style="display: inline-block; margin-left: 5px">({{ row.machine_type }})</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="承载实例" align="center">
+            <template slot-scope="{ row }">
+              <span class="cluster-nodes-pod-count" @click="transformToPods('galaxyCloudClusterPodList', row.ip_address)">{{ row.pod_count }}</span>
             </template>
           </el-table-column>
           <el-table-column label="剩余资源" align="center">
@@ -112,7 +113,7 @@ export default {
     }
   },
   mounted() {
-    if (!_.isNumber(+this.$route.params.clusterId || this.$route.params.clusterId < 1)) {
+    if (+this.$route.params.clusterId < 1) {
       this.$message.error('clusterId不合法!')
       this.$router.push({ name: 'galaxyCloudClusterList' })
       return
@@ -205,8 +206,9 @@ export default {
   .error {
     background-color: #DC143C;
   }
-  .cluster-nodes-ip {
+  .cluster-nodes-pod-count {
     color: blue;
     cursor: pointer;
+    text-decoration: underline;
   }
 </style>

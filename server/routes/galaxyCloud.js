@@ -180,13 +180,15 @@ routerApi.get('/cluster/bridgx/available_clusters', async(ctx) => {
 
 routerApi.post('/cluster', async(ctx) => {
   try {
+    console.log(ctx.request.body)
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
       url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster`,
       method: 'POST',
-      body: ctx.request.body
+      body: ctx.request.body,
+      json: true
     })
   } catch (e) {
     ctx.body = e.error

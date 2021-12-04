@@ -77,7 +77,7 @@ export function justifySubnet(vpcCidr, subnetCidr) {
   return vpcIpMask.slice(0, vpcMask) === subnetIpMask.slice(0, vpcMask)
 }
 
-function cidrIsLegal(cidr) {
+export function cidrIsLegal(cidr) {
   const arr = cidr.split('/')
   if (arr.length !== 2) {
     return false

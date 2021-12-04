@@ -145,7 +145,7 @@ export function clusterAvailable(page_number, page_size, ip, cluster_name) {
   })
 }
 
-export function clusterCreate(cluster_name, bridgx_cluster_name, type) {
+export function clusterCreate(cluster_name, bridgx_cluster_name, cluster_type, service_cidr, pod_cidr) {
   const token = getToken()
   return request({
     url: '/api/v1/galaxy_cloud/cluster',
@@ -153,7 +153,9 @@ export function clusterCreate(cluster_name, bridgx_cluster_name, type) {
     data: {
       cluster_name,
       bridgx_cluster_name,
-      type
+      cluster_type,
+      service_cidr,
+      pod_cidr
     },
     headers: {
       Authorization: ` Bearer ${token}`
@@ -215,13 +217,13 @@ export function clusterPods(id, page_number, page_size, node_ip, pod_ip) {
   })
 }
 
-export function podRestart(cluster_id, instance_name) {
+export function podRestart(instance_group_id, instance_name) {
   const token = getToken()
   return request({
     url: '/api/v1/galaxy_cloud/eci/instance/restart',
     method: 'post',
     data: {
-      cluster_id,
+      instance_group_id,
       instance_name
     },
     headers: {

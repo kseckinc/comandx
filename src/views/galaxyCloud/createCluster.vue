@@ -14,6 +14,27 @@
         <div class="note">支持中文英文数字，限制20字符</div>
       </el-col>
     </el-row>
+    <el-row :gutter="20" style="margin-top: 10px">
+      <el-col :span="4" class="title">
+        <span class="asterisk">*</span> 服务网段
+      </el-col>
+      <el-col :span="4">
+        <el-input v-model="service_cidr" size="medium" style="width: 100%" placeholder="例如: 172.16.16.0/20" @blur="verifyCidr" />
+      </el-col>
+      <el-col :span="2" class="title">
+        <span class="asterisk">*</span> Pod网段
+      </el-col>
+      <el-col :span="8">
+        <el-input v-model="pod_cidr" size="medium" style="width: 47%" placeholder="例如: 192.169.16.0/20" @blur="verifyCidr" />
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="4"><div style="height: 16px" /></el-col>
+      <el-col :span="20">
+        <div v-if="cidrIsLegal" class="note">服务网段与Pod网段应不在同一网段范围内</div>
+        <div v-else class="note warning">{{ cidrWarning }}</div>
+      </el-col>
+    </el-row>
     <el-row :gutter="20" style="margin-top: 20px">
       <el-col :span="4" class="title">
         <span class="asterisk">*</span> 配置集群机器
@@ -28,7 +49,7 @@
       <el-col :span="20"><div><i class="el-icon-info" style="color: green" /><span style="display: inline-block; margin-left: 5px">搭建Kubernates集群机器配置可参考</span>
         <span style="color: blue; cursor: pointer" @click="goto('https://help.aliyun.com/document_detail/98886.html#title-084-lfh-8go')">《ECS选型》</span></div></el-col>
     </el-row>
-    <el-row :gutter="20" style="height: calc(98% - 203px)">
+    <el-row :gutter="20" style="height: calc(98% - 240px)">
       <el-col :span="4"><div style="height: 16px" /></el-col>
       <el-col :span="20" style="height: 100%">
         <div class="transfer-container">
@@ -146,7 +167,7 @@
 <script>
 import _ from 'lodash'
 import { clusterAvailable, clusterCreate } from '@/api/galaxyCloud'
-import { isIPv4 } from '@/utils'
+import { cidrIsLegal, isIPv4, justifySubnet } from '@/utils'
 
 export default {
   name: 'CreateCluster',
@@ -169,12 +190,16 @@ export default {
       radio: '',
       search: '',
       cluster_name: '',
-      loading: false
+      pod_cidr: '',
+      service_cidr: '',
+      cidrWarning: '',
+      loading: false,
+      cidrIsLegal: true
     }
   },
   computed: {
     submitDisabled() {
-      return _.isEmpty(this.cluster_name) || _.isEmpty(this.clusterConfigType) || _.isEmpty(this.selectCluster.cluster_name) || _.isEmpty(this.selectCluster.nodes)
+      return _.isEmpty(this.cluster_name) || _.isEmpty(this.clusterConfigType) || _.isEmpty(this.selectCluster.cluster_name) || _.isEmpty(this.selectCluster.nodes) || !this.cidrIsLegal
     },
     standaloneDisabled() {
       return _.get(this.selectCluster, 'nodes.length', 0) <= 0
@@ -203,6 +228,24 @@ export default {
       }
       this.loading = false
     },
+    verifyCidr() {
+      if (!cidrIsLegal(this.service_cidr)) {
+        this.cidrWarning = '服务网段不合法'
+        this.cidrIsLegal = false
+        return
+      }
+      if (!cidrIsLegal(this.pod_cidr)) {
+        this.cidrWarning = 'Pod网段不合法'
+        this.cidrIsLegal = false
+        return
+      }
+      if (justifySubnet(this.service_cidr, this.pod_cidr) || justifySubnet(this.pod_cidr, this.service_cidr)) {
+        this.cidrIsLegal = false
+        this.cidrWarning = '服务网段与Pod网段应在不同网段范围内'
+        return
+      }
+      this.cidrIsLegal = true
+    },
     async searchCluster() {
       const isIp = isIPv4(this.search)
       const res = await clusterAvailable(1, 10, isIp ? this.search : '', isIp ? '' : this.search)
@@ -230,7 +273,7 @@ export default {
       window.open(url)
     },
     async submit() {
-      const res = await clusterCreate(this.cluster_name, this.selectCluster.cluster_name, this.clusterConfigType)
+      const res = await clusterCreate(this.cluster_name, this.selectCluster.cluster_name, this.clusterConfigType, this.service_cidr, this.pod_cidr)
       if (res.status === 'success') {
         this.$message.success('创建成功')
         this.$router.push({ name: 'galaxyCloudClusterList' })
@@ -275,6 +318,9 @@ export default {
       padding-top: 5px;
       font-size: 14px;
       color: rgb(170, 170,170);
+    }
+    .warning {
+      color: #f4516c;
     }
   }
   .footer {
