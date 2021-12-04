@@ -22,24 +22,22 @@
           v-loading="listLoading"
           :data="list"
           border
-          fit
-          highlight-current-row
-          size="medium"
+          style="margin: 10px; width: calc(100% - 30px)"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" />
+          <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="ID" prop="id" align="center" />
-          <el-table-column label="实例组名" min-width="100px" align="center">
+          <el-table-column label="实例组名" align="center">
             <template slot-scope="{row}">
               {{ row.name }}
             </template>
           </el-table-column>
-          <el-table-column label="实例组机型" width="150px" align="center">
+          <el-table-column label="实例组机型" align="center">
             <template slot-scope="{row}">
               {{ row.cpu }}核/ {{ row.memory }}G /{{ row.disk }}G
             </template>
           </el-table-column>
-          <el-table-column label="运行实例数" width="150px" align="center">
+          <el-table-column label="运行实例数" align="center">
             <template slot-scope="{row}">
               {{ row.instance_count }}
             </template>

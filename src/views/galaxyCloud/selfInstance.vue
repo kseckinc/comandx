@@ -24,41 +24,41 @@
           v-loading="listLoading"
           :data="list"
           border
-          fit
-          highlight-current-row
-          size="medium"
+          style="margin: 10px; width: calc(100% - 30px)"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column label="运行状态" min-width="100px" align="center">
-            <template slot-scope="{row}">
-              {{ row.status }}
+          <el-table-column label="运行状态" align="center">
+            <template slot-scope="{ row }">
+              <span v-if="row.status === 'Running'" class="cluster-pods-status common">{{ row.status }}</span>
+              <span v-else class="cluster-pods-status error">{{ row.status }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="实例名" min-width="100px" align="center">
+          <el-table-column label="实例名" align="center">
             <template slot-scope="{row}">
               {{ row.pod_name }}
             </template>
           </el-table-column>
-          <el-table-column label="IP" width="150px" align="center">
+          <el-table-column label="IP" align="center">
             <template slot-scope="{row}">
               {{ row.pod_ip }}
             </template>
           </el-table-column>
-          <el-table-column label="所属实例组" width="150px" align="center">
+          <el-table-column label="所属实例组" align="center">
             <template slot-scope="{row}">
               {{ row.group_name }}
             </template>
           </el-table-column>
-          <el-table-column label="宿主机IP" width="150px" align="center">
+          <el-table-column label="宿主机IP" align="center">
             <template slot-scope="{row}">
               {{ row.node_ip }}
             </template>
           </el-table-column>
-          <el-table-column label="机型配置" width="150px" align="center">
+          <el-table-column label="机型配置" align="center">
             <template slot-scope="{row}">
-              {{ row.allocated_cpu_cores }}核/ {{ row.allocated_memory_gi }}G /{{ row.allocated_disk_gi }}G
+              {{ row.allocated_cpu_cores|formatPrecision(2) }}核/ {{ row.allocated_memory_gi|formatPrecision(2) }}G /{{ row.allocated_disk_gi|formatStorage }}
             </template>
           </el-table-column>
+          <el-table-column label="运行时间" align="center" prop="running_time" />
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
@@ -123,7 +123,18 @@
         margin-top: 10px;
       }
     }
+    .cluster-pods-status {
+    color: white;
+    padding: 2px 10px;
+    border-radius: 5px;
   }
+  .common {
+    background-color: #B8741A;
+  }
+  .error {
+    background-color: #DC143C;
+  }
+}
 </style>
 
 <script>

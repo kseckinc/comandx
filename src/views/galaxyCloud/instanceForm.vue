@@ -18,45 +18,58 @@
           v-loading="listLoading"
           :data="list"
           border
-          fit
-          highlight-current-row
-          size="medium"
+          style="margin: 10px; width: calc(100% - 30px)"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column label="执行状态" min-width="100px" align="center">
-            <template slot-scope="{row}">
-              {{ row.execute_status }}
+          <el-table-column label="执行状态" align="center">
+            <template slot-scope="{ row }">
+              <span v-if="row.execute_status === 'NORMAL'" class="cluster-nodes-status normal">{{ row.execute_status }}</span>
+              <span v-else class="cluster-nodes-status error">{{ row.execute_status }}</span>
             </template>
           </el-table-column>
           <el-table-column label="流水号" prop="id" align="center" />
-          <el-table-column label="实例组" min-width="100px" align="center">
+          <el-table-column label="实例组" align="center">
             <template slot-scope="{row}">
               {{ row.instance_group }}
             </template>
           </el-table-column>
-          <el-table-column label="实例配置" width="150px" align="center">
+          <el-table-column label="实例配置" align="center">
             <template slot-scope="{row}">
               {{ row.cpu }}核/ {{ row.memory }}G /{{ row.disk }}G
             </template>
           </el-table-column>
-          <el-table-column label="变更实例数" width="150px" align="center">
+          <el-table-column label="变更实例数" align="center">
             <template slot-scope="{row}">
-              {{ row.updated_instance_count }}
+              <div v-if="row.opt_type === 'EXPAND'" class="task-action-container">
+                {{ row.updated_instance_count }}
+                <svg class="task-action-svg">
+                  <use xlink:href="#icon-upward" />
+                </svg>
+              </div>
+              <div v-else-if="row.opt_type === 'SHRINK'" class="task-action-container">
+                {{ row.updated_instance_count }}
+                <svg class="task-action-svg">
+                  <use xlink:href="#icon-downward" />
+                </svg>
+              </div>
+              <div v-else>
+                {{ row.updated_instance_count }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="执行耗时" width="150px" align="center">
+          <el-table-column label="执行耗时" align="center">
             <template slot-scope="{row}">
-              {{ row.host_time }}
+              {{ row.host_time/1000 }}秒
             </template>
           </el-table-column>
-          <el-table-column label="申请人" width="150px" align="center">
+          <el-table-column label="申请人" align="center">
             <template slot-scope="{row}">
               {{ row.created_user_name }}
             </template>
           </el-table-column>
-          <el-table-column label="申请时间" width="150px" align="center">
+          <el-table-column label="创建时间" align="center">
             <template slot-scope="{row}">
-              {{ row.created_time }}
+              {{ row.created_time | formatMomentZone('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </el-table-column>
         </el-table>
@@ -111,7 +124,31 @@
         margin-top: 10px;
       }
     }
+        .cluster-pods-status {
+    color: white;
+    padding: 2px 10px;
+    border-radius: 5px;
   }
+  .normal {
+    background-color: #2cb81a;
+  }
+  .common {
+    background-color: #B8741A;
+  }
+  .error {
+    background-color: #DC143C;
+  }
+    .task-action-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    .task-action-svg {
+      height: 18px;
+      width: 18px;
+    }
+  }
+}
 </style>
 
 <script>
@@ -156,7 +193,7 @@ export default {
       const res = await getInstanceFormList(params)
       if (res.status === 'success') {
         this.list = _.get(res, 'instance_forms', [])
-        this.total = res.total
+        this.total = res.pager.total
       } else {
         this.$message.error(res.message)
       }
