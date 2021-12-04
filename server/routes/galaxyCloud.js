@@ -254,20 +254,4 @@ routerApi.delete('/cluster/:clusterId', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/instance/restart', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/restart`,
-      method: 'POST',
-      body: ctx.request.body,
-      json: true
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
 module.exports = routerApi

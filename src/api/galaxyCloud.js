@@ -220,7 +220,7 @@ export function clusterPods(id, page_number, page_size, node_ip, pod_ip) {
 export function podRestart(instance_group_id, instance_name) {
   const token = getToken()
   return request({
-    url: '/api/v1/galaxy_cloud/eci/instance/restart',
+    url: '/api/v1/galaxy_cloud/instance/restart',
     method: 'post',
     data: {
       instance_group_id,
