@@ -69,7 +69,7 @@
           </el-table-column>
           <el-table-column label="创建时间" align="center">
             <template slot-scope="{row}">
-              {{ row.created_time | formatMomentZone('YYYY-MM-DD HH:mm:ss') }}
+              {{ row.created_time*1000 | formatMoment('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </el-table-column>
         </el-table>
