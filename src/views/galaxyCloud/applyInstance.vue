@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { galaxyCloudBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
+import { instancGroupBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
 import _ from 'lodash'
 
 export default {
@@ -114,7 +114,7 @@ export default {
         i.kubernetes_id = this.selectCluster
         i.instance_count = Number(i.instance_count)
       })
-      const res = await galaxyCloudBatchCreate(this.rowArrList)
+      const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
         this.$router.push({ name: 'galaxyCloudInstanceGroup' })
@@ -123,9 +123,7 @@ export default {
       }
     },
     cancel() {
-
     }
-
   }
 }
 </script>

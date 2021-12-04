@@ -20,13 +20,13 @@ routerApi.get('/kubernetes', async(ctx) => {
   }
 })
 
-routerApi.get('/eci/cluster', async(ctx) => {
+routerApi.get('/instance_group', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/cluster`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -36,13 +36,13 @@ routerApi.get('/eci/cluster', async(ctx) => {
   }
 })
 
-routerApi.get('/eci/instance/form', async(ctx) => {
+routerApi.get('/instance/form', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/form`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/form`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -52,13 +52,13 @@ routerApi.get('/eci/instance/form', async(ctx) => {
   }
 })
 
-routerApi.get('/eci/instance/self', async(ctx) => {
+routerApi.get('/instance/self', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/self`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/self`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -68,13 +68,13 @@ routerApi.get('/eci/instance/self', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/cluster/batch/create', async(ctx) => {
+routerApi.post('/instance_group/batch/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/cluster/batch/create`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/batch/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -84,13 +84,13 @@ routerApi.post('/eci/cluster/batch/create', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/cluster/batch/delete', async(ctx) => {
+routerApi.post('/instance_group/batch/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/cluster/batch/delete`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/batch/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -100,13 +100,13 @@ routerApi.post('/eci/cluster/batch/delete', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/instance/expand_shrink', async(ctx) => {
+routerApi.post('/instance_group/expand_shrink', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/expand_shrink`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/expand_shrink`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -116,13 +116,13 @@ routerApi.post('/eci/instance/expand_shrink', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/instance/delete', async(ctx) => {
+routerApi.post('/instance/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/delete`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -132,13 +132,13 @@ routerApi.post('/eci/instance/delete', async(ctx) => {
   }
 })
 
-routerApi.post('/eci/instance/restart', async(ctx) => {
+routerApi.post('/instance/restart', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/eci/instance/restart`,
+      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/restart`,
       method: 'POST',
       body: ctx.request.body,
       json: true

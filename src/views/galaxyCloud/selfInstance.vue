@@ -189,7 +189,7 @@ export default {
     },
     async handleDelete(row) {
       const data = {
-        'cluster_id': Number(row.group_id),
+        'instance_group_id': Number(row.group_id),
         'instance_name': row.pod_name
       }
       const res = await instanceDelete(data)
@@ -202,7 +202,7 @@ export default {
     },
     async handleRestart(row) {
       const data = {
-        'cluster_id': Number(row.group_id),
+        'instance_group_id': Number(row.group_id),
         'instance_name': row.pod_name
       }
       const res = await instanceRestart(data)

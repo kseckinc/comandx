@@ -139,7 +139,7 @@
 </style>
 
 <script>
-import { getInstanceGroup, instanceGroupDelete, instanceExpandOrShrink } from '@/api/galaxyCloud'
+import { getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -182,9 +182,9 @@ export default {
         ...this.listQuery,
         ...this.search
       }
-      const res = await getInstanceGroup(params)
+      const res = await getInstanceGroupList(params)
       if (res.status === 'success') {
-        this.list = _.get(res, 'clusters', [])
+        this.list = _.get(res, 'instance_groups', [])
         this.total = res.pager.total
       } else {
         this.$message.error(res.message)
@@ -233,10 +233,10 @@ export default {
     },
     async submitDialog() {
       const data = {
-        'cluster_id': Number(this.curRowId),
+        'instance_group_id': Number(this.curRowId),
         'count': Number(this.dialogForm.instance_count)
       }
-      const res = await instanceExpandOrShrink(data)
+      const res = await instanceGroupExpandOrShrink(data)
       if (res.status === 'success') {
         this.$message.success('提交成功')
         this.dialogVisible = false

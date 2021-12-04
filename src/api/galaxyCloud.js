@@ -2,10 +2,10 @@ import request from '@/utils/request'
 import http from '@/utils/http'
 import { getToken } from '@/utils/auth'
 
-export async function galaxyCloudBatchCreate(data) {
+export async function instancGroupBatchCreate(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/galaxy_cloud/eci/cluster/batch/create',
+    url: '/api/v1/galaxy_cloud/instance_group/batch/create',
     method: 'post',
     data,
     headers: {
@@ -18,7 +18,7 @@ export async function galaxyCloudBatchCreate(data) {
 export async function instanceGroupDelete(data) {
   const token = getToken()
   const res = await http({
-    url: '/api/v1/galaxy_cloud/eci/cluster/batch/delete',
+    url: '/api/v1/galaxy_cloud/instance_group/batch/delete',
     method: 'post',
     data,
     headers: {
@@ -40,10 +40,10 @@ export async function getGalaxyClusters() {
   return res
 }
 
-export async function getInstanceGroup(params) {
+export async function getInstanceGroupList(params) {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/galaxy_cloud/eci/cluster',
+    url: '/api/v1/galaxy_cloud/instance_group',
     method: 'get',
     params: params,
     headers: {
@@ -56,7 +56,7 @@ export async function getInstanceGroup(params) {
 export async function getInstanceFormList(params) {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/galaxy_cloud/eci/instance/form',
+    url: '/api/v1/galaxy_cloud/instance/form',
     method: 'get',
     params: params,
     headers: {
@@ -69,7 +69,7 @@ export async function getInstanceFormList(params) {
 export async function getInstanceBySelf(params) {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/galaxy_cloud/eci/instance/self',
+    url: '/api/v1/galaxy_cloud/instance/self',
     method: 'get',
     params: params,
     headers: {
@@ -79,10 +79,10 @@ export async function getInstanceBySelf(params) {
   return res
 }
 
-export async function instanceExpandOrShrink(data) {
+export async function instanceGroupExpandOrShrink(data) {
   const token = getToken()
   return await request({
-    url: '/api/v1/galaxy_cloud/eci/instance/expand_shrink',
+    url: '/api/v1/galaxy_cloud/instance_group/expand_shrink',
     method: 'post',
     data,
     headers: {
@@ -94,7 +94,7 @@ export async function instanceExpandOrShrink(data) {
 export async function instanceDelete(data) {
   const token = getToken()
   return await request({
-    url: '/api/v1/galaxy_cloud/eci/instance/delete',
+    url: '/api/v1/galaxy_cloud/instance/delete',
     method: 'post',
     data,
     headers: {
@@ -106,7 +106,7 @@ export async function instanceDelete(data) {
 export async function instanceRestart(data) {
   const token = getToken()
   return await request({
-    url: '/api/v1/galaxy_cloud/eci/instance/restart',
+    url: '/api/v1/galaxy_cloud/instance/restart',
     method: 'post',
     data,
     headers: {
