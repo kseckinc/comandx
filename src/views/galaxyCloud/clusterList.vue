@@ -11,7 +11,12 @@
         </div>
       </div>
       <hr color="#80FFFF">
-      <list-item v-for="(item, idx) in list" :key="idx" :item="item" @reload="fetchData"/>
+      <div class="galaxy-cluster-content">
+        <div v-if="isNoData">
+          暂无集群
+        </div>
+        <list-item v-for="(item, idx) in list" :key="idx" :item="item" @reload="fetchData"/>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +25,7 @@
 import introduction from '@/views/galaxyCloud/components/introduction'
 import listItem from '@/views/galaxyCloud/components/galaxyClusterListItem'
 import { clustersSummary } from '@/api/galaxyCloud'
+import _ from 'lodash'
 
 export default {
   name: 'ClusterList',
@@ -40,6 +46,11 @@ export default {
       list: []
     }
   },
+  computed: {
+    isNoData() {
+      return _.isEmpty(this.list) || this.list.length === 0
+    }
+  },
   mounted() {
     this.fetchData()
   },
@@ -47,7 +58,9 @@ export default {
     async fetchData() {
       const res = await clustersSummary(this.listQuery.page_number, this.listQuery.page_size)
       if (res.status === 'success') {
-        this.list = res.clusters
+        this.list = _.get(res, 'clusters', [])
+      } else {
+        this.$message.error(`获取星云集群失败: ${res.message}`)
       }
     },
     createGalaxyCluster() {
@@ -69,6 +82,11 @@ export default {
   }
   .galaxy-cluster-container {
     padding: 0 10px;
+    height: 100%;
+    .galaxy-cluster-content {
+      height: calc(~"100% - 180px");
+      overflow-y: scroll;
+    }
     .galaxy-cluster-button {
       display: flex;
       flex: 1;
