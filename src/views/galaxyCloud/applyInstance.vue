@@ -33,7 +33,7 @@
           </svg>
           <p>
             <span class="index">{{ index + 1 }}</span>
-            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px" placeholder="请输入实例名" /></span>
+            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px" placeholder="请输入实例组名称" /></span>
             <span class="input" />
             <span class="config-item">CPU <el-input v-model="item.cpu" style="width: 120px; margin: 0 10px" placeholder="0.000" /> 核</span>
             <span class="input" />
