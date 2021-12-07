@@ -195,6 +195,12 @@ export const constantRoutes = [
       component: () => import('@/views/template/edit'),
       meta: { title: '编辑扩缩容流程', icon: '' },
       hidden: true
+    }, {
+      path: '/service/help',
+      name: 'noService',
+      component: () => import('@/views/service/help'),
+      meta: { title: '帮助', icon: '' },
+      hidden: true
     }]
   },
   {
@@ -240,6 +246,11 @@ export const constantRoutes = [
       component: () => import('@/views/account/index'),
       meta: { title: '账户管理', icon: 'account' }
     }]
+  },
+  {
+    path: '/help',
+    component: () => import('@/views/help'),
+    hidden: true
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

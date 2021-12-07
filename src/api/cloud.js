@@ -2,6 +2,12 @@ import request from '@/utils/request'
 import { getToken } from '@/utils/auth'
 import _ from 'lodash'
 
+export function checkBridgX() {
+  return request({
+    url: '/api/v1/ok'
+  })
+}
+
 export async function vpcDescribe(region_id) {
   const token = getToken()
   const res = await request({

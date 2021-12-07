@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { getToken } from '@/utils/auth'
-import _ from "lodash";
+import _ from 'lodash'
 
 export function login(data) {
   return request({

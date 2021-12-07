@@ -154,15 +154,11 @@
 <script>
 import { getInstanceFormList } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
-import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
 
 export default {
   name: 'InstanceGroup',
   components: { Pagination },
-  directives: {
-    loadMore
-  },
   data() {
     return {
       accounts: [],

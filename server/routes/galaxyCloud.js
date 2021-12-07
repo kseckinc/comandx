@@ -1,8 +1,10 @@
 const host = require('../config/host')
 const request = require('request-promise')
 const Router = require('koa-router')
+
+const prefix = '/api/v1/galaxy_cloud'
 const routerApi = new Router({
-  prefix: '/api/v1/galaxy_cloud'
+  prefix
 })
 
 routerApi.get('/kubernetes', async(ctx) => {
@@ -11,7 +13,7 @@ routerApi.get('/kubernetes', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/kubernetes`,
+      url: `${host.getKubeHost()}${prefix}/kubernetes`,
       method: 'GET',
       json: true
     })
@@ -26,7 +28,7 @@ routerApi.get('/instance_group', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group`,
+      url: `${host.getKubeHost()}${prefix}/instance_group`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -42,7 +44,7 @@ routerApi.get('/instance/form', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/form`,
+      url: `${host.getKubeHost()}${prefix}/instance/form`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -58,7 +60,7 @@ routerApi.get('/instance/self', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/self`,
+      url: `${host.getKubeHost()}${prefix}/instance/self`,
       method: 'GET',
       qs: ctx.query,
       json: true
@@ -74,7 +76,7 @@ routerApi.post('/instance_group/batch/create', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/batch/create`,
+      url: `${host.getKubeHost()}${prefix}/instance_group/batch/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -90,7 +92,7 @@ routerApi.post('/instance_group/batch/delete', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/batch/delete`,
+      url: `${host.getKubeHost()}${prefix}/instance_group/batch/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -106,7 +108,7 @@ routerApi.post('/instance_group/expand_shrink', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance_group/expand_shrink`,
+      url: `${host.getKubeHost()}${prefix}/instance_group/expand_shrink`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -122,7 +124,7 @@ routerApi.post('/instance/delete', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/delete`,
+      url: `${host.getKubeHost()}${prefix}/instance/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -138,7 +140,7 @@ routerApi.post('/instance/restart', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/instance/restart`,
+      url: `${host.getKubeHost()}${prefix}/instance/restart`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -154,7 +156,7 @@ routerApi.get('/cluster/summary', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/summary`,
+      url: `${host.getKubeHost()}${prefix}/cluster/summary`,
       qs: ctx.query,
       json: true
     })
@@ -169,7 +171,7 @@ routerApi.get('/cluster/bridgx/available_clusters', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/bridgx/available_clusters`,
+      url: `${host.getKubeHost()}${prefix}/cluster/bridgx/available_clusters`,
       qs: ctx.query,
       json: true
     })
@@ -185,7 +187,7 @@ routerApi.post('/cluster', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster`,
+      url: `${host.getKubeHost()}${prefix}/cluster`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -201,7 +203,7 @@ routerApi.get('/cluster/summary/:clusterId', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/summary/${ctx.params.clusterId}`,
+      url: `${host.getKubeHost()}${prefix}/cluster/summary/${ctx.params.clusterId}`,
       json: true
     })
   } catch (e) {
@@ -215,7 +217,7 @@ routerApi.get('/cluster/nodes/:clusterId', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/nodes/${ctx.params.clusterId}`,
+      url: `${host.getKubeHost()}${prefix}/cluster/nodes/${ctx.params.clusterId}`,
       qs: ctx.query,
       json: true
     })
@@ -230,7 +232,7 @@ routerApi.get('/cluster/pods/:clusterId', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/pods/${ctx.params.clusterId}`,
+      url: `${host.getKubeHost()}${prefix}/cluster/pods/${ctx.params.clusterId}`,
       qs: ctx.query,
       json: true
     })
@@ -245,7 +247,7 @@ routerApi.delete('/cluster/:clusterId', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getKubeHost()}/api/v1/galaxy_cloud/cluster/${ctx.params.clusterId}`,
+      url: `${host.getKubeHost()}${prefix}/cluster/${ctx.params.clusterId}`,
       method: 'DELETE',
       json: true
     })

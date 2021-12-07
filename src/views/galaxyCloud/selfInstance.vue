@@ -140,15 +140,11 @@
 <script>
 import { getInstanceBySelf, instanceDelete, instanceRestart } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
-import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
 
 export default {
   name: 'InstanceGroup',
   components: { Pagination },
-  directives: {
-    loadMore
-  },
   data() {
     return {
       accounts: [],
@@ -200,8 +196,8 @@ export default {
     },
     async handleDelete(row) {
       const data = {
-        'instance_group_id': Number(row.group_id),
-        'instance_name': row.pod_name
+        instance_group_id: Number(row.group_id),
+        instance_name: row.pod_name
       }
       const res = await instanceDelete(data)
       if (res.data.Status === 'success') {
@@ -209,12 +205,12 @@ export default {
       } else {
         this.$message.error('删除失败')
       }
-      this.fetchData()
+      await this.fetchData()
     },
     async handleRestart(row) {
       const data = {
-        'instance_group_id': Number(row.group_id),
-        'instance_name': row.pod_name
+        instance_group_id: Number(row.group_id),
+        instance_name: row.pod_name
       }
       const res = await instanceRestart(data)
       if (res.data.Status === 'success') {
@@ -222,7 +218,7 @@ export default {
       } else {
         this.$message.error('删除失败')
       }
-      this.fetchData()
+      await this.fetchData()
     }
   }
 }

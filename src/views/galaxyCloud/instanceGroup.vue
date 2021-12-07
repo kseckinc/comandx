@@ -139,15 +139,11 @@
 <script>
 import { getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
-import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
 
 export default {
   name: 'InstanceGroup',
   components: { Pagination },
-  directives: {
-    loadMore
-  },
   data() {
     return {
       accounts: [],
@@ -210,7 +206,7 @@ export default {
     },
     async handleDelete() {
       const params = {
-        'ids': this.selectInstanceGroups.map(i => Number(i.id))
+        ids: this.selectInstanceGroups.map(i => Number(i.id))
       }
       const res = await instanceGroupDelete(params)
       if (res.data.status === 'success') {
@@ -218,7 +214,7 @@ export default {
       } else {
         this.$message.error('删除失败')
       }
-      this.fetchData()
+      await this.fetchData()
     },
     process(row) {
       this.curRowName = row.name
@@ -231,14 +227,14 @@ export default {
     },
     async submitDialog() {
       const data = {
-        'instance_group_id': Number(this.curRowId),
-        'count': Number(this.dialogForm.instance_count)
+        instance_group_id: Number(this.curRowId),
+        count: Number(this.dialogForm.instance_count)
       }
       const res = await instanceGroupExpandOrShrink(data)
       if (res.status === 'success') {
         this.$message.success('提交成功')
         this.dialogVisible = false
-        this.fetchData()
+        await this.fetchData()
       } else {
         this.$message.error('提交失败')
       }

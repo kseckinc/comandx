@@ -2,8 +2,19 @@ const Router = require('koa-router')
 const host = require('../config/host')
 const request = require('request-promise')
 
+const prefix = '/api/v1'
 const routerApi = new Router({
   prefix: '/api/v1'
+})
+
+routerApi.get('/ok', async(ctx) => {
+  try {
+    ctx.body = await request({
+      url: host.getHost()
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
 })
 
 routerApi.get('/vpc/describe', async(ctx) => {
@@ -12,7 +23,7 @@ routerApi.get('/vpc/describe', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/vpc/describe`,
+      url: `${host.getHost()}${prefix}/vpc/describe`,
       qs: ctx.query
     })
   } catch (e) {
@@ -26,7 +37,7 @@ routerApi.get('/subnet/describe', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/subnet/describe`,
+      url: `${host.getHost()}${prefix}/subnet/describe`,
       qs: ctx.query
     })
   } catch (e) {
@@ -40,7 +51,7 @@ routerApi.get('/security_group/describe', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/security_group/describe`,
+      url: `${host.getHost()}${prefix}/security_group/describe`,
       qs: ctx.query
     })
   } catch (e) {
@@ -54,7 +65,7 @@ routerApi.get('/cloud_account/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/cloud_account/list`,
+      url: `${host.getHost()}${prefix}/cloud_account/list`,
       qs: {
         ...ctx.query
       }
@@ -69,7 +80,7 @@ routerApi.post('/cloud_account/create', async(ctx) => {
     headers: {
       authorization: ctx.header.authorization
     },
-    url: `${host.getHost()}/api/v1/cloud_account/create`,
+    url: `${host.getHost()}${prefix}/cloud_account/create`,
     method: 'POST',
     body: ctx.request.body,
     json: true
@@ -82,7 +93,7 @@ routerApi.post('/cloud_account/edit', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/cloud_account/edit`,
+      url: `${host.getHost()}${prefix}/cloud_account/edit`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -98,7 +109,7 @@ routerApi.delete('/cloud_account/delete/:ids', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/cloud_account/delete/${ctx.params.ids}`,
+      url: `${host.getHost()}${prefix}/cloud_account/delete/${ctx.params.ids}`,
       method: 'DELETE'
     })
   } catch (e) {
@@ -112,7 +123,7 @@ routerApi.get('/region/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/region/list`,
+      url: `${host.getHost()}${prefix}/region/list`,
       qs: ctx.query
     })
   } catch (e) {
@@ -126,7 +137,7 @@ routerApi.get('/zone/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/zone/list`,
+      url: `${host.getHost()}${prefix}/zone/list`,
       qs: ctx.query
     })
   } catch (e) {
@@ -140,7 +151,7 @@ routerApi.get('/instance_type/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance_type/list`,
+      url: `${host.getHost()}${prefix}/instance_type/list`,
       qs: ctx.query
     })
   } catch (e) {
@@ -155,7 +166,7 @@ routerApi.post('/vpc/create', async(ctx) => {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}/api/v1/vpc/create`,
+      url: `${host.getHost()}${prefix}/vpc/create`,
       body: ctx.request.body,
       json: true
     })
@@ -171,7 +182,7 @@ routerApi.post('/subnet/create', async(ctx) => {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}/api/v1/subnet/create`,
+      url: `${host.getHost()}${prefix}/subnet/create`,
       body: ctx.request.body,
       json: true
     })
@@ -187,7 +198,7 @@ routerApi.post('/security_group/create', async(ctx) => {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}/api/v1/security_group/create`,
+      url: `${host.getHost()}${prefix}/security_group/create`,
       body: ctx.request.body,
       json: true
     })
@@ -203,7 +214,7 @@ routerApi.post('/security_group/create_with_rule', async(ctx) => {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}/api/v1/security_group/create_with_rule`,
+      url: `${host.getHost()}${prefix}/security_group/create_with_rule`,
       body: ctx.request.body,
       json: true
     })
@@ -219,7 +230,7 @@ routerApi.post('/security_group/rule/add', async(ctx) => {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}/api/v1/security_group/rule/add`,
+      url: `${host.getHost()}${prefix}/security_group/rule/add`,
       body: ctx.request.body,
       json: true
     })
@@ -234,7 +245,7 @@ routerApi.get('/image/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/image/list`,
+      url: `${host.getHost()}${prefix}/image/list`,
       qs: ctx.query
     })
   } catch (e) {

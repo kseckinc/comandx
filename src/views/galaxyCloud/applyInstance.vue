@@ -69,6 +69,8 @@
 <script>
 import { instancGroupBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
 import _ from 'lodash'
+import { checkBridgX } from '@/api/cloud'
+import { checkSchedulX } from '@/api/service'
 
 export default {
   name: 'ApplyInstance',
@@ -89,8 +91,15 @@ export default {
   },
   created() {
     this.getSelectList()
+    this.test()
   },
   methods: {
+    async test() {
+      const bres = await checkBridgX()
+      const sres = await checkSchedulX()
+      console.log(bres)
+      console.log(sres.code === 'ECONNREFUSED')
+    },
     async getSelectList() {
       const res = await getGalaxyClusters()
       if (res.status === 'success') {
@@ -151,7 +160,6 @@ export default {
       color: blue;
     }
   }
-<<<<<<< HEAD
   .content-part {
     margin: 0 auto;
     display: flex;
