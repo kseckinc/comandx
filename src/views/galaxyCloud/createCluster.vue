@@ -2,7 +2,7 @@
   <div class="container">
     <el-row :gutter="20">
       <el-col :span="4" class="title">
-        <span class="asterisk">*</span> 星云集群名
+        <span class="asterisk">*</span> Kubernetes集群名
       </el-col>
       <el-col :span="20">
         <el-input v-model="cluster_name" size="medium" style="width: 30%" placeholder="请输入集群名" />
@@ -59,17 +59,17 @@
                 <span class="transfer-step">第一步： </span><span>选择集群</span>
               </div>
               <div class="transfer-note">
-                建议选择机器配置不低于8核16G的集群
+                建议选择机器配置不低于2核4G的集群
               </div>
             </div>
             <div class="transfer-content">
-              <el-input v-model="search" size="medium" placeholder="搜索集群名称或IP" @change="searchCluster" />
+              <el-input v-model="search" size="medium" placeholder="搜索集群名称或IP" @click="searchCluster" />
               <div v-loading="loading" class="transfer-cluster-container">
-                <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster">
+                <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster" @click="chooseCluster(item, false)">
                   <span class="transfer-cluster-provider">{{ item.cloud_type | filterCloudProvider }}</span>
                   <span class="transfer-cluster-name">{{ item.cluster_name }}</span>
                   <div class="transfer-check-box">
-                    <el-checkbox v-model="item.checked" @change="chooseCluster(item)" />
+                    <input type="checkbox" :checked="item.checked" style="cursor:pointer;" />
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@
               </div>
               <div class="transfer-footer-container">
                 <div class="transfer-footer-node">
-                  提示：搭建星云集群需满足机器数最低配置，您可以更换集群或向已选中集群增加机器
+                  提示：搭建Kubernetes集群需满足机器数最低配置，您可以更换集群或向已选中集群增加机器
                 </div>
                 <el-row style="margin-top: 10px">
                   <el-col :span="1">
@@ -257,11 +257,13 @@ export default {
       }
     },
     chooseCluster(cluster) {
-      this.selectCluster = { ...cluster, nodesShow: true }
       this.clusterConfigType = ''
       this.clusters = this.clusters.map((i) => {
         if (i.cluster_name !== cluster.cluster_name) {
           i.checked = false
+        } else {
+          i.checked = !i.checked
+          this.selectCluster = { ...i, nodesShow: true }
         }
         return i
       })
@@ -356,9 +358,11 @@ export default {
         padding: 20px 10px;
         height: 100%;
         .transfer-cluster {
+          cursor: pointer;
           padding: 10px 30px 0 5px;
           .transfer-check-box {
             float: right;
+            margin-top: 7px;
           }
         }
         .transfer-cluster-container {

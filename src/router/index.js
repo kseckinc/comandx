@@ -56,23 +56,53 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/cluster',
+    component: Layout,
+    redirect: '/cluster',
+    name: '集群管理',
+    meta: { title: '集群管理', icon: 'cluster' },
+    children: [{
+      path: '/cluster/create',
+      name: 'clusterCreate',
+      component: () => import('@/views/cluster/createOrEdit'),
+      meta: { title: '创建集群', icon: '' }
+    }, {
+      path: '/cluster/list',
+      name: 'clusterList',
+      component: () => import('@/views/cluster/index'),
+      meta: { title: '集群列表', icon: '' }
+    }, {
+      path: '/cluster/edit/:name',
+      name: 'clusterEdit',
+      component: () => import('@/views/cluster/createOrEdit'),
+      meta: { title: '编辑集群', icon: '' },
+      hidden: true
+    }, {
+      path: '/cluster/info/:name',
+      name: 'clusterInfo',
+      component: () => import('@/views/cluster/detail'),
+      meta: { title: '集群信息', icon: '' },
+      hidden: true
+    }]
+  },
+  {
     path: '/galaxy-cloud',
     component: Layout,
     redirect: '/galaxy-cloud/cluster',
-    name: '星云集群',
-    meta: { title: '星云集群', icon: 'galaxy' },
+    name: '集群',
+    meta: { title: 'Kubernetes集群', icon: 'galaxy' },
     children: [
       {
         path: '/galaxy-cloud/cluster',
         name: 'galaxyCloudCluster',
         redirect: '/galaxy-cloud/cluster/list',
         component: () => import('@/views/galaxyCloud/admin'),
-        meta: { title: '星云集群列表', icon: '' },
+        meta: { title: '集群列表', icon: '' },
         children: [{
           path: '/galaxy-cloud/cluster/list',
           name: 'galaxyCloudClusterList',
           component: () => import('@/views/galaxyCloud/clusterList'),
-          meta: { title: '星云集群列表', icon: '', breadcrumb: false }
+          meta: { title: '集群列表', icon: '', breadcrumb: false }
         }, {
           path: '/galaxy-cloud/cluster/create',
           name: 'galaxyCloudClusterCreate',
@@ -124,36 +154,6 @@ export const constantRoutes = [
         meta: { title: '实例申请单', icon: '' }
       }
     ]
-  },
-  {
-    path: '/cluster',
-    component: Layout,
-    redirect: '/cluster',
-    name: '集群管理',
-    meta: { title: '集群管理', icon: 'cluster' },
-    children: [{
-      path: '/cluster/create',
-      name: 'clusterCreate',
-      component: () => import('@/views/cluster/createOrEdit'),
-      meta: { title: '创建集群', icon: '' }
-    }, {
-      path: '/cluster/list',
-      name: 'clusterList',
-      component: () => import('@/views/cluster/index'),
-      meta: { title: '集群列表', icon: '' }
-    }, {
-      path: '/cluster/edit/:name',
-      name: 'clusterEdit',
-      component: () => import('@/views/cluster/createOrEdit'),
-      meta: { title: '编辑集群', icon: '' },
-      hidden: true
-    }, {
-      path: '/cluster/info/:name',
-      name: 'clusterInfo',
-      component: () => import('@/views/cluster/detail'),
-      meta: { title: '集群信息', icon: '' },
-      hidden: true
-    }]
   },
   {
     path: '/service',

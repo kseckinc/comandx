@@ -90,10 +90,10 @@
         警告！！
       </div>
       <div style="text-indent:2rem;color: black">
-        删除星云集群会清除所有实例及部署的服务，集群内的公有云服务器也将在当天24点释放
+        删除Kubernetes集群会清除所有实例及部署的服务，集群内的公有云服务器也将在当天24点释放
       </div>
       <div style="text-indent:2rem;margin-top: 1.5rem;color: black">
-        确定要删除星云集群吗？？
+        确定要删除Kubernetes集群吗？？
       </div>
       <div slot="footer" class="warning-footer">
         <div style="color: #D9001B" @click="deleteGCluster(cluster.cluster_id)">删除</div>

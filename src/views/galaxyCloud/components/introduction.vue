@@ -3,11 +3,11 @@
     <div>
       <i class="el-icon-close" style="float: right; color: #8c939d" @click="disappear" />
       <div class="introduction-title">
-        <i class="el-icon-info" style="font-size: 20px; color: #00B7FF" /><span class="text">星云集群介绍</span>
+        <i class="el-icon-info" style="font-size: 20px; color: #00B7FF" /><span class="text">Kubernetes集群介绍</span>
       </div>
     </div>
     <div class="introduction-content">
-      星云集群为平台独立定义的集群类别，其支持将任意类型物理机放入该集群，通过bridgX提供的容器化资源切割能力，向用户提供任意配置对的算力资源
+      Kubernetes集群为平台独立定义的集群类别，其支持将任意类型物理机放入该集群，通过bridgX提供的容器化资源切割能力，向用户提供任意配置对的算力资源
     </div>
     <div class="introduction-no-more-show">
       <span @click="noMoreShow">

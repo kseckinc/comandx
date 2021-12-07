@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <introduction :content="note.content" :title="note.title" />
+<!--    <introduction :content="note.content" :title="note.title" />-->
     <div v-load-more="loadMore" class="galaxy-cluster-container">
       <div class="galaxy-cluster-title">
         <span style="font-size: 18px">
-          星云集群
+          Kubernetes集群
         </span>
         <div class="galaxy-cluster-button">
-          <el-button size="mini" type="primary" @click="createGalaxyCluster">创建星云集群</el-button>
+          <el-button size="mini" type="primary" @click="createGalaxyCluster">创建Kubernetes集群</el-button>
         </div>
       </div>
       <hr color="#80FFFF">
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import introduction from '@/views/galaxyCloud/components/introduction'
+// import introduction from '@/views/galaxyCloud/components/introduction'
 import listItem from '@/views/galaxyCloud/components/galaxyClusterListItem'
 import { clustersSummary } from '@/api/galaxyCloud'
 import _ from 'lodash'
@@ -30,7 +30,7 @@ import _ from 'lodash'
 export default {
   name: 'ClusterList',
   components: {
-    introduction,
+    // introduction,
     listItem
   },
   directives: {
@@ -51,8 +51,8 @@ export default {
   data() {
     return {
       note: {
-        title: '星云集群介绍',
-        content: '星云集群为平台独立定义的集群类别，其支持将任意类型物理机放入该集群，通过bridgX提供的容器化资源切割能力，向用户提供任意配置的算力资源'
+        title: 'Kubernetes集群介绍',
+        content: 'Kubernetes集群为平台独立定义的集群类别，其支持将任意类型物理机放入该集群，通过bridgX提供的容器化资源切割能力，向用户提供任意配置的算力资源'
       },
       query: {
         page_number: 1,
@@ -81,7 +81,7 @@ export default {
       if (res.status === 'success') {
         this.list = _.get(res, 'clusters', [])
       } else {
-        this.$message.error(`获取星云集群失败: ${res.message}`)
+        this.$message.error(`获取Kubernetes集群失败: ${res.message}`)
       }
     },
     createGalaxyCluster() {

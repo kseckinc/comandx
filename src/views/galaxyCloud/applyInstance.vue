@@ -10,10 +10,10 @@
       <hr color="#80FAFF" />
     </div>
     <div class="content">
-      <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>星云集群</span>
+      <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>Kubernetes集群</span>
       <el-select
         v-model="selectCluster"
-        placeholder="请选择实例所属的星云集群"
+        placeholder="请选择实例所属的Kubernetes集群"
         style="width: 400px; margin-left:10px"
       >
         <el-option
