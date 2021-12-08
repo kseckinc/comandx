@@ -4,7 +4,8 @@
       <div class="search">
         <div class="search-item">
           <span class="label">实例组名称</span>
-          <el-input v-model="search.name" size="medium" placeholder="输入实例组名称搜索" clearable style="width: 200px" @change="fetchData" />
+          <el-input v-model="search.name" size="medium" placeholder="输入实例组名称搜索" clearable style="width: 200px"
+                    @change="fetchData"/>
         </div>
       </div>
       <div class="buttons">
@@ -19,14 +20,14 @@
       </div>
       <div class="table">
         <el-table
-          v-loading="listLoading"
-          :data="list"
-          border
-          style="margin: 10px; width: calc(100% - 30px)"
-          @selection-change="handleSelectionChange"
+            v-loading="listLoading"
+            :data="list"
+            border
+            style="margin: 10px; width: calc(100% - 30px)"
+            @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="ID" prop="id" align="center" />
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column label="ID" prop="id" align="center"/>
           <el-table-column label="实例组名" align="center">
             <template slot-scope="{row}">
               {{ row.name }}
@@ -45,24 +46,26 @@
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
-                type="text"
-                @click="process(scope.row)"
-              >扩缩容</el-button>
+                  type="text"
+                  @click="process(scope.row)"
+              >扩缩容
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size" @pagination="fetchData" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size"
+                    @pagination="fetchData"/>
       </div>
     </div>
 
-    <el-dialog title="实例组伸缩" :visible="dialogVisible" width="20%" @close="cancelDialog">
+    <el-dialog title="实例组伸缩" :visible="dialogVisible" width="500px" @close="cancelDialog">
       <div>
         <el-form
-          ref="dialogForm"
-          :model="dialogForm"
-          label-width="120px"
-          label-position="right"
-          style="margin-left:50px"
+            ref="dialogForm"
+            :model="dialogForm"
+            label-width="120px"
+            label-position="right"
+            style="margin-left:50px"
         >
           <el-form-item label="实例组名">
             <span>{{ curRowName }}</span>
@@ -70,15 +73,20 @@
           <el-form-item label="运行实例数">
             <div>
               <el-input
-                v-model="dialogForm.instance_count"
-                prop="instance_count"
-                style="width: 120px"
+                  v-model="dialogForm.instance_count"
+                  type="number"
+                  prop="instance_count"
+                  aria-valuemin="0"
+                  style="width: 120px"
+                  @input="inputCheck"
               />
             </div>
           </el-form-item>
           <el-form-item>
-            <div><el-button type="primary" @click="submitDialog">提交</el-button>
-              <el-button @click="cancelDialog">取消</el-button></div>
+            <div>
+              <el-button type="primary" @click="submitDialog">提交</el-button>
+              <el-button @click="cancelDialog">取消</el-button>
+            </div>
           </el-form-item>
         </el-form>
 
@@ -89,6 +97,7 @@
 </template>
 
 <style lang="less" scoped>
+<<<<<<< HEAD
   .container {
     position: absolute;
     width: 100%;
@@ -105,6 +114,30 @@
         display: flex;
         flex-basis: 100%;
         .search-item {
+=======
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 0 10px;
+  background-color: rgb(240, 242, 245);
+
+  .header {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
+    display: flex;
+    flex-direction: row;
+
+    .search {
+      display: flex;
+      flex-basis: 100%;
+
+      .search-item {
+        display: flex;
+        margin-right: 40px;
+
+        .label {
           display: flex;
           margin-right: 40px;
           .label {
@@ -133,17 +166,39 @@
         margin-top: 10px;
       }
     }
+
+    .buttons {
+      display: flex;
+      width: 200px;
+    }
+  }
+
+  .content {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
+
+    .buttons {
+      button {
+        margin-right: 40px;
+      }
+    }
+
+    .table {
+      margin-top: 10px;
+    }
   }
 </style>
 
 <script>
-import { getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink } from '@/api/galaxyCloud'
+import {getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink} from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import _ from 'lodash'
 
 export default {
   name: 'InstanceGroup',
-  components: { Pagination },
+  components: {Pagination},
   data() {
     return {
       accounts: [],
@@ -199,7 +254,7 @@ export default {
     },
 
     applyInstance() {
-      this.$router.push({ name: 'galaxyCloudInstanceApply' })
+      this.$router.push({name: 'galaxyCloudInstanceApply'})
     },
     async reboot() {
 
@@ -238,6 +293,12 @@ export default {
       } else {
         this.$message.error('提交失败')
       }
+    },
+    inputCheck() {
+      let count = Number(this.dialogForm.instance_count)
+      Number.isNaN(count) && (count = 0)
+      count = count < 0 ? 0 : count
+      this.dialogForm.instance_count = parseInt(count)
     }
   }
 }

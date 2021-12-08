@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="statistic">
-        合计：<span class="num">{{ rowArrList.length }}</span>   实例
+        合计：<span class="num">{{ rowArrList.length }}</span> 实例
       </div>
       <div>
         资源申请
@@ -12,15 +12,15 @@
     <div class="content">
       <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>Kubernetes集群</span>
       <el-select
-        v-model="selectCluster"
-        placeholder="请选择实例所属的Kubernetes集群"
-        style="width: 400px; margin-left:10px"
+          v-model="selectCluster"
+          placeholder="请选择实例所属的Kubernetes集群"
+          style="width: 400px; margin-left:10px"
       >
         <el-option
-          v-for="item in galaxyClusters"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
+            v-for="item in galaxyClusters"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
         />
       </el-select>
       <div class="create-instance" @click="addInstance">
@@ -29,19 +29,36 @@
       <div class="content-part">
         <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
           <svg class="svg" style="cursor: pointer" @click="deleteInstance(index)">
-            <use xlink:href="#icon-ashbin" />
+            <use xlink:href="#icon-ashbin"/>
           </svg>
           <p>
             <span class="index">{{ index + 1 }}</span>
-            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px" placeholder="请输入实例组名称" /></span>
-            <span class="input" />
-            <span class="config-item">CPU <el-input v-model="item.cpu" style="width: 120px; margin: 0 10px" placeholder="0.000" /> 核</span>
-            <span class="input" />
-            <span class="config-item">内存 <el-input v-model="item.memory" style="width: 120px; margin: 0 10px" placeholder="0.000" /> G</span>
-            <span class="input" />
-            <span class="config-item">硬盘 <el-input v-model="item.disk" style="width: 120px; margin: 0 10px" placeholder="0.000" /> G</span>
-            <span class="input" />
-            <span class="config-item">数量 <el-input v-model="item.instance_count" style="width: 120px; margin: 0 10px" placeholder="0" /> 台</span>
+            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px"
+                                              placeholder="请输入实例组名称"/></span>
+            <span class="input"/>
+            <span class="config-item">CPU <el-input v-model="item.cpu"
+                                                    style="width: 120px; margin: 0 10px"
+                                                    placeholder="1.000"
+                                                    @input="inputCheck(index,'cpu',item.cpu,true,false)"
+                                                    @change="inputCheck(index,'cpu',item.cpu,true,true)"/> 核</span>
+            <span class="input"/>
+            <span class="config-item">内存 <el-input v-model="item.memory"
+                                                   style="width: 120px; margin: 0 10px"
+                                                   placeholder="1.000"
+                                                   @input="inputCheck(index,'memory',item.memory,true,false)"
+                                                   @change="inputCheck(index,'memory',item.memory,true,true)"/> G</span>
+            <span class="input"/>
+            <span class="config-item">硬盘 <el-input v-model="item.disk"
+                                                   style="width: 120px; margin: 0 10px"
+                                                   placeholder="1.000"
+                                                   @input="inputCheck(index,'disk',item.disk,true,false)"
+                                                   @change="inputCheck(index,'disk',item.disk,true,true)"/> G</span>
+            <span class="input"/>
+            <span class="config-item">数量 <el-input v-model="item.instance_count"
+                                                   style="width: 120px; margin: 0 10px"
+                                                   placeholder="1" type="number"
+                                                   @input="inputCheck(index,'instance_count',item.instance_count,false,false)"
+                                                   @change="inputCheck(index,'instance_count',item.instance_count,false,true)"/> 台</span>
           </p>
         </div>
       </div>
@@ -54,23 +71,25 @@
     </div>
     <div class="buttons">
       <el-button
-        size="medium"
-        type="primary"
-        @click="submit"
-      >提 交</el-button>
+          size="medium"
+          type="primary"
+          @click="submit"
+      >提 交
+      </el-button>
       <el-button
-        size="medium"
-        @click="cancel"
-      >取 消</el-button>
+          size="medium"
+          @click="cancel"
+      >取 消
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { instancGroupBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
+import {instancGroupBatchCreate, getGalaxyClusters} from '@/api/galaxyCloud'
 import _ from 'lodash'
-import { checkBridgX } from '@/api/cloud'
-import { checkSchedulX } from '@/api/service'
+import {checkBridgX} from '@/api/cloud'
+import {checkSchedulX} from '@/api/service'
 
 export default {
   name: 'ApplyInstance',
@@ -82,15 +101,16 @@ export default {
       groupItem: {
         kubernetes_id: 0,
         name: '',
-        cpu: '',
-        memory: '',
-        disk: '',
-        instance_count: ''
+        cpu: '1.000',
+        memory: '1.000',
+        disk: '1.000',
+        instance_count: '1'
       }
     }
   },
   created() {
     this.getSelectList()
+    this.addInstance()
     this.test()
   },
   methods: {
@@ -118,7 +138,7 @@ export default {
       if (this.rowArrList.length >= 100) {
         return
       }
-      this.rowArrList.push({ ...this.groupItem })
+      this.rowArrList.push({...this.groupItem})
     },
     async submit() {
       this.rowArrList.map(i => {
@@ -128,12 +148,45 @@ export default {
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
-        this.$router.push({ name: 'galaxyCloudInstanceGroup' })
+        this.$router.push({name: 'galaxyCloudInstanceGroup'})
       } else {
         this.$message.error('创建失败')
       }
     },
     cancel() {
+      this.rowArrList = []
+    },
+    inputCheck(index, type, count, isFloat, isChange) {
+      const nCount = Number(count)
+      Number.isNaN(nCount) && (count = isChange ? '1.000' : '0');
+      (nCount <= 0 && isChange) && (count = '1.000')
+
+      const fCount = count.toString().split('.')
+      if (isFloat) { // 保留小数
+        if (isChange) { // 修改
+          if (typeof fCount[1] === 'undefined') { // 没有小数
+            count += '.000'
+          } else { // 有小数
+            if (fCount[1].length < 3) { // 未满3位
+              fCount[1].length < 2 && (fCount[1] += '00')
+              fCount[1].length < 3 && (fCount[1] += '0')
+            } else if (fCount[1].length >= 3) { // 已满3位
+              fCount[1] = fCount[1].substring(0, 3)
+            }
+            count = fCount[0] + '.' + fCount[1]
+          }
+        } else { // 输入
+          if (typeof fCount[1] !== 'undefined' && fCount[1].length >= 3) {
+            fCount[1] = fCount[1].substring(0, 3)
+            count = fCount[0] + '.' + fCount[1]
+          }
+        }
+      } else { // 不保留小数
+        count = parseInt(count)
+      }
+
+      this.rowArrList[index][type] = count;
+      // console.log(index, type, count);
     }
   }
 }
@@ -148,18 +201,22 @@ export default {
   padding: 10px;
   background-color: #ffffff;
   box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
+
   .header {
     padding: 10px;
     font-size: 20px;
   }
+
   .statistic {
     float: right;
+
     .num {
       display: inline-block;
       padding: 0 5px;
       color: blue;
     }
   }
+<<<<<<< HEAD
   .content-part {
     margin: 0 auto;
     display: flex;
@@ -192,11 +249,11 @@ export default {
         margin-right: 4px;
     }
 }
-=======
   .content {
     padding: 20px 0 20px 20px;
     width: 100%;
     height: calc(~"100% - 200px");
+
     .create-instance {
       display: flex;
       width: calc(~"100% - 65px");
@@ -208,35 +265,42 @@ export default {
       color: #8080ff;
       font-size: 16px;
       cursor: pointer;
+
       .plus {
         display: inline-block;
         padding: 0 10px;
       }
     }
+
     .content-part {
       margin-top: 10px;
       height: calc(~"100% - 100px");
       background: #fff;
       overflow-y: scroll;
       width: 100%;
+
       .svg {
         width: 40px;
         padding: 5px;
         height: 62px;
       }
+
       .flex-part {
         width: 100%;
         display: flex;
         align-items: center;
+
         i {
           margin-right: 4px;
         }
-        >p {
+
+        > p {
           width: calc(~"100% - 50px");
           border: 1px solid #ccc;
           box-shadow: 5px 5px 5px #b0afaf;
           display: flex;
           align-items: center;
+
           .index {
             width: 50px;
             box-shadow: 5px 0 5px #b0afaf;
@@ -246,10 +310,12 @@ export default {
             align-items: center;
             border-right: 1px solid #ccc;
           }
+
           .group {
             flex-basis: 24%;
             margin-left: 20px;
           }
+
           .config-item {
             flex-basis: 19%;
             display: flex;
@@ -258,7 +324,8 @@ export default {
           }
         }
       }
-      .input{
+
+      .input {
         display: inline-block;
         height: 60px;
         line-height: 40px;
@@ -268,6 +335,7 @@ export default {
       }
     }
   }
+
   .buttons {
     display: flex;
     justify-content: center;
