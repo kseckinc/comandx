@@ -67,9 +67,9 @@
               <div v-loading="loading" class="transfer-cluster-container">
                 <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster" @click="chooseCluster(item, false)">
                   <span class="transfer-cluster-provider">{{ item.cloud_type | filterCloudProvider }}</span>
-                  <span class="transfer-cluster-name">{{ item.cluster_name }}({{ getNodeCount(item.nodes) }})</span>
+                  <span class="transfer-cluster-name">{{ item.cluster_name }}({{ getNodeCount(item.nodes) }}台)</span>
                   <div class="transfer-check-box">
-                    <input type="checkbox" :checked="item.checked" style="cursor:pointer;" />
+                    <input type="checkbox" :checked="item.checked" style="cursor:pointer;">
                   </div>
                 </div>
               </div>

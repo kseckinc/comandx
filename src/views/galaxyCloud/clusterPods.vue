@@ -11,7 +11,7 @@
         </div>
         <div class="cluster-pods-button">
           <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
-          <el-button size="medium" @click="reset">重置</el-button>
+          <el-button size="medium" @click="reset" style="margin-right: 10px">重置</el-button>
         </div>
       </div>
       <div class="cluster-pods-list">

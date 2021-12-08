@@ -20,7 +20,7 @@
         </div>
         <div class="cluster-nodes-button">
           <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
-          <el-button size="medium" @click="reset">重置</el-button>
+          <el-button size="medium" @click="reset" style="margin-right: 10px">重置</el-button>
         </div>
       </div>
       <div class="cluster-nodes-list">
@@ -184,9 +184,6 @@ export default {
         align-items: center;
         .label {
           margin: 0 15px 0 30px;
-        }
-        .cluster-nodes-button {
-          width: 200px;
         }
       }
       .cluster-nodes-list {
