@@ -213,8 +213,8 @@
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>付费方式 </div></el-col>
               <el-col :span="19">
                 <el-radio-group v-model="charge_config.charge_type">
-                  <el-radio-button label="PrePaid">包年包月</el-radio-button>
                   <el-radio-button label="PostPaid">按量付费</el-radio-button>
+                  <el-radio-button label="PrePaid">包年包月</el-radio-button>
                 </el-radio-group>
                 <el-select v-if="charge_config.charge_type === 'PrePaid'" v-model="charge_config.period" style="width: 80px; margin-left: 20px">
                   <el-option v-for="item in chargePeriodOptions" :key="item" :value="item" :label="item" />
