@@ -37,6 +37,7 @@
               v-model="item.name"
               style="width: 180px; margin: 0 10px"
               placeholder="请输入实例组名称"
+              @input="inputName(index)"
             /></span>
             <span class="input" />
             <span class="config-item">CPU <el-input
@@ -153,10 +154,24 @@ export default {
       this.rowArrList.push({ ...this.groupItem })
     },
     async submit() {
-      this.rowArrList.map(i => {
-        i.kubernetes_id = this.selectCluster
-        i.instance_count = Number(i.instance_count)
-      })
+      if (!this.selectCluster) {
+        alert('未选择集群')
+        return
+      }
+
+      for (let i = 0, n = this.rowArrList.length; i < n; i++) {
+        const item = this.rowArrList[i]
+
+        if (item.name === '') {
+          alert('实例组名不可为空')
+          return
+        }
+        // TODO：可能加入提交验证
+
+        item.kubernetes_id = this.selectCluster
+        item.instance_count = Number(item.instance_count)
+      }
+
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
@@ -167,6 +182,9 @@ export default {
     },
     cancel() {
       this.rowArrList = []
+    },
+    inputName(index) {
+      this.rowArrList[index].name = this.rowArrList[index].name.replace(/[^a-zA-Z0-9]/g, '')
     },
     inputCheck(index, type, count, isFloat, isChange) {
       const nCount = Number(count)
