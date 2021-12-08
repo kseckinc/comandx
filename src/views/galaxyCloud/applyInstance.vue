@@ -12,15 +12,15 @@
     <div class="content">
       <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>Kubernetes集群</span>
       <el-select
-          v-model="selectCluster"
-          placeholder="请选择实例所属的Kubernetes集群"
-          style="width: 400px; margin-left:10px"
+        v-model="selectCluster"
+        placeholder="请选择实例所属的Kubernetes集群"
+        style="width: 400px; margin-left:10px"
       >
         <el-option
-            v-for="item in galaxyClusters"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
+          v-for="item in galaxyClusters"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
         />
       </el-select>
       <div class="create-instance" @click="addInstance">
@@ -29,36 +29,48 @@
       <div class="content-part">
         <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
           <svg class="svg" style="cursor: pointer" @click="deleteInstance(index)">
-            <use xlink:href="#icon-ashbin"/>
+            <use xlink:href="#icon-ashbin" />
           </svg>
           <p>
             <span class="index">{{ index + 1 }}</span>
-            <span class="group">实例组 <el-input v-model="item.name" style="width: 180px; margin: 0 10px"
-                                              placeholder="请输入实例组名称"/></span>
-            <span class="input"/>
-            <span class="config-item">CPU <el-input v-model="item.cpu"
-                                                    style="width: 120px; margin: 0 10px"
-                                                    placeholder="1.000"
-                                                    @input="inputCheck(index,'cpu',item.cpu,true,false)"
-                                                    @change="inputCheck(index,'cpu',item.cpu,true,true)"/> 核</span>
-            <span class="input"/>
-            <span class="config-item">内存 <el-input v-model="item.memory"
-                                                   style="width: 120px; margin: 0 10px"
-                                                   placeholder="1.000"
-                                                   @input="inputCheck(index,'memory',item.memory,true,false)"
-                                                   @change="inputCheck(index,'memory',item.memory,true,true)"/> G</span>
-            <span class="input"/>
-            <span class="config-item">硬盘 <el-input v-model="item.disk"
-                                                   style="width: 120px; margin: 0 10px"
-                                                   placeholder="1.000"
-                                                   @input="inputCheck(index,'disk',item.disk,true,false)"
-                                                   @change="inputCheck(index,'disk',item.disk,true,true)"/> G</span>
-            <span class="input"/>
-            <span class="config-item">数量 <el-input v-model="item.instance_count"
-                                                   style="width: 120px; margin: 0 10px"
-                                                   placeholder="1" type="number"
-                                                   @input="inputCheck(index,'instance_count',item.instance_count,false,false)"
-                                                   @change="inputCheck(index,'instance_count',item.instance_count,false,true)"/> 台</span>
+            <span class="group">实例组 <el-input
+              v-model="item.name"
+              style="width: 180px; margin: 0 10px"
+              placeholder="请输入实例组名称"
+            /></span>
+            <span class="input" />
+            <span class="config-item">CPU <el-input
+              v-model="item.cpu"
+              style="width: 120px; margin: 0 10px"
+              placeholder="1.000"
+              @input="inputCheck(index,'cpu',item.cpu,true,false)"
+              @change="inputCheck(index,'cpu',item.cpu,true,true)"
+            /> 核</span>
+            <span class="input" />
+            <span class="config-item">内存 <el-input
+              v-model="item.memory"
+              style="width: 120px; margin: 0 10px"
+              placeholder="1.000"
+              @input="inputCheck(index,'memory',item.memory,true,false)"
+              @change="inputCheck(index,'memory',item.memory,true,true)"
+            /> G</span>
+            <span class="input" />
+            <span class="config-item">硬盘 <el-input
+              v-model="item.disk"
+              style="width: 120px; margin: 0 10px"
+              placeholder="1.000"
+              @input="inputCheck(index,'disk',item.disk,true,false)"
+              @change="inputCheck(index,'disk',item.disk,true,true)"
+            /> G</span>
+            <span class="input" />
+            <span class="config-item">数量 <el-input
+              v-model="item.instance_count"
+              style="width: 120px; margin: 0 10px"
+              placeholder="1"
+              type="number"
+              @input="inputCheck(index,'instance_count',item.instance_count,false,false)"
+              @change="inputCheck(index,'instance_count',item.instance_count,false,true)"
+            /> 台</span>
           </p>
         </div>
       </div>
@@ -71,14 +83,14 @@
     </div>
     <div class="buttons">
       <el-button
-          size="medium"
-          type="primary"
-          @click="submit"
+        size="medium"
+        type="primary"
+        @click="submit"
       >提 交
       </el-button>
       <el-button
-          size="medium"
-          @click="cancel"
+        size="medium"
+        @click="cancel"
       >取 消
       </el-button>
     </div>
@@ -86,10 +98,10 @@
 </template>
 
 <script>
-import {instancGroupBatchCreate, getGalaxyClusters} from '@/api/galaxyCloud'
+import { instancGroupBatchCreate, getGalaxyClusters } from '@/api/galaxyCloud'
 import _ from 'lodash'
-import {checkBridgX} from '@/api/cloud'
-import {checkSchedulX} from '@/api/service'
+import { checkBridgX } from '@/api/cloud'
+import { checkSchedulX } from '@/api/service'
 
 export default {
   name: 'ApplyInstance',
@@ -138,7 +150,7 @@ export default {
       if (this.rowArrList.length >= 100) {
         return
       }
-      this.rowArrList.push({...this.groupItem})
+      this.rowArrList.push({ ...this.groupItem })
     },
     async submit() {
       this.rowArrList.map(i => {
@@ -148,7 +160,7 @@ export default {
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
-        this.$router.push({name: 'galaxyCloudInstanceGroup'})
+        this.$router.push({ name: 'galaxyCloudInstanceGroup' })
       } else {
         this.$message.error('创建失败')
       }
@@ -185,7 +197,7 @@ export default {
         count = parseInt(count)
       }
 
-      this.rowArrList[index][type] = count;
+      this.rowArrList[index][type] = count
       // console.log(index, type, count);
     }
   }

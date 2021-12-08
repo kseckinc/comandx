@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column label="机型配置" align="center">
             <template slot-scope="{row}">
-              {{ row.allocated_cpu_cores|formatPrecision(3) }}核/ {{ row.allocated_memory_gi|formatPrecision(3) }}G /{{ row.allocated_disk_gi|formatPrecision(3) }}
+              {{ row.allocated_cpu_cores|formatPrecision(3) }}核/ {{ row.allocated_memory_gi|formatPrecision(3) }}G /{{ row.allocated_disk_gi|formatPrecision(3) }}G
             </template>
           </el-table-column>
           <el-table-column label="运行时间" align="center" prop="running_time" />
