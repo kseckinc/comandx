@@ -849,7 +849,7 @@ export default {
       this.vpcAddVisible = false
     },
     async submitSubnet() {
-      const res = await subnetCreate(this.cluster.provider, this.cluster.zone_id, this.subnet.cidr_block, this.subnet.vpc_id, this.subnet.switch_name)
+      const res = await subnetCreate(this.cluster.provider, this.cluster.zone_id, this.subnet.cidr_block, this.subnet.vpc_id, this.subnet.switch_name, this.subnet.gateway_ip)
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }
