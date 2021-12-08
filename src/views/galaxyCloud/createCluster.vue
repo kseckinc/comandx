@@ -17,12 +17,24 @@
     <el-row :gutter="20" style="margin-top: 10px">
       <el-col :span="4" class="title">
         <span class="asterisk">*</span> 服务网段
+        <el-tooltip effect="light" placement="bottom">
+          <div slot="content">
+            服务网段是Kubernetes集群内部服务网段，<br>服务网段之间，服务网段和Pod网段之间<br>不应该重叠，如10.11.0.0/16
+          </div>
+          <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+        </el-tooltip>
       </el-col>
       <el-col :span="4">
         <el-input v-model="service_cidr" size="medium" style="width: 100%" placeholder="例如: 172.16.16.0/20" @blur="verifyCidr" />
       </el-col>
       <el-col :span="2" class="title">
         <span class="asterisk">*</span> Pod网段
+        <el-tooltip effect="light" placement="bottom">
+          <div slot="content">
+            Pod网段是应用实例所在的网段，多个集群<br>之间网络应该不重叠比如10.244.0.0/16，<br> 生成的实例ip可能是10.244.0.100
+          </div>
+          <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+        </el-tooltip>
       </el-col>
       <el-col :span="8">
         <el-input v-model="pod_cidr" size="medium" style="width: 47%" placeholder="例如: 192.169.16.0/20" @blur="verifyCidr" />
@@ -46,7 +58,7 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="4"><div style="height: 16px" /></el-col>
-      <el-col :span="20"><div><i class="el-icon-info" style="color: green" /><span style="display: inline-block; margin-left: 5px">搭建Kubernates集群机器配置可参考</span>
+      <el-col :span="20"><div><i class="el-icon-info" style="color: green" /><span style="display: inline-block; margin-left: 5px">搭建K8s集群机器配置可参考</span>
         <span style="color: blue; cursor: pointer" @click="goto('https://help.aliyun.com/document_detail/98886.html#title-084-lfh-8go')">《ECS选型》</span></div></el-col>
     </el-row>
     <el-row :gutter="20" style="height: calc(98% - 240px)">
@@ -59,7 +71,8 @@
                 <span class="transfer-step">第一步： </span><span>选择集群</span>
               </div>
               <div class="transfer-note">
-                建议选择机器配置不低于2核4G的集群
+                1、建议选择机器配置不低于2核4G的集群<br>
+                2、安全组规则已经对BridgX服务所部署的服务器开放了6443端口，且您账号的AKSK具有VPC操作权限
               </div>
             </div>
             <div class="transfer-content">
@@ -91,8 +104,10 @@
           </svg>
           <div class="transfer-item">
             <div class="transfer-title">
-              <div style="margin: 20px 0  23px 20px">
+              <div style="margin: 20px 0  0 20px">
                 <span class="transfer-step">第二步： </span><span>选择配置方案</span>
+              </div>
+              <div style="height: 49px">
               </div>
             </div>
             <div class="transfer-content">
@@ -355,7 +370,7 @@ export default {
           color: black;
         }
         .transfer-note {
-          margin: 5px 0 5px 20px;
+          padding: 5px 20px;
           font-size: 12px;
           color: #D9001B;
         }

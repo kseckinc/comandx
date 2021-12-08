@@ -22,7 +22,7 @@
           <el-row>
             <el-col :span="5"><span class="cluster-info-label">DISK</span></el-col>
             <el-col :span="3"><span class="cluster-info-percent">{{ cluster.diskPercent | formatPercent(2) }}</span></el-col>
-            <el-col :span="16"><span class="cluster-info-occupancy">{{ (cluster.all_disk_gi - cluster.free_disk_gi) | formatPrecision(2) }}</span> / {{ cluster.all_disk_gi | formatPrecision(2) }}<span class="cluster-info-label" style="margin-left: 10px">T</span></el-col>
+            <el-col :span="16"><span class="cluster-info-occupancy">{{ (cluster.all_disk_gi - cluster.free_disk_gi) | formatPrecision(2) }}</span> / {{ cluster.all_disk_gi | formatPrecision(2) }}<span class="cluster-info-label" style="margin-left: 10px">G</span></el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -87,6 +87,7 @@ export default {
 
 <style lang="less" scoped>
   .cluster-info-container {
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
     background-color: white;
     margin: 10px;
     padding: 10px 20px;

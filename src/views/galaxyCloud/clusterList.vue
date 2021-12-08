@@ -28,7 +28,7 @@
         <div class="label" style="margin-left: 15px">ID</div>
         <el-input v-model="search.id" size="medium" style="width: 200px" placeholder="输入集群ID进行匹配" clearable @blur="fetchData" />
         <div class="label">集群名称</div>
-        <el-input v-model="search.name" size="medium" style="width: 200px" placeholder="输入集群名称进行匹配" clearable @blur="fetchData" />
+        <el-input v-model="search.cluster_name" size="medium" style="width: 200px" placeholder="输入集群名称进行匹配" clearable @blur="fetchData" />
       </div>
       <div class="clusters-button">
         <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
@@ -38,17 +38,17 @@
     <div class="clusters-list">
       <div class="buttons">
         <el-button size="medium" type="primary" style="margin-left: 10px" @click="createGalaxyCluster">+创建集群</el-button>
-        <el-button size="medium" style="margin-left: 40px" disabled>编辑</el-button>
-        <el-button size="medium" disabled>删除</el-button>
+<!--        <el-button size="medium" style="margin-left: 40px" disabled>编辑</el-button>-->
+<!--        <el-button size="medium" disabled>删除</el-button>-->
       </div>
       <el-table v-loading="loading" :data="list" border style="margin: 10px; width: calc(100% - 30px)">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="状态" align="center">
+        <el-table-column label="状态" align="center" width="90px">
           <template slot-scope="{ row }">
             <span class="status">{{ row.status | generateClusterStatus }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="ID" prop="cluster_id" align="center" />
+        <el-table-column label="ID" prop="cluster_id" align="center" width="90px" />
         <el-table-column label="集群名称" align="center">
           <template slot-scope="{ row }">
             <span style="color: blue; cursor: pointer" @click="clusterInfo(row.cluster_name)"> {{ row.cluster_name }} </span>
@@ -56,17 +56,17 @@
         </el-table-column>
         <el-table-column label="CPU(已用/全部)" align="center" min-width="130px">
           <template slot-scope="{ row }">
-            <span style="color:#B8741A">{{ (row.all_cpu_cores - row.free_cpu_cores) | formatPrecision(2) }}核</span><span class="division">/</span>{{ row.all_cpu_cores | formatPrecision(2) }}核
+            <span style="color:#B8741A">{{ (row.all_cpu_cores - row.free_cpu_cores) | formatPrecision(3) }}核</span><span class="division">/</span>{{ row.all_cpu_cores | formatPrecision(3) }}核
           </template>
         </el-table-column>
         <el-table-column label="内存(已用/全部)" align="center" min-width="130px">
           <template slot-scope="{ row }">
-            <span style="color:#B8741A">{{ (row.all_memory_gi - row.free_memory_gi) | formatPrecision(2) }}G</span><span class="division">/</span>{{ (row.all_memory_gi) | formatPrecision(2) }}G
+            <span style="color:#B8741A">{{ (row.all_memory_gi - row.free_memory_gi) | formatPrecision(3) }}G</span><span class="division">/</span>{{ (row.all_memory_gi) | formatPrecision(3) }}G
           </template>
         </el-table-column>
         <el-table-column label="本地存储(已用/全部)" align="center" min-width="130px">
           <template slot-scope="{ row }">
-            <span style="color:#B8741A">{{ (row.all_disk_gi - row.free_disk_gi) | formatPrecision(2) }}G</span><span class="division">/</span>{{ row.all_disk_gi | formatPrecision(2) }}G
+            <span style="color:#B8741A">{{ (row.all_disk_gi - row.free_disk_gi) | formatPrecision(3) }}G</span><span class="division">/</span>{{ row.all_disk_gi | formatPrecision(3) }}G
           </template>
         </el-table-column>
         <el-table-column label="集群机器" align="center" min-width="130px">
@@ -81,7 +81,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="{ row }">
-            <span style="color: blue; cursor: pointer; margin-right: 5px">日志</span><span style="color: #D9001B; cursor: pointer" @click="showDelete(row)">删除</span>
+<!--            <span style="color: blue; cursor: pointer; margin-right: 5px">日志</span>-->
+            <span style="color: #D9001B; cursor: pointer" @click="showDelete(row)">删除</span>
           </template>
         </el-table-column>
       </el-table>
@@ -124,14 +125,14 @@ export default {
       },
       search: {
         id: '',
-        name: ''
+        cluster_name: ''
       },
       cluster: {
         cluster_id: null
       },
       query: {
         page_number: 1,
-        page_size: 50,
+        page_size: 10,
         total: 0
       },
       list: [],
@@ -149,7 +150,7 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true
-      const res = await clustersSummary(this.query.page_number, this.query.page_size, this.search.id, this.search.name)
+      const res = await clustersSummary(this.query.page_number, this.query.page_size, this.search.id, this.search.cluster_name)
       this.query = {
         page_number: _.get(res, 'page_number', 1),
         page_size: _.get(res, 'page_size', 50),
@@ -201,11 +202,11 @@ export default {
 <style lang="less" scoped>
   .container {
     position: absolute;
-    margin: 10px;
     padding: 10px;
     height: 98%;
-    width: calc(~"100% - 20px");
+    width: 100%;
     .clusters-header {
+      box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
       display: flex;
       background-color: white;
       flex-direction: row;
@@ -224,11 +225,12 @@ export default {
       }
     }
     .clusters-list {
+      box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
       margin-top: 10px;
       padding: 10px 0;
       background-color: white;
       width: 100%;
-      height: calc(~"100% - 50px");
+      height: calc(~"100% - 60px");
     }
   }
   .clusters {

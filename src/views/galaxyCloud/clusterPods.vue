@@ -126,6 +126,7 @@ export default {
     width: calc(~"100% - 20px");
   }
   .cluster-pods {
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
     background-color: white;
     margin: 10px;
     height: calc(~"98% - 150px");

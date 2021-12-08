@@ -90,7 +90,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/galaxy-cloud/cluster',
     name: '集群',
-    meta: { title: 'Kubernetes集群', icon: 'galaxy' },
+    meta: { title: 'K8s集群', icon: 'galaxy' },
     children: [
       {
         path: '/galaxy-cloud/cluster',
@@ -136,16 +136,16 @@ export const constantRoutes = [
         meta: { title: '申请实例', icon: '' }
       },
       {
-        path: '/galaxy-cloud/instance/self',
-        name: 'galaxyCloudInstanceSelf',
-        component: () => import('@/views/galaxyCloud/selfInstance'),
-        meta: { title: '我的实例', icon: '' }
-      },
-      {
         path: '/galaxy-cloud/instance/group',
         name: 'galaxyCloudInstanceGroup',
         component: () => import('@/views/galaxyCloud/instanceGroup'),
         meta: { title: '实例组', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/self',
+        name: 'galaxyCloudInstanceSelf',
+        component: () => import('@/views/galaxyCloud/selfInstance'),
+        meta: { title: '实例列表', icon: '' }
       },
       {
         path: '/galaxy-cloud/instance/form',
