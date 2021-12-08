@@ -6,16 +6,34 @@ const cloudProviders = [{
   label: '华为云'
 }]
 
-const alibabaCloudDiskTypes = [{
-  value: 'cloud_efficiency',
-  label: '高效云盘'
-}, {
-  value: 'cloud_ssd',
-  label: 'SSD云盘'
-}, {
-  value: 'cloud_essd',
-  label: 'ESSD云盘'
-}]
+const cloudDiskTypes = {
+  AlibabaCloud: [{
+    value: 'cloud_efficiency',
+    label: '高效云盘'
+  }, {
+    value: 'cloud_ssd',
+    label: 'SSD云盘'
+  }, {
+    value: 'cloud_essd',
+    label: 'ESSD云盘'
+  }],
+  HuaweiCloud: [{
+    value: 'SATA',
+    label: '普通IO'
+  }, {
+    value: 'SAS',
+    label: '高IO'
+  }, {
+    value: 'SSD',
+    label: '超高IO'
+  }, {
+    value: 'CO_P1',
+    label: '高IO (性能优化I型)'
+  }, {
+    value: 'UH_L1',
+    label: '高IO (性能优化I型)'
+  }]
+}
 
 const ramUrl = {
   AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak',
@@ -91,7 +109,7 @@ const taskStatus = [{
 
 export {
   cloudProviders,
-  alibabaCloudDiskTypes,
+  cloudDiskTypes,
   aksk,
   taskStatus,
   systemDiskSizes,

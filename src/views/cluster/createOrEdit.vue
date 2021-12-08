@@ -290,7 +290,7 @@
               <el-col :span="3">
                 <el-select v-model="system_disk.category">
                   <el-option
-                    v-for="item in alibabaCloudDiskTypes"
+                    v-for="item in diskTypes"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -316,7 +316,7 @@
               <el-col :span="3">
                 <el-select v-model="item.category">
                   <el-option
-                    v-for="t in alibabaCloudDiskTypes"
+                    v-for="t in diskTypes"
                     :key="t.value"
                     :label="t.label"
                     :value="t.value"
@@ -512,7 +512,7 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType } from '@/config/cloud'
+import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -570,7 +570,8 @@ export default {
       }],
       step: 0,
       cloudProviders,
-      alibabaCloudDiskTypes,
+      cloudDiskTypes,
+      diskTypes: [],
       systemDiskSizes,
       dataDiskSizes,
       huaweiIpType,
@@ -704,6 +705,7 @@ export default {
     },
     async loadRegion() {
       this.regions = await regionList(this.cluster.provider)
+      this.diskTypes = _.get(this.cloudDiskTypes, this.cluster.provider, [])
       if (this.cluster.region_id === '' && this.regions !== null && this.regions.length > 0) {
         this.cluster.region_id = _.get(this.regions, '0.RegionId', '')
       }
