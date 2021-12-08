@@ -31,7 +31,7 @@
         <span class="asterisk">*</span> Pod网段
         <el-tooltip effect="light" placement="bottom">
           <div slot="content">
-            Pod网段是应用实例所在的网段，多个集群<br>之间网络应该不重叠比如10.244.0.0/16，<br> 生成的实例ip可能是10.244.0.100
+            Pod网段是应用实例所在的网段，多个集群<br>之间网络应该不重叠，比如10.244.0.0/16，<br> 生成的实例ip可能是10.244.0.100
           </div>
           <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
         </el-tooltip>
