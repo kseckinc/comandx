@@ -5,6 +5,8 @@ export function filterCloudProvider(string) {
   switch (string) {
     case 'AlibabaCloud':
       return '阿里云'
+    case 'HuaweiCloud':
+      return '华为云'
     default:
       return '未知云厂商'
   }
