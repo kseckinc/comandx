@@ -127,12 +127,6 @@ export default {
     this.test()
   },
   methods: {
-    async test() {
-      const bres = await checkBridgX()
-      const sres = await checkSchedulX()
-      console.log(bres)
-      console.log(sres.code === 'ECONNREFUSED')
-    },
     async getSelectList() {
       const res = await getGalaxyClusters()
       if (res.status === 'success') {

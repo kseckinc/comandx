@@ -32,7 +32,7 @@
             </template>
           </el-table-column>
           <el-table-column label="IP" prop="ip_address" align="center" />
-          <el-table-column label="机器名称" prop="host_name" align="center" />
+          <el-table-column label="机器名称" prop="host_name" align="center" min-width="150px" />
           <el-table-column label="所属集群" align="center">
             <template slot-scope="{ row }">
               <span class="cluster-nodes-ip" @click="transformToCluster('clusterInfo', row.cluster_name)">{{ row.cluster_name }}</span>

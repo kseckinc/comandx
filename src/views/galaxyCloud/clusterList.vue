@@ -230,7 +230,7 @@ export default {
       padding: 10px 0;
       background-color: white;
       width: 100%;
-      height: calc(~"100% - 60px");
+      height: calc(~"100% - 45px");
     }
   }
   .clusters {
