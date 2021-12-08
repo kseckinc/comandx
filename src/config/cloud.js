@@ -1,6 +1,9 @@
 const cloudProviders = [{
   value: 'AlibabaCloud',
   label: '阿里云'
+}, {
+  value: 'HuaweiCloud',
+  label: '华为云'
 }]
 
 const alibabaCloudDiskTypes = [{
@@ -15,7 +18,8 @@ const alibabaCloudDiskTypes = [{
 }]
 
 const ramUrl = {
-  AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak'
+  AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak',
+  HuaweiCloud: ''
 }
 
 const systemDiskSizes = [{
@@ -43,10 +47,31 @@ const dataDiskSizes = [{
   label: '2T'
 }]
 
+const huaweiIpType = [{
+  value: '5_telcom',
+  label: '电信'
+}, {
+  value: '5_union',
+  label: '联通'
+}, {
+  value: '5_bgp',
+  label: '全动态BGP'
+}, {
+  value: '5_sbgp',
+  label: '静态BGP'
+}, {
+  value: '5_ipv6',
+  label: 'ipv6'
+}]
+
 const aksk = {
   AlibabaCloud: {
     key: 'AccessKey',
     secret: 'AccessKey Secret'
+  },
+  HuaweiCloud: {
+    key: 'AK',
+    secret: 'SK'
   }
 }
 
@@ -71,5 +96,6 @@ export {
   taskStatus,
   systemDiskSizes,
   dataDiskSizes,
-  ramUrl
+  ramUrl,
+  huaweiIpType
 }

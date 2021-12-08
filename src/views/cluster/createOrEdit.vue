@@ -183,6 +183,28 @@
           </div>
           <div class="form-container">
             <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>IP类型 </div></el-col>
+              <el-col :span="19">
+                <el-select v-model="network_config.internet_ip_type" size="medium" style="width: 400px">
+                  <el-option
+                    v-for="item in huaweiIpType"
+                    :key="item.value"
+                    :value="item.value"
+                    :label="item.label"
+                  />
+                </el-select>
+                <el-tooltip class="item" effect="light" placement="top">
+                  <div slot="content">
+                    安全组为虚拟防火墙，用于控制安全组内云服务器的入流量<br>和出流量
+                  </div>
+                  <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
+                </el-tooltip>
+                <el-button size="medium" type="primary" style="margin-left: 10px;width: 126px" @click="addSecurityGroup">添加安全组</el-button>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
               <el-col :span="5"><div class="center-text">公网访问 </div></el-col>
               <el-col :span="19">
                 <div style="height: 36px; display: flex; align-items: center">
@@ -422,6 +444,16 @@
             </el-select>
           </el-col>
         </el-row>
+        <el-row style="padding-bottom: 20px">
+          <el-col :span="5">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
+              网关IP
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <el-input v-model="subnet.gateway_ip" size="medium" />
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="5">
             <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
@@ -480,7 +512,7 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
+import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -527,7 +559,8 @@ export default {
       subnet: {
         switch_name: '',
         vpc_id: '',
-        cidr_block: ''
+        cidr_block: '',
+        gateway_ip: ''
       },
       securityGroup: {
         security_group_name: ''
@@ -540,6 +573,7 @@ export default {
       alibabaCloudDiskTypes,
       systemDiskSizes,
       dataDiskSizes,
+      huaweiIpType,
       providers: [{
         value: '',
         label: '全部'
@@ -566,7 +600,8 @@ export default {
         subnet_id: '',
         security_group: '',
         internet_charge_type: 'PayByTraffic',
-        internet_max_bandwidth_out: 0
+        internet_max_bandwidth_out: 0,
+        internet_ip_type: ''
       },
       networkSwitch: false,
       system_disk: {
@@ -726,6 +761,9 @@ export default {
           subnet_id: this.network_config.subnet_id,
           security_group: this.network_config.security_group
         }
+      }
+      if (this.cluster.provider === 'HuaweiCloud') {
+        network_config.internet_ip_type = this.network_config.internet_ip_type
       }
       let charge_config
       if (this.charge_config.charge_type === 'PrePaid') {
