@@ -63,11 +63,11 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
-                @click="handleDelete(scope.row)"
+                @click="confirmDelete(scope.row)"
               >删除</el-button>
               <el-button
                 type="text"
-                @click="handleRestart(scope.row)"
+                @click="confirmRestart(scope.row)"
               >重启</el-button>
             </template>
           </el-table-column>
@@ -75,6 +75,34 @@
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size" @pagination="fetchData" />
       </div>
     </div>
+    <el-dialog :visible="confirmDeleteInstanceDiglogVis" width="30%" @close="cancelDeleteInstance">
+      <div style="font-size:25px;text-align:center">
+        确定要删除实例吗?
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <el-button
+          type="primary"
+          @click="handleDelete()"
+        >删除</el-button>
+        <el-button
+          @click="cancelDeleteInstance()"
+        >取消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible="confirmRestartInstanceDiglogVis" width="30%" @close="cancelRestartInstance">
+      <div style="font-size:25px;text-align:center">
+        确定要重启实例吗?
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <el-button
+          type="primary"
+          @click="handleRestart()"
+        >重启</el-button>
+        <el-button
+          @click="cancelRestartInstance()"
+        >取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -159,7 +187,11 @@ export default {
         page_number: 1,
         page_size: 10
       },
-      selectInstanceGroups: []
+      selectInstanceGroups: [],
+      confirmDeleteInstanceDiglogVis: false,
+      confirmRestartInstanceDiglogVis: false,
+      deleteRow: null,
+      restartRow: null
     }
   },
   created() {
@@ -194,31 +226,47 @@ export default {
     applyInstance() {
       this.$router.push({ name: 'galaxyCloudInstanceApply' })
     },
-    async handleDelete(row) {
+    async handleDelete() {
       const data = {
-        instance_group_id: Number(row.group_id),
-        instance_name: row.pod_name
+        instance_group_id: Number(this.deleteRow.group_id),
+        instance_name: this.deleteRow.pod_name
       }
       const res = await instanceDelete(data)
-      if (res.data.Status === 'success') {
+      if (res.status === 'success') {
         this.$message.success('删除成功')
+        this.confirmDeleteInstanceDiglogVis = false
       } else {
         this.$message.error('删除失败')
       }
       await this.fetchData()
     },
-    async handleRestart(row) {
+    async handleRestart() {
       const data = {
-        instance_group_id: Number(row.group_id),
-        instance_name: row.pod_name
+        instance_group_id: Number(this.restartRow.group_id),
+        instance_name: this.restartRow.pod_name
       }
       const res = await instanceRestart(data)
-      if (res.data.Status === 'success') {
-        this.$message.success('删除成功')
+      if (res.status === 'success') {
+        this.$message.success('重启成功')
+        this.confirmRestartInstanceDiglogVis = false
       } else {
-        this.$message.error('删除失败')
+        this.$message.error('重启失败')
       }
       await this.fetchData()
+    },
+    confirmDelete(row) {
+      this.deleteRow = row
+      this.confirmDeleteInstanceDiglogVis = true
+    },
+    confirmRestart(row) {
+      this.restartRow = row
+      this.confirmRestartInstanceDiglogVis = true
+    },
+    cancelDeleteInstance() {
+      this.confirmDeleteInstanceDiglogVis = false
+    },
+    cancelRestartInstance() {
+      this.confirmRestartInstanceDiglogVis = false
     }
   }
 }

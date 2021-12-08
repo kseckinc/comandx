@@ -7,7 +7,7 @@
       <div>
         资源申请
       </div>
-      <hr color="#80FAFF" />
+      <hr color="#80FAFF">
     </div>
     <div class="content">
       <span class="is-required" style="color: #FF4C4C; margin-left: 40px">* </span><span>Kubernetes集群</span>
