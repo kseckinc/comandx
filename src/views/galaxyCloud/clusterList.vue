@@ -28,7 +28,7 @@
         <div class="label" style="margin-left: 15px">ID</div>
         <el-input v-model="search.id" size="medium" style="width: 200px" placeholder="输入集群ID进行匹配" clearable @blur="fetchData" />
         <div class="label">集群名称</div>
-        <el-input v-model="search.cluster_name" size="medium" style="width: 200px" placeholder="输入集群名称进行匹配" clearable @blur="fetchData" />
+        <el-input v-model="search.name" size="medium" style="width: 200px" placeholder="输入集群名称进行匹配" clearable @blur="fetchData" />
       </div>
       <div class="clusters-button">
         <el-button size="medium" type="primary" @click="fetchData">查询</el-button>
@@ -125,7 +125,7 @@ export default {
       },
       search: {
         id: '',
-        cluster_name: ''
+        name: ''
       },
       cluster: {
         cluster_id: null
@@ -150,7 +150,7 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true
-      const res = await clustersSummary(this.query.page_number, this.query.page_size, this.search.id, this.search.cluster_name)
+      const res = await clustersSummary(this.query.page_number, this.query.page_size, this.search.id, this.search.name)
       this.query = {
         page_number: _.get(res, 'page_number', 1),
         page_size: _.get(res, 'page_size', 50),

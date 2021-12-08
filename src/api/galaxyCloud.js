@@ -115,7 +115,7 @@ export async function instanceRestart(data) {
   })
 }
 
-export function clustersSummary(page_number, page_size, id, cluster_name) {
+export function clustersSummary(page_number, page_size, id, name) {
   const token = getToken()
   return request({
     url: '/api/v1/galaxy_cloud/cluster/summary',
@@ -123,7 +123,7 @@ export function clustersSummary(page_number, page_size, id, cluster_name) {
       page_number,
       page_size,
       id,
-      cluster_name
+      name
     },
     headers: {
       Authorization: ` Bearer ${token}`
