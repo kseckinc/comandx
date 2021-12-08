@@ -245,7 +245,6 @@ export default {
     color: white;
     background: rgb(184, 116, 26);
     border-radius: 5px;
-    margin-top: 10px;
   }
   .division {
     display: inline-block;
