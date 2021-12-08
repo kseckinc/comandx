@@ -73,7 +73,7 @@ export function formatMoment(date, format) {
 }
 
 export function formatMomentZone(date, format) {
-  const str = moment(date).utcOffset(-6).format(format)
+  const str = moment(new Date(date)).utcOffset(-6).format(format)
   return str === 'Invalid date' ? '--' : str
 }
 
