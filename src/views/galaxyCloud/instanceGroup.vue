@@ -4,8 +4,14 @@
       <div class="search">
         <div class="search-item">
           <span class="label">实例组名称</span>
-          <el-input v-model="search.name" size="medium" placeholder="输入实例组名称搜索" clearable style="width: 200px"
-                    @change="fetchData"/>
+          <el-input
+            v-model="search.name"
+            size="medium"
+            placeholder="输入实例组名称搜索"
+            clearable
+            style="width: 200px"
+            @change="fetchData"
+          />
         </div>
       </div>
       <div class="buttons">
@@ -20,14 +26,14 @@
       </div>
       <div class="table">
         <el-table
-            v-loading="listLoading"
-            :data="list"
-            border
-            style="margin: 10px; width: calc(100% - 30px)"
-            @selection-change="handleSelectionChange"
+          v-loading="listLoading"
+          :data="list"
+          border
+          style="margin: 10px; width: calc(100% - 30px)"
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column label="ID" prop="id" align="center"/>
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="ID" prop="id" align="center" />
           <el-table-column label="实例组名" align="center">
             <template slot-scope="{row}">
               {{ row.name }}
@@ -46,26 +52,31 @@
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
-                  type="text"
-                  @click="process(scope.row)"
+                type="text"
+                @click="process(scope.row)"
               >扩缩容
               </el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size"
-                    @pagination="fetchData"/>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page_number"
+          :limit.sync="listQuery.page_size"
+          @pagination="fetchData"
+        />
       </div>
     </div>
 
     <el-dialog title="实例组伸缩" :visible="dialogVisible" width="500px" @close="cancelDialog">
       <div>
         <el-form
-            ref="dialogForm"
-            :model="dialogForm"
-            label-width="120px"
-            label-position="right"
-            style="margin-left:50px"
+          ref="dialogForm"
+          :model="dialogForm"
+          label-width="120px"
+          label-position="right"
+          style="margin-left:50px"
         >
           <el-form-item label="实例组名">
             <span>{{ curRowName }}</span>
@@ -73,12 +84,12 @@
           <el-form-item label="运行实例数">
             <div>
               <el-input
-                  v-model="dialogForm.instance_count"
-                  type="number"
-                  prop="instance_count"
-                  aria-valuemin="0"
-                  style="width: 120px"
-                  @input="inputCheck"
+                v-model="dialogForm.instance_count"
+                type="number"
+                prop="instance_count"
+                aria-valuemin="0"
+                style="width: 120px"
+                @input="inputCheck"
               />
             </div>
           </el-form-item>
@@ -198,7 +209,7 @@ import _ from 'lodash'
 
 export default {
   name: 'InstanceGroup',
-  components: {Pagination},
+  components: { Pagination },
   data() {
     return {
       accounts: [],
@@ -254,7 +265,7 @@ export default {
     },
 
     applyInstance() {
-      this.$router.push({name: 'galaxyCloudInstanceApply'})
+      this.$router.push({ name: 'galaxyCloudInstanceApply' })
     },
     async reboot() {
 
