@@ -28,6 +28,11 @@
             </template>
           </el-table-column>
           <el-table-column label="流水号" prop="id" align="center" />
+          <el-table-column label="所属集群" align="center">
+            <template slot-scope="{row}">
+              {{ row.cluster_name }}
+            </template>
+          </el-table-column>
           <el-table-column label="实例组" align="center">
             <template slot-scope="{row}">
               {{ row.instance_group }}
