@@ -75,9 +75,9 @@
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.page_number" :limit.sync="listQuery.page_size" @pagination="fetchData" />
       </div>
     </div>
-    <el-dialog :visible="confirmDeleteInstanceDiglogVis" width="30%" @close="cancelDeleteInstance">
-      <div style="font-size:25px;text-align:center">
-        确定要删除实例吗?
+    <el-dialog title="提示" :visible="confirmDeleteInstanceDiglogVis" width="30%" @close="cancelDeleteInstance">
+      <div style="font-size:15px;text-align:center">
+        删除实例将会影响用户访问流量，确定要删除吗？
       </div>
       <div style="text-align:center;margin-top:20px">
         <el-button
@@ -89,9 +89,9 @@
         >取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible="confirmRestartInstanceDiglogVis" width="30%" @close="cancelRestartInstance">
-      <div style="font-size:25px;text-align:center">
-        确定要重启实例吗?
+    <el-dialog title="提示" :visible="confirmRestartInstanceDiglogVis" width="30%" @close="cancelRestartInstance">
+      <div style="font-size:15px;text-align:center">
+        重启实例将会影响用户访问流量，确定要重启吗？
       </div>
       <div style="text-align:center;margin-top:20px">
         <el-button
