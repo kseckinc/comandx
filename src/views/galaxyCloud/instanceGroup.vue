@@ -108,7 +108,6 @@
 </template>
 
 <style lang="less" scoped>
-<<<<<<< HEAD
   .container {
     position: absolute;
     width: 100%;
@@ -125,30 +124,6 @@
         display: flex;
         flex-basis: 100%;
         .search-item {
-=======
-.container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 10px 10px 0 10px;
-  background-color: rgb(240, 242, 245);
-
-  .header {
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
-    display: flex;
-    flex-direction: row;
-
-    .search {
-      display: flex;
-      flex-basis: 100%;
-
-      .search-item {
-        display: flex;
-        margin-right: 40px;
-
-        .label {
           display: flex;
           margin-right: 40px;
           .label {
@@ -177,33 +152,11 @@
         margin-top: 10px;
       }
     }
-
-    .buttons {
-      display: flex;
-      width: 200px;
-    }
-  }
-
-  .content {
-    margin-top: 20px;
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, .08);
-
-    .buttons {
-      button {
-        margin-right: 40px;
-      }
-    }
-
-    .table {
-      margin-top: 10px;
-    }
   }
 </style>
 
 <script>
-import {getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink} from '@/api/galaxyCloud'
+import { getInstanceGroupList, instanceGroupDelete, instanceGroupExpandOrShrink } from '@/api/galaxyCloud'
 import Pagination from '@/components/Pagination'
 import _ from 'lodash'
 

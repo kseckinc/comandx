@@ -2,7 +2,7 @@
   <div class="container">
     <el-row :gutter="20">
       <el-col :span="4" class="title">
-        <span class="asterisk">*</span> Kubernetes集群名
+        <span class="asterisk">*</span> K8s
       </el-col>
       <el-col :span="20">
         <el-input v-model="cluster_name" size="medium" style="width: 30%" placeholder="请输入集群名" />
@@ -93,8 +93,8 @@
                   layout="prev, pager, next"
                   style="float: right"
                   :total="query.total"
-                  :current-page.sync="query.page_number"
                   hide-on-single-page
+                  :current-page.sync="query.page_number"
                   @current-change="fetchData"
                 />
               </div>
@@ -365,7 +365,7 @@ export default {
       flex-basis: 40%;
       flex-direction: column;
       .transfer-title {
-        box-shadow: 0 5px 5px #b0afaf;
+        box-shadow: 0 0px 5px #b0afaf;
         .transfer-step {
           font-weight: bolder;
           color: black;
@@ -388,7 +388,7 @@ export default {
           }
         }
         .transfer-cluster-container {
-          height: calc(~"100% - 230px");
+          height: calc(~"100% - 50px");
           overflow-y: scroll;
         }
         .transfer-cluster-nodes {
@@ -404,7 +404,7 @@ export default {
           }
         }
         .transfer-footer-container {
-          height: 160px;
+          height: 30px;
           padding: 10px;
           .transfer-footer-node {
             color: #D9001B;

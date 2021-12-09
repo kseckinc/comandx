@@ -7,7 +7,7 @@ const schedulx_host = 'http://127.0.0.1:9091'
 
 const kube_host = 'http://127.0.0.1:9090'
 // const kube_host = 'http://bridgx-containers.internal.galaxy-future.org'
-// kube_host = 'http://bridgx-api-test.internal.galaxy-future.org'
+// const kube_host = 'http://bridgx-api-test.internal.galaxy-future.org'
 
 function getBridgXHost() {
   return bridgx_host

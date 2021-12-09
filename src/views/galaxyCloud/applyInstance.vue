@@ -108,12 +108,6 @@
           </p>
         </div>
       </div>
-      <div class="buttons" align="center"><el-button
-        size="medium"
-        type="primary"
-        @click="addInstance"
-      >添加实例组
-      </el-button></div>
     </div>
     <div class="buttons">
       <el-button
@@ -134,7 +128,6 @@
 <script>
 import { instancGroupBatchCreate, clustersSummary } from '@/api/galaxyCloud'
 import _ from 'lodash'
-
 export default {
   name: 'ApplyInstance',
   data() {
@@ -186,7 +179,6 @@ export default {
     deleteInstance(index) {
       if (this.rowArrList.length <= 0) return
       this.rowArrList.splice(index, 1)
-
       this.changeData()
     },
     addInstance() {
@@ -194,7 +186,6 @@ export default {
         return
       }
       this.rowArrList.push({ ...this.groupItem })
-
       this.changeData()
     },
     async submit() {
@@ -202,25 +193,20 @@ export default {
         this.$message('未选择K8s集群')
         return
       }
-
       if (this.rowArrList.length === 0) {
         this.$message('未添加实例组')
         return
       }
-
       for (let i = 0, n = this.rowArrList.length; i < n; i++) {
         const item = this.rowArrList[i]
-
         if (item.name === '') {
           this.$message('实例组名不可为空')
           return
         }
         // TODO：可能加入提交验证
-
         item.kubernetes_id = this.selectCluster
         item.instance_count = Number(item.instance_count)
       }
-
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
@@ -238,7 +224,6 @@ export default {
         for (const key in this.dataCluster) this.dataCluster[key] = ''
         return
       }
-
       this.showAvailable = true
       this.dataCluster = this.galaxyClusters.find(v => {
         return v.cluster_id === this.selectCluster
@@ -249,22 +234,18 @@ export default {
     },
     inputCheck(index, type, count, isFloat, isChange) {
       let nCount = Number(count)
-
       if (isChange && (Number.isNaN(nCount) || nCount <= 0)) {
         count = '1'
         nCount = 1
       }
-
       if (isFloat) {
         const fCount = count.toString().split('.')
         if (isChange || (fCount.length > 1 && fCount[1].length > this.fixed)) count = nCount.toFixed(3).toString()
       } else {
         count = parseInt(count).toString()
       }
-
       this.rowArrList[index][type] = count
       // console.log(index, type, count)
-
       this.changeData()
     },
     inputPassword(index) {
@@ -283,13 +264,11 @@ export default {
       let cpu = 0
       let memory = 0
       let disk = 0
-
       this.rowArrList.forEach((v) => {
         cpu += v.cpu * v.instance_count
         memory += v.memory * v.instance_count
         disk += v.disk * v.instance_count
       })
-
       this.showAddCount.cpu = cpu
       this.showAddCount.memory = memory
       this.showAddCount.disk = disk / 1024
@@ -307,26 +286,22 @@ export default {
   padding: 10px;
   background-color: #ffffff;
   box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
-
   .header {
     padding: 10px;
     font-size: 20px;
   }
-
   .statistic {
     float: right;
     font-size: 16px;
     height: 25px;
     line-height: 25px;
     margin-right: 35px;
-
     .num {
       display: inline-block;
       padding: 0 2px;
       color: #409EFF;
     }
   }
-
   .tips {
     width: 670px;
     margin: 20px 0 0 40px;
@@ -335,7 +310,6 @@ export default {
     color: #777777;
     float: left;
     font-size: 14px;
-
     i {
       display: inline-block;
       width: 20px;
@@ -351,44 +325,10 @@ export default {
       font-weight: bolder;
     }
   }
-<<<<<<< HEAD
-  .content-part {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #fff;
-    padding: 20px;
-    .flex-part {
-        display: flex;
-        align-items: center;
-        i {
-            margin-right: 4px;
-        }
-        >p {
-           padding: 10px 0;
-            border: 1px solid #ccc;
-            display: flex;
-            align-items: center;
-            >span:not(.input) {
-                margin: 0 10px;
-            }
-        }
-    }
-    .input{
-        display: inline-block;
-        height: 30px;
-        line-height: 30px;
-        border-right: 1px solid #6097b8;
-        margin-right: 4px;
-    }
-}
   .content {
     padding: 10px 0 20px;
     width: 100%;
     height: calc(~"100% - 200px");
-
     .create-instance {
       display: flex;
       width: calc(~"100% - 65px");
@@ -400,41 +340,34 @@ export default {
       color: #8080ff;
       font-size: 16px;
       cursor: pointer;
-
       .plus {
         display: inline-block;
         padding: 0 10px;
       }
     }
-
     .content-part {
       height: calc(~"100% - 100px");
       background: #fff;
       overflow-y: scroll;
       width: 100%;
-
       .svg {
         width: 35px;
         height: 62px;
         margin-right: 5px;
       }
-
       .flex-part {
         width: 100%;
         display: flex;
         align-items: center;
-
         i {
           margin-right: 4px;
         }
-
         > p {
           width: calc(~"100% - 50px");
           border: 1px solid #ccc;
           box-shadow: 5px 5px 5px #e7e7e7;
           display: flex;
           align-items: center;
-
           .index {
             width: 20px;
             box-shadow: 5px 0 5px #e7e7e7;
@@ -444,18 +377,15 @@ export default {
             align-items: center;
             border-right: 1px solid #ccc;
           }
-
           .group {
             flex-basis: 24%;
             margin-left: 20px;
           }
-
           .config-item {
             flex-basis: 19%;
             display: flex;
             justify-content: center;
             align-items: center;
-
             span {
               padding: 0 5px;
               color: #409EFF;
@@ -463,7 +393,6 @@ export default {
           }
         }
       }
-
       .input {
         display: inline-block;
         height: 60px;
@@ -474,7 +403,6 @@ export default {
       }
     }
   }
-
   .buttons {
     display: flex;
     justify-content: center;
