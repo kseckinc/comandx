@@ -122,43 +122,79 @@
 ![image](https://user-images.githubusercontent.com/94337797/145374783-56ca5c5e-3c29-4237-8658-734eab236e8a.png)
 
 
- 
-## 5. 云服务器
+
+## 5. K8s集群
+  K8s集群模块提供集群列表、创建集群、申请实例、实例组列表、实例列表、实例申请单等功能，用户可以简便的操作K8s。
+### 5.1 集群列表
+集群列表模块提供对已有K8s集群的查询功能，可以根据ID、集群名称进行查询，可以显示每个集群的状态、ID、集群名称、CPU、内存、存储、集群机器、集群实例数等信息。
+![image](https://user-images.githubusercontent.com/94337797/145389933-10a7e153-1533-4b4b-8db2-916cbbe41427.png)
+
+如果需要创建新的集群，则点击创建集群按钮，根据提示配置参数，进行创建。
+![image](https://user-images.githubusercontent.com/94337797/145390047-995953e9-150a-4ca2-919d-f423b2fbd264.png)
+
+### 5.2 申请实例
+申请实例模块可以帮助用户申请相同规格的实例，方便快速操作，并且可以同时申请多个实例组。
+![image](https://user-images.githubusercontent.com/94337797/145390365-4d215953-6456-46a8-987f-f9595376353b.png)
+
+### 5.3 实例组
+实例组模块主要是对已经申请的实例组进行管理，查找、删除，并且可以对实例组直接进行扩缩容。
+![image](https://user-images.githubusercontent.com/94337797/145390456-21ce4033-2ed8-42ec-8673-416e81b5dbdf.png)
+
+### 5.4 实例列表
+实例列表模块是对已经申请的实例进行管理，可以通过Pod IP或者宿主机IP进行查找特定的实例，可以删除或重启某个实例，同时提供了申请实例的快速入口。
+![image](https://user-images.githubusercontent.com/94337797/145391087-8a156aa3-c670-41d2-b906-df346c3a8b75.png)
+
+### 5.5 实例申请单
+实例申请单模块主要记录每一次申请实例的过程，包括执行状态、流水号、所属集群、实例组、实例配置、变更实例数、执行耗时、申请人及创建时间等信息。
+![image](https://user-images.githubusercontent.com/94337797/145391158-171bdcaa-bc7a-4516-9cac-87eef42f3422.png)
+
+
+## 6. 服务部署
+通过服务部署模块，用户可以进行服务镜像部署。
+## 6.1 创建服务
+通过配置服务名称以及服务类型创建服务
+![image](https://user-images.githubusercontent.com/94337797/145392067-6a9115a6-3632-4cd4-9786-1c691b9e94d2.png)
+
+## 6.2 服务列表
+服务列表模块不仅可以查看某个特定的服务信息，而且可以进行扩缩容。
+对服务进行扩缩容，在操作列表点击相应服务的扩缩容；
+![image](https://user-images.githubusercontent.com/94337797/143419363-9293d820-cf3b-40e5-b88a-d5e7d727cd96.png)
+
+在扩缩容页面，根据需求进行操作；
+![image](https://user-images.githubusercontent.com/94337797/143419451-2811560b-905b-4e92-bc78-55f69f51dcd5.png)
+
+查看服务扩缩容执行详情；
+![image](https://user-images.githubusercontent.com/94337797/143419885-4f9c93d7-a96a-40c2-b37c-e061d7d95d56.png)
+
+## 7. 云服务器
   云服务器模块，可以显示用户所有已经申请的云服务器信息，并且可以通过机器名、IP、云厂商等信息进行选择和筛查。
-  ![image](https://user-images.githubusercontent.com/94337797/142167437-44eb6e9c-366f-4368-8d64-03aeccbd080e.png)
+![image](https://user-images.githubusercontent.com/94337797/145394153-7135b8cc-2a89-4b47-9bd8-97fe5982e57c.png)
 
 
   如果对某个特定的机器详细感兴趣，可以通过点击相应的机器名称进行详细信息查看，包括实例ID、创建时间、云厂商、机器规格、镜像ID、系统盘类型及大小、数据盘类型大小及个数，网络配置包括VPC名称、子网名称、安全组名称、内网IP及公网IP等信息。
-  ![image](https://user-images.githubusercontent.com/94337797/142167482-4855aed0-b930-426d-800a-648a61e7ab1a.png)
+![image](https://user-images.githubusercontent.com/94337797/145394209-6e38efeb-f389-457b-98b0-a01e632d0c15.png)
 
 
-## 6. K8s集群
 
-
-## 6. 云厂商账户
+## 8. 云厂商账户
   云厂商账户模块主要是管理客户的云账户信息，可以通过账户名称、云厂商、账户信息等进行查找和筛选。
-  ![image](https://user-images.githubusercontent.com/94337797/142167534-2bda3f7c-9cee-49ce-abd1-e220f6c6f563.png)
+![image](https://user-images.githubusercontent.com/94337797/145393256-ff937e45-3dad-4902-bb14-8a461d05014c.png)
 
 
   如果需要增加云账户，则可以点击添加云账户按钮，填写账户名称、云厂商以及账户的AccessKey和AccessKey Secret信息。
-  ![image](https://user-images.githubusercontent.com/94337797/142167574-cc0a21b2-9472-4116-9f02-ffa6dd0d8c45.png)
-
-
-  如果需要对某个账户进行删除或者修改，则可以通过勾选相应的账户，然后对点击删除或者编辑按钮，进行相应的操作。
-  ![image](https://user-images.githubusercontent.com/94337797/142167633-0790eb96-a59e-4b70-87b0-0bfa71b88464.png)
+![image](https://user-images.githubusercontent.com/94337797/145393506-1766134f-d3d4-4665-b294-58f753180247.png)
 
 
 
-## 7. 费用管理
+## 9. 费用管理
   费用模块主要是用来对客户已经申请的云资源所花费的费用进行管理。客户可以查看所有机器的费用，也可以通过集群选择查看某个集群的费用，同时支持可以针对某天的费用进行查询。
-  ![image](https://user-images.githubusercontent.com/94337797/142167675-8f167fc7-7ff1-44ae-bba1-1c98d4ff6af7.png)
+![image](https://user-images.githubusercontent.com/94337797/145393641-bde407a8-2c0e-49e5-aad6-f6199aab920f.png)
 
 
-
-## 8. 账户管理
+## 10. 账户管理
   账户管理模块主要是用于对主账户和子账户进行进行管理，可以创建子账户、对子账户进行禁用和启用。
-  ![image](https://user-images.githubusercontent.com/94337797/142167718-6bcdf7eb-9be0-40f9-8c34-76a526f31c6b.png)
-
+![image](https://user-images.githubusercontent.com/94337797/145393718-e87f59b7-b2ab-4ed7-a3ba-6158a94942fa.png)
 
   当需要创建子账号时，点击创建子账号按钮，通过添加用户名、密码来添加子账号。
-  ![image](https://user-images.githubusercontent.com/94337797/142167769-9d6c9677-c97c-468c-8290-2d29ce320938.png)
+  ![image](https://user-images.githubusercontent.com/94337797/145393795-150b0cad-83ba-4522-ba60-34a049859838.png)
+
