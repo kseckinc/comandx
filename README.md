@@ -24,11 +24,9 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 
 联系我们
 ----
-官方微博：[星汉未来](https://weibo.com/galaxyfuture)
+[微博](https://weibo.com/galaxyfuture) | [知乎](https://www.zhihu.com/org/xing-yi-wei-lai) | [B站](https://space.bilibili.com/2057006251)
 
-官方知乎：[星汉未来](https://www.zhihu.com/org/xing-yi-wei-lai)
 
-官方B站：[星汉未来](https://space.bilibili.com/2057006251)
 
 微信公众号：GalaxyFutureTech <br>
 ![image](https://user-images.githubusercontent.com/94337797/142592631-0bed59e6-7840-4c1c-870e-13dd9edd0c9b.png)
@@ -73,11 +71,11 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 
     
 #### 3、快速上手  
-通过[快速上手指南](https://github.com/galaxy-future/bridgx/blob/master/docs/getting-started.md)，可以掌握基本的集群创建、快速扩缩容、K8s集群等操作流程。  
+通过[快速上手指南](https://github.com/galaxy-future/comandx/blob/main/docs/getting-started.md)，可以掌握基本的集群创建、快速扩缩容、K8s集群等操作流程。  
 
 
 #### 4、用户手册  
-通过[用户手册](https://github.com/galaxy-future/bridgx/blob/master/docs/user-manual.md)，用户可以掌握BridgX的功能使用全貌，方便快速查找使用感兴趣的功能。
+通过[用户手册](https://github.com/galaxy-future/comandx/blob/main/docs/user-manual.md)，用户可以掌握BridgX的功能使用全貌，方便快速查找使用感兴趣的功能。
 
 
 行为准则
