@@ -24,9 +24,6 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 
 联系我们
 ----
-
-联系我们
-----
 官方微博：[星汉未来](https://weibo.com/galaxyfuture)
 
 官方知乎：[星汉未来](https://www.zhihu.com/org/xing-yi-wei-lai)
