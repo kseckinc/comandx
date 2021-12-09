@@ -71,7 +71,12 @@ const gClusterNodeStatuses = {
 const gClusterStatuses = {
   initialize: '初始化中',
   running: '运行中',
-  failed: '初始化失败'
+  failed: '异常'
+  // 'Initialize the cluster': '初始化集群',
+  // 'Install master': '安装master',
+  // 'Install flannel': '安装flannel',
+  // 'Install Node': '安装node',
+  // 'Done': '初始化完成'
 }
 
 export function parseTaskAction(action) {
@@ -112,7 +117,7 @@ export function generateNodeStatus(status) {
 }
 
 export function generateClusterStatus(status) {
-  return _.get(gClusterStatuses, status, '未知')
+  return _.get(gClusterStatuses, status, status)
 }
 
 export function formatPrecision(value, precision) {

@@ -43,9 +43,9 @@
       </div>
       <el-table v-loading="loading" :data="list" border style="margin: 10px; width: calc(100% - 30px)">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="状态" align="center" width="90px">
+        <el-table-column label="状态" align="center" width="120">
           <template slot-scope="{ row }">
-            <span class="status">{{ row.status | generateClusterStatus }}</span>
+            <span class="status">{{ getStatus(row) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="ID" prop="cluster_id" align="center" width="90px" />
@@ -162,6 +162,15 @@ export default {
         this.$message.error(`获取Kubernetes集群失败: ${res.message}`)
       }
       this.loading = false
+    },
+    getStatus(row) {
+      if (row.status === 'running') {
+        return '运行中'
+      }
+      if (row.status === 'initialize') {
+        return row.install_step
+      }
+      return `异常:${row.install_step}`
     },
     clusterInfo(name) {
       this.$router.push({ name: 'clusterInfo', params: { name }})

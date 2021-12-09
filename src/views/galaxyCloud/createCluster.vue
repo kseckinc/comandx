@@ -72,7 +72,8 @@
               </div>
               <div class="transfer-note">
                 1、建议选择机器配置不低于2核4G的集群<br>
-                2、安全组规则已经对BridgX服务所部署的服务器开放了6443端口，且您账号的AKSK具有VPC操作权限
+                2、安全组规则已经对BridgX服务所部署的服务器开放了6443端口，且您账号的AKSK具有VPC操作权限<br>
+                3、暂时仅支持操作系统镜像版本为centos7的集群
               </div>
             </div>
             <div class="transfer-content">
@@ -107,7 +108,7 @@
               <div style="margin: 20px 0  0 20px">
                 <span class="transfer-step">第二步： </span><span>选择配置方案</span>
               </div>
-              <div style="height: 49px">
+              <div style="height: 62px">
               </div>
             </div>
             <div class="transfer-content">
