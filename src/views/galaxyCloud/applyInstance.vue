@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="content" style="padding-left: 0">
-      <span class="is-required" style="color: #FF4C4C; margin-left:13px">* </span><span>Kubernetes集群</span>
+      <span class="is-required" style="color: #FF4C4C; margin-left:30px">* </span><span>Kubernetes集群</span>
       <el-select
         v-model="selectCluster"
         placeholder="请选择实例所属的Kubernetes集群"
@@ -15,9 +15,9 @@
       >
         <el-option
           v-for="item in galaxyClusters"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
+          :key="item.cluster_id"
+          :label="item.cluster_name"
+          :value="item.cluster_id"
         />
       </el-select>
       <div v-show="showAvailable" class="statistic">
@@ -132,10 +132,8 @@
 </template>
 
 <script>
-import { instancGroupBatchCreate, getGalaxyClusters, clustersSummary } from '@/api/galaxyCloud'
+import { instancGroupBatchCreate, clustersSummary } from '@/api/galaxyCloud'
 import _ from 'lodash'
-import { checkBridgX } from '@/api/cloud'
-import { checkSchedulX } from '@/api/service'
 
 export default {
   name: 'ApplyInstance',
@@ -160,21 +158,14 @@ export default {
         ssh_pwd: ''
       },
       dataCluster: {
-        status: '', // 状态
-        ip_address: '', // IP地址
-        host_name: '', // 机器名称
-        cluster_name: '', // 集群名称
+        cluster_id: '', // id
+        cluster_name: '', // 名称
         all_cpu_cores: '', // 所有cpu数量
         free_cpu_cores: '', // 已经分配cpu数量
         all_memory_gi: '', // 集群内存总数
         free_memory_gi: '', // 已经分配内存
         all_disk_gi: '', // 磁盘大小
-        free_disk_gi: '', // 已经分配磁盘大小
-        machine_type: '', // 机器型号
-        cloud_provider: '', // 为所属云厂商
-        pod_count: '', // 实例中pod数量
-        role: '',
-        message: '' // 获取节点失败信息，正常返回为success，异常时返回出错信息
+        free_disk_gi: '' // 已经分配磁盘大小
       },
       fixed: 3
     }
@@ -182,11 +173,10 @@ export default {
   created() {
     this.getSelectList()
     this.addInstance()
-    this.test()
   },
   methods: {
     async getSelectList() {
-      const res = await getGalaxyClusters()
+      const res = await clustersSummary(1, 50, '', '')
       if (res.status === 'success') {
         this.galaxyClusters = _.get(res, 'clusters', [])
       } else {
@@ -227,7 +217,7 @@ export default {
         }
         // TODO：可能加入提交验证
 
-        item.kubernetes_id = this.selectCluster.id
+        item.kubernetes_id = this.selectCluster
         item.instance_count = Number(item.instance_count)
       }
 
@@ -250,8 +240,9 @@ export default {
       }
 
       this.showAvailable = true
-      this.dataCluster = await clustersSummary(1, 50, this.selectCluster.id, '')
-      console.log(this.dataCluster)
+      this.dataCluster = this.galaxyClusters.find(v => {
+        return v.cluster_id === this.selectCluster
+      })
     },
     inputName(index) {
       this.rowArrList[index].name = this.rowArrList[index].name.replace(/[^a-zA-Z0-9]/g, '')
@@ -259,7 +250,7 @@ export default {
     inputCheck(index, type, count, isFloat, isChange) {
       let nCount = Number(count)
 
-      if (Number.isNaN(nCount) || nCount <= 0) {
+      if (isChange && (Number.isNaN(nCount) || nCount <= 0)) {
         count = '1'
         nCount = 1
       }
@@ -327,7 +318,7 @@ export default {
     font-size: 16px;
     height: 25px;
     line-height: 25px;
-    margin-right: 30px;
+    margin-right: 35px;
 
     .num {
       display: inline-block;
@@ -338,11 +329,12 @@ export default {
 
   .tips {
     width: 670px;
-    margin-left: 40px;
-    height: 30px;
-    line-height: 30px;
+    margin: 20px 0 0 40px;
+    height: 20px;
+    line-height: 20px;
     color: #777777;
     float: left;
+    font-size: 14px;
 
     i {
       display: inline-block;
@@ -351,7 +343,7 @@ export default {
       margin-right: 10px;
       border: 2px solid #ff0000;
       color: #ff0000;
-      font-size: 14px;
+      font-size: 12px;
       line-height: 18px;
       border-radius: 50%;
       text-align: center;
