@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import logo from '@/assets/login-logo.png'
+import logo from '@/assets/logo.svg'
 import { validUsername } from '@/utils/validate'
 
 export default {
