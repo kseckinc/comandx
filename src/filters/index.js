@@ -53,6 +53,15 @@ const instanceStatuses = {
   Deleting: '删除中'
 }
 
+const paidTypes = {
+  PostPaid: '按量付费',
+  PrePaid: '包年包月'
+}
+
+export function parsePaidType(type) {
+  return _.get(paidTypes, type, '未知')
+}
+
 export function parseTaskAction(action) {
   return _.get(taskActionCode, action, '未知')
 }
