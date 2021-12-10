@@ -2,8 +2,9 @@ const host = require('../config/host')
 const request = require('request-promise')
 const Router = require('koa-router')
 
+const prefix = '/api/v1/instance'
 const routerApi = new Router({
-  prefix: '/api/v1/instance'
+  prefix
 })
 
 routerApi.get('/num', async(ctx) => {
@@ -12,7 +13,7 @@ routerApi.get('/num', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance/num`,
+      url: `${host.getHost()}${prefix}/num`,
       qs: ctx.query
     })
   } catch (e) {
@@ -26,7 +27,7 @@ routerApi.get('/describe_all', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance/describe_all`,
+      url: `${host.getHost()}${prefix}/describe_all`,
       qs: ctx.query
     })
   } catch (e) {
@@ -40,7 +41,7 @@ routerApi.get('/id/describe', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance/id/describe`,
+      url: `${host.getHost()}${prefix}/id/describe`,
       qs: ctx.query
     })
   } catch (e) {
@@ -54,7 +55,7 @@ routerApi.get('/usage_total', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance/usage_total`,
+      url: `${host.getHost()}${prefix}/usage_total`,
       qs: ctx.query
     })
   } catch (e) {
@@ -68,7 +69,7 @@ routerApi.get('/usage_statistics', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}/api/v1/instance/usage_statistics`,
+      url: `${host.getHost()}${prefix}/usage_statistics`,
       qs: ctx.query
     })
   } catch (e) {

@@ -825,7 +825,11 @@ export default {
       this.rules = this.rules.filter((v, i) => i !== idx)
     },
     async submitSecurityGroup() {
-      const res = await securityGroupCreateWithRule(this.cluster.region_id, this.network_config.vpc, this.securityGroup.security_group_name, this.rules)
+      const res = await securityGroupCreateWithRule(this.cluster.region_id, this.network_config.vpc, this.securityGroup.security_group_name, this.rules.map(i => ({
+        protocol: i.protocol,
+        port_range: `${i.port_from}/${i.port_to}`,
+        direction: i.protocol
+      })))
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }

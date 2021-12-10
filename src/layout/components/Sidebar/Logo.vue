@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import logo from '@/assets/logo.png'
+import logo from '@/assets/logo.svg'
 import logoF from '@/assets/logo-fold.png'
 
 export default {
@@ -57,10 +57,8 @@ export default {
     width: auto;
 
     & .sidebar-logo {
-      width: 70%;
-      height: 70%;
+      width: 85%;
       vertical-align: middle;
-      margin-right: 12px;
     }
 
     & .sidebar-title {

@@ -45,7 +45,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code === 401) {
+    if (res.code === 401 && getToken()) {
       store.dispatch('user/refresh').then(() => {
         const res = getToken()
         console.log(res)

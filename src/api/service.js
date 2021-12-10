@@ -3,6 +3,12 @@ import http from '@/utils/http'
 import _ from 'lodash'
 import { getToken } from '@/utils/auth'
 
+export function checkSchedulX() {
+  return request({
+    url: '/api/v1/schedulx/ok'
+  })
+}
+
 export async function getServiceList(params) {
   const token = getToken()
   const res = await request({

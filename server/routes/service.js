@@ -1,17 +1,29 @@
 const host = require('../config/host')
 const request = require('request-promise')
 const Router = require('koa-router')
+
+const prefix = '/api/v1/schedulx'
 const routerApi = new Router({
-  prefix: '/api/v1'
+  prefix
 })
 
-routerApi.get('/schedulx/service/list', async(ctx) => {
+routerApi.get('/ok', async(ctx) => {
+  try {
+    ctx.body = await request({
+      url: host.getSchedulxHost()
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/service/list', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/list`,
+      url: `${host.getSchedulxHost()}${prefix}/service/list`,
       qs: ctx.query,
       json: true
     })
@@ -20,13 +32,13 @@ routerApi.get('/schedulx/service/list', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/service/update', async(ctx) => {
+routerApi.post('/service/update', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/update`,
+      url: `${host.getSchedulxHost()}${prefix}/service/update`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -36,13 +48,13 @@ routerApi.post('/schedulx/service/update', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/service/create', async(ctx) => {
+routerApi.post('/service/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/create`,
+      url: `${host.getSchedulxHost()}${prefix}/service/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -52,13 +64,13 @@ routerApi.post('/schedulx/service/create', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/service/expand', async(ctx) => {
+routerApi.get('/service/expand', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/expand`,
+      url: `${host.getSchedulxHost()}${prefix}/service/expand`,
       qs: ctx.query
     })
   } catch (e) {
@@ -66,13 +78,13 @@ routerApi.get('/schedulx/service/expand', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/service/shrink', async(ctx) => {
+routerApi.get('/service/shrink', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/shrink`,
+      url: `${host.getSchedulxHost()}${prefix}/service/shrink`,
       qs: ctx.query
     })
   } catch (e) {
@@ -80,13 +92,13 @@ routerApi.get('/schedulx/service/shrink', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/template/expand/list', async(ctx) => {
+routerApi.get('/template/expand/list', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/template/expand/list`,
+      url: `${host.getSchedulxHost()}${prefix}/template/expand/list`,
       qs: ctx.query
     })
   } catch (e) {
@@ -94,13 +106,13 @@ routerApi.get('/schedulx/template/expand/list', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/template/expand/create', async(ctx) => {
+routerApi.post('/template/expand/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/template/expand/create`,
+      url: `${host.getSchedulxHost()}${prefix}/template/expand/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -110,13 +122,13 @@ routerApi.post('/schedulx/template/expand/create', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/template/expand/update', async(ctx) => {
+routerApi.post('/template/expand/update', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/template/expand/update`,
+      url: `${host.getSchedulxHost()}${prefix}/template/expand/update`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -126,13 +138,13 @@ routerApi.post('/schedulx/template/expand/update', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/template/expand/delete', async(ctx) => {
+routerApi.post('/template/expand/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/template/expand/delete`,
+      url: `${host.getSchedulxHost()}${prefix}/template/expand/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -142,13 +154,13 @@ routerApi.post('/schedulx/template/expand/delete', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/template/expand/info', async(ctx) => {
+routerApi.get('/template/expand/info', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/template/expand/info`,
+      url: `${host.getSchedulxHost()}${prefix}/template/expand/info`,
       qs: ctx.query
     })
   } catch (e) {
@@ -156,13 +168,13 @@ routerApi.get('/schedulx/template/expand/info', async(ctx) => {
   }
 })
 
-routerApi.post('/schedulx/decision/rule/update', async(ctx) => {
+routerApi.post('/decision/rule/update', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/decision/rule/update`,
+      url: `${host.getSchedulxHost()}${prefix}/decision/rule/update`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -172,13 +184,13 @@ routerApi.post('/schedulx/decision/rule/update', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/decision/rule/info', async(ctx) => {
+routerApi.get('/decision/rule/info', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/decision/rule/info`,
+      url: `${host.getSchedulxHost()}${prefix}/decision/rule/info`,
       qs: ctx.query
     })
   } catch (e) {
@@ -186,27 +198,13 @@ routerApi.get('/schedulx/decision/rule/info', async(ctx) => {
   }
 })
 
-routerApi.get('/schedulx/service/breathrecord', async(ctx) => {
+routerApi.get('/service/breathrecord', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getSchedulxHost()}/api/v1/schedulx/service/breathrecord`,
-      qs: ctx.query
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.get('/cluster/describe_all', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getHost()}/api/v1/cluster/describe_all`,
+      url: `${host.getSchedulxHost()}${prefix}/service/breathrecord`,
       qs: ctx.query
     })
   } catch (e) {

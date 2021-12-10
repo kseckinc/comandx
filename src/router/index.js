@@ -86,6 +86,76 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/galaxy-cloud',
+    component: Layout,
+    redirect: '/galaxy-cloud/cluster',
+    name: '集群',
+    meta: { title: 'K8s集群', icon: 'galaxy' },
+    children: [
+      {
+        path: '/galaxy-cloud/cluster',
+        name: 'galaxyCloudCluster',
+        redirect: '/galaxy-cloud/cluster/list',
+        component: () => import('@/views/galaxyCloud/admin'),
+        meta: { title: '集群列表', icon: '' },
+        children: [{
+          path: '/galaxy-cloud/cluster/list',
+          name: 'galaxyCloudClusterList',
+          component: () => import('@/views/galaxyCloud/clusterList'),
+          meta: { title: '集群列表', icon: '', breadcrumb: false }
+        }, {
+          path: '/galaxy-cloud/cluster/create',
+          name: 'galaxyCloudClusterCreate',
+          component: () => import('@/views/galaxyCloud/createCluster'),
+          meta: { title: '创建集群', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/node/list',
+          name: 'galaxyCloudClusterNodeList',
+          component: () => import('@/views/galaxyCloud/clusterNodes'),
+          meta: { title: '机器资源', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/pod/list',
+          name: 'galaxyCloudClusterPodList',
+          component: () => import('@/views/galaxyCloud/clusterPods'),
+          meta: { title: '实例资源', icon: '' },
+          hidden: true
+        }, {
+          path: '/galaxy-cloud/cluster/:clusterId/node/:nodeIp/pod/list',
+          name: 'galaxyCloudClusterPodList',
+          component: () => import('@/views/galaxyCloud/clusterPods'),
+          meta: { title: '实例资源', icon: '' },
+          hidden: true
+        }]
+      },
+      {
+        path: '/galaxy-cloud/instance/apply',
+        name: 'galaxyCloudInstanceApply',
+        component: () => import('@/views/galaxyCloud/applyInstance'),
+        meta: { title: '申请实例', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/group',
+        name: 'galaxyCloudInstanceGroup',
+        component: () => import('@/views/galaxyCloud/instanceGroup'),
+        meta: { title: '实例组', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/self',
+        name: 'galaxyCloudInstanceSelf',
+        component: () => import('@/views/galaxyCloud/selfInstance'),
+        meta: { title: '实例列表', icon: '' }
+      },
+      {
+        path: '/galaxy-cloud/instance/form',
+        name: 'galaxyCloudInstanceForm',
+        component: () => import('@/views/galaxyCloud/instanceForm'),
+        meta: { title: '实例申请单', icon: '' }
+      }
+    ]
+  },
+  {
     path: '/service',
     component: Layout,
     redirect: '/service/list',
@@ -124,6 +194,12 @@ export const constantRoutes = [
       name: 'templateEdit',
       component: () => import('@/views/template/edit'),
       meta: { title: '编辑扩缩容流程', icon: '' },
+      hidden: true
+    }, {
+      path: '/service/help',
+      name: 'noService',
+      component: () => import('@/views/service/help'),
+      meta: { title: '帮助', icon: '' },
       hidden: true
     }]
   },
@@ -170,6 +246,11 @@ export const constantRoutes = [
       component: () => import('@/views/account/index'),
       meta: { title: '账户管理', icon: 'account' }
     }]
+  },
+  {
+    path: '/help',
+    component: () => import('@/views/help'),
+    hidden: true
   },
   { path: '*', redirect: '/404', hidden: true }
 ]
