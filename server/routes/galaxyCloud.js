@@ -1,99 +1,82 @@
-const Router = require('koa-router')
 const host = require('../config/host')
 const request = require('request-promise')
+const Router = require('koa-router')
 
-const prefix = '/api/v1'
+const prefix = '/api/v1/galaxy_cloud'
 const routerApi = new Router({
-  prefix: '/api/v1'
+  prefix
 })
 
-routerApi.get('/ok', async(ctx) => {
+routerApi.get('/kubernetes', async(ctx) => {
   try {
     ctx.body = await request({
-      url: host.getHost()
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/kubernetes`,
+      method: 'GET',
+      json: true
     })
   } catch (e) {
     ctx.body = e.error
   }
 })
 
-routerApi.get('/vpc/describe', async(ctx) => {
+routerApi.get('/instance_group', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/vpc/describe`,
-      qs: ctx.query
+      url: `${host.getKubeHost()}${prefix}/instance_group`,
+      method: 'GET',
+      qs: ctx.query,
+      json: true
     })
   } catch (e) {
     ctx.body = e.error
   }
 })
 
-routerApi.get('/subnet/describe', async(ctx) => {
+routerApi.get('/instance/form', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/subnet/describe`,
-      qs: ctx.query
+      url: `${host.getKubeHost()}${prefix}/instance/form`,
+      method: 'GET',
+      qs: ctx.query,
+      json: true
     })
   } catch (e) {
     ctx.body = e.error
   }
 })
 
-routerApi.get('/security_group/describe', async(ctx) => {
+routerApi.get('/instance/self', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/security_group/describe`,
-      qs: ctx.query
+      url: `${host.getKubeHost()}${prefix}/instance/self`,
+      method: 'GET',
+      qs: ctx.query,
+      json: true
     })
   } catch (e) {
     ctx.body = e.error
   }
 })
 
-routerApi.get('/cloud_account/list', async(ctx) => {
+routerApi.post('/instance_group/batch/create', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/cloud_account/list`,
-      qs: {
-        ...ctx.query
-      }
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.post('/cloud_account/create', async(ctx) => {
-  ctx.body = await request({
-    headers: {
-      authorization: ctx.header.authorization
-    },
-    url: `${host.getHost()}${prefix}/cloud_account/create`,
-    method: 'POST',
-    body: ctx.request.body,
-    json: true
-  })
-})
-
-routerApi.post('/cloud_account/edit', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getHost()}${prefix}/cloud_account/edit`,
+      url: `${host.getKubeHost()}${prefix}/instance_group/batch/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -103,70 +86,14 @@ routerApi.post('/cloud_account/edit', async(ctx) => {
   }
 })
 
-routerApi.delete('/cloud_account/delete/:ids', async(ctx) => {
+routerApi.post('/instance_group/batch/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/cloud_account/delete/${ctx.params.ids}`,
-      method: 'DELETE'
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.get('/region/list', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getHost()}${prefix}/region/list`,
-      qs: ctx.query
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.get('/zone/list', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getHost()}${prefix}/zone/list`,
-      qs: ctx.query
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.get('/instance_type/list', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
-      url: `${host.getHost()}${prefix}/instance_type/list`,
-      qs: ctx.query
-    })
-  } catch (e) {
-    ctx.body = e.error
-  }
-})
-
-routerApi.post('/vpc/create', async(ctx) => {
-  try {
-    ctx.body = await request({
-      headers: {
-        authorization: ctx.header.authorization
-      },
+      url: `${host.getKubeHost()}${prefix}/instance_group/batch/delete`,
       method: 'POST',
-      url: `${host.getHost()}${prefix}/vpc/create`,
       body: ctx.request.body,
       json: true
     })
@@ -175,14 +102,14 @@ routerApi.post('/vpc/create', async(ctx) => {
   }
 })
 
-routerApi.post('/subnet/create', async(ctx) => {
+routerApi.post('/instance_group/expand_shrink', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
+      url: `${host.getKubeHost()}${prefix}/instance_group/expand_shrink`,
       method: 'POST',
-      url: `${host.getHost()}${prefix}/subnet/create`,
       body: ctx.request.body,
       json: true
     })
@@ -191,14 +118,14 @@ routerApi.post('/subnet/create', async(ctx) => {
   }
 })
 
-routerApi.post('/security_group/create', async(ctx) => {
+routerApi.post('/instance/delete', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
+      url: `${host.getKubeHost()}${prefix}/instance/delete`,
       method: 'POST',
-      url: `${host.getHost()}${prefix}/security_group/create`,
       body: ctx.request.body,
       json: true
     })
@@ -207,14 +134,14 @@ routerApi.post('/security_group/create', async(ctx) => {
   }
 })
 
-routerApi.post('/security_group/create_with_rule', async(ctx) => {
+routerApi.post('/instance/restart', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
+      url: `${host.getKubeHost()}${prefix}/instance/restart`,
       method: 'POST',
-      url: `${host.getHost()}${prefix}/security_group/create_with_rule`,
       body: ctx.request.body,
       json: true
     })
@@ -223,14 +150,45 @@ routerApi.post('/security_group/create_with_rule', async(ctx) => {
   }
 })
 
-routerApi.post('/security_group/rule/add', async(ctx) => {
+routerApi.get('/cluster/summary', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
+      url: `${host.getKubeHost()}${prefix}/cluster/summary`,
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/cluster/bridgx/available_clusters', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/cluster/bridgx/available_clusters`,
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.post('/cluster', async(ctx) => {
+  try {
+    console.log(ctx.request.body)
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/cluster`,
       method: 'POST',
-      url: `${host.getHost()}${prefix}/security_group/rule/add`,
       body: ctx.request.body,
       json: true
     })
@@ -239,14 +197,59 @@ routerApi.post('/security_group/rule/add', async(ctx) => {
   }
 })
 
-routerApi.get('/image/list', async(ctx) => {
+routerApi.get('/cluster/summary/:clusterId', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/image/list`,
-      qs: ctx.query
+      url: `${host.getKubeHost()}${prefix}/cluster/summary/${ctx.params.clusterId}`,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/cluster/nodes/:clusterId', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/cluster/nodes/${ctx.params.clusterId}`,
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/cluster/pods/:clusterId', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/cluster/pods/${ctx.params.clusterId}`,
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.delete('/cluster/:clusterId', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getKubeHost()}${prefix}/cluster/${ctx.params.clusterId}`,
+      method: 'DELETE',
+      json: true
     })
   } catch (e) {
     ctx.body = e.error

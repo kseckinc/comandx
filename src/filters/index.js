@@ -28,7 +28,8 @@ const taskStatusRoughlyCode = {
   SUCCESS: '执行完毕',
   RUNNING: '执行中',
   INIT: '待执行',
-  FAILED: '执行完毕'
+  FAILED: '执行完毕',
+  PARTIAL_SUCCESS: '部分成功'
 }
 
 const taskResult = {
@@ -53,6 +54,31 @@ const instanceStatuses = {
   Deleting: '删除中'
 }
 
+const paidTypes = {
+  PostPaid: '按量付费',
+  PrePaid: '包年包月'
+}
+
+export function parsePaidType(type) {
+  return _.get(paidTypes, type, '未知')
+}
+
+const gClusterNodeStatuses = {
+  Ready: '正常',
+  notReady: '异常'
+}
+
+const gClusterStatuses = {
+  initialize: '初始化中',
+  running: '运行中',
+  failed: '异常'
+  // 'Initialize the cluster': '初始化集群',
+  // 'Install master': '安装master',
+  // 'Install flannel': '安装flannel',
+  // 'Install Node': '安装node',
+  // 'Done': '初始化完成'
+}
+
 export function parseTaskAction(action) {
   return _.get(taskActionCode, action, '未知')
 }
@@ -73,10 +99,37 @@ export function formatMoment(date, format) {
 }
 
 export function formatMomentZone(date, format) {
-  const str = moment(date).utcOffset(-6).format(format)
+  const str = moment(new Date(date)).utcOffset(-6).format(format)
   return str === 'Invalid date' ? '--' : str
 }
 
 export function formatInstanceStatuses(status) {
   return _.get(instanceStatuses, status, '未知')
+}
+
+export function formatPercent(value, precision) {
+  const tmp = 10 ** precision
+  return `${Math.round(value * 100 * tmp) / tmp}%`
+}
+
+export function generateNodeStatus(status) {
+  return _.get(gClusterNodeStatuses, status, '未知')
+}
+
+export function generateClusterStatus(status) {
+  return _.get(gClusterStatuses, status, status)
+}
+
+export function formatPrecision(value, precision) {
+  if (_.isNumber(value)) {
+    return value.toFixed(precision)
+  }
+  return '--'
+}
+
+export function formatStorage(storage) {
+  if (storage >= 1000) {
+    return `${(storage / 1000).toFixed(2)}T`
+  }
+  return `${storage.toFixed(2)}G`
 }

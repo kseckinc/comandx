@@ -13,7 +13,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>集群名称 </div></el-col>
               <el-col :span="19">
-                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit />
+                <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit style="width: 400px" />
               </el-col>
             </el-row>
             <el-row>
@@ -25,7 +25,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text">集群描述 </div></el-col>
               <el-col :span="19">
-                <el-input v-model="cluster.desc" size="medium" placeholder="请输入集群描述信息" maxlength="50" show-word-limit />
+                <el-input v-model="cluster.desc" size="medium" placeholder="请输入集群描述信息" maxlength="50" show-word-limit style="width: 400px" />
               </el-col>
             </el-row>
             <el-row>
@@ -213,8 +213,8 @@
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>付费方式 </div></el-col>
               <el-col :span="19">
                 <el-radio-group v-model="charge_config.charge_type">
-                  <el-radio-button label="PrePaid">包年包月</el-radio-button>
                   <el-radio-button label="PostPaid">按量付费</el-radio-button>
+                  <el-radio-button label="PrePaid">包年包月</el-radio-button>
                 </el-radio-group>
                 <el-select v-if="charge_config.charge_type === 'PrePaid'" v-model="charge_config.period" style="width: 80px; margin-left: 20px">
                   <el-option v-for="item in chargePeriodOptions" :key="item" :value="item" :label="item" />
@@ -275,7 +275,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="3"><div class="center-text">系统盘容量 </div></el-col>
+              <el-col :span="5"><div class="center-text">系统盘容量 </div></el-col>
               <el-col :span="8">
                 <el-select v-model="system_disk.size">
                   <el-option
@@ -301,7 +301,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="3"><div class="center-text">数据盘容量 </div></el-col>
+              <el-col :span="5"><div class="center-text">数据盘容量 </div></el-col>
               <el-col :span="8">
                 <el-select v-model="item.size">
                   <el-option
@@ -825,7 +825,11 @@ export default {
       this.rules = this.rules.filter((v, i) => i !== idx)
     },
     async submitSecurityGroup() {
-      const res = await securityGroupCreateWithRule(this.cluster.region_id, this.network_config.vpc, this.securityGroup.security_group_name, this.rules)
+      const res = await securityGroupCreateWithRule(this.cluster.region_id, this.network_config.vpc, this.securityGroup.security_group_name, this.rules.map(i => ({
+        protocol: i.protocol,
+        port_range: `${i.port_from}/${i.port_to}`,
+        direction: i.protocol
+      })))
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }
@@ -874,7 +878,7 @@ export default {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 90%;
     .tips {
       margin-top: 5px;
       color: #8c939d;
