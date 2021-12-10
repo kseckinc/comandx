@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="content" style="padding-left: 0">
-      <span class="is-required" style="color: #FF4C4C; margin-left:30px">* </span><span>Kubernetes集群</span>
+      <span class="is-required" style="color:#FF4C4C;">* </span><span>Kubernetes集群</span>
       <el-select
         v-model="selectCluster"
         placeholder="请选择实例所属的Kubernetes集群"
@@ -20,93 +20,120 @@
           :value="item.cluster_id"
         />
       </el-select>
-      <div v-show="showAvailable" class="statistic">
+      <div v-show="showAvailable" class="statistic" style="line-height:40px">
         可用资源：
-        <span class="num">{{ (dataCluster.all_cpu_cores - dataCluster.free_cpu_cores).toFixed(fixed) }}</span> 核 |
-        <span class="num">{{ (dataCluster.all_memory_gi - dataCluster.free_memory_gi).toFixed(fixed) }}</span> G |
-        <span class="num">{{ ((dataCluster.all_disk_gi - dataCluster.free_disk_gi) / 1024).toFixed(fixed) }}</span> T
+        <span class="num">{{ Number(dataCluster.free_cpu_cores).toFixed(fixed) }}</span> 核 |
+        <span class="num">{{ Number(dataCluster.free_memory_gi).toFixed(fixed) }}</span> G |
+        <span class="num">{{ Number(dataCluster.free_disk_gi).toFixed(fixed) }}</span> G
       </div>
-      <div style="overflow: hidden;margin-top: 10px;">
-        <el-button size="medium" type="primary" style="float:left;margin-left: 40px;" @click="addInstance">
+      <div style="overflow:hidden;margin-top:15px;width:100%;">
+        <el-button size="medium" type="primary" style="float:left;" @click="addInstance">
           <span class="plus">+</span><span class="text">新建实例组</span>
         </el-button>
-        <div class="statistic" style="height: 40px;line-height: 40px">
+        <div class="statistic" style="height:40px;line-height:40px">
           总计：
           <span class="num">{{ rowArrList.length }}</span> 实例 |
           <span class="num">{{ showAddCount.cpu.toFixed(fixed) }}</span> 核 |
           <span class="num">{{ showAddCount.memory.toFixed(fixed) }}</span> G |
-          <span class="num">{{ showAddCount.disk.toFixed(fixed) }}</span> T
+          <span class="num">{{ showAddCount.disk.toFixed(fixed) }}</span> G
         </div>
       </div>
-      <div style="overflow: hidden">
+      <div class="box-table">
         <div class="tips">
           <i>!</i>提示：用户可设定实例组密码，在获取到实例后使用用户名:root和密码，SSH访问pod实例
         </div>
-      </div>
-      <div class="content-part">
-        <div v-for="(item, index) in rowArrList" :key="index" class="flex-part" style="margin-top: 4px">
-          <svg class="svg" style="cursor: pointer" @click="deleteInstance(index)">
-            <use xlink:href="#icon-ashbin" />
-          </svg>
-          <p>
-            <span class="index">{{ index + 1 }}</span>
-            <span class="group" style="flex-basis: 19%;">实例组 <el-input
-              v-model="item.name"
-              style="width: 150px; margin: 0 10px"
-              placeholder="支持英文和数字"
-              @input="inputName(index)"
-            /></span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 12%">CPU <el-input
-              v-model="item.cpu"
-              style="width: 80px; margin: 0 10px"
-              placeholder="1.000"
-              @input="inputCheck(index,'cpu',item.cpu,true,false)"
-              @change="inputCheck(index,'cpu',item.cpu,true,true)"
-            /> 核</span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 12%">内存 <el-input
-              v-model="item.memory"
-              style="width: 80px; margin: 0 10px"
-              placeholder="1.000"
-              @input="inputCheck(index,'memory',item.memory,true,false)"
-              @change="inputCheck(index,'memory',item.memory,true,true)"
-            /> G</span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 12%">硬盘 <el-input
-              v-model="item.disk"
-              style="width: 80px; margin: 0 10px"
-              placeholder="1.000"
-              @input="inputCheck(index,'disk',item.disk,true,false)"
-              @change="inputCheck(index,'disk',item.disk,true,true)"
-            /> G</span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 12%">数量 <el-input
-              v-model="item.instance_count"
-              style="width: 80px; margin: 0 10px"
-              placeholder="1"
-              type="number"
-              @input="inputCheck(index,'instance_count',item.instance_count,false,false)"
-              @change="inputCheck(index,'instance_count',item.instance_count,false,true)"
-            /> 台</span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 13%">密码 <el-input
-              v-model="item.ssh_pwd"
-              style="width: 110px; margin: 0 10px"
-              placeholder="请输入密码"
-              type="password"
-              @input="inputPassword(index)"
-              @focus="passwordIn"
-              @blur="passwordOut"
-            /></span>
-            <span class="input" />
-            <span class="config-item" style="flex-basis: 20%;">合计
-              <span>{{ (item.cpu * item.instance_count).toFixed(fixed) }}</span> 核 |
-              <span>{{ (item.memory * item.instance_count).toFixed(fixed) }}</span> G |
-              <span>{{ (item.disk * item.instance_count / 1024).toFixed(fixed) }}</span> T
-            </span>
-          </p>
-        </div>
+        <el-table :data="rowArrList" border>
+          <el-table-column align="center" width="50px">
+            <template slot-scope="{ $index }">
+              {{ $index+1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="实例组" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.name"
+                style="width:100%;"
+                placeholder="支持英文和数字"
+                @input="inputName($index)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="CPU（核）" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.cpu"
+                style="width:100%;"
+                placeholder="精度支持3位小数"
+                @input="inputCheck($index,'cpu',row.cpu,true,false)"
+                @change="inputCheck($index,'cpu',row.cpu,true,true)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="内存（G）" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.memory"
+                style="width:100%;"
+                placeholder="精度支持3位小数"
+                @input="inputCheck($index,'memory',row.memory,true,false)"
+                @change="inputCheck($index,'memory',row.memory,true,true)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="硬盘（G）" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.disk"
+                style="width:100%;"
+                placeholder="精度支持3位小数"
+                @input="inputCheck($index,'disk',row.disk,true,false)"
+                @change="inputCheck($index,'disk',row.disk,true,true)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="数量（个）" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.instance_count"
+                style="width:100%;"
+                placeholder="精度支持整数"
+                @input="inputCheck($index,'instance_count',row.instance_count,false,false)"
+                @change="inputCheck($index,'instance_count',row.instance_count,false,true)"
+              /></template>
+          </el-table-column>
+          <el-table-column label="密码" align="center">
+            <template slot-scope="{ $index,row }">
+              <el-input
+                v-model="row.ssh_pwd"
+                type="password"
+                style="width:100%;"
+                placeholder="最大长度6位"
+                maxlength="6"
+                @input="inputPassword($index)"
+                @focus="passwordIn"
+                @blur="passwordOut"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="合计" align="center" width="100px">
+            <template slot-scope="{ row }">
+              <span style="color:#409EFF;">{{ (row.cpu * row.instance_count).toFixed(fixed) }}</span> 核<br>
+              <span style="color:#409EFF;">{{ (row.memory * row.instance_count).toFixed(fixed) }}</span> G<br>
+              <span style="color:#409EFF;">{{ (row.disk * row.instance_count).toFixed(fixed) }}</span> G
+            </template>
+          </el-table-column>
+          <el-table-column align="center" width="50px">
+            <template slot-scope="{ $index }">
+              <svg
+                class="svg"
+                style="cursor:pointer;width:30px;height:30px;margin-top:5px;"
+                @click="deleteInstance($index)"
+              >
+                <use xlink:href="#icon-ashbin" />
+              </svg>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
     <div class="buttons">
@@ -128,6 +155,7 @@
 <script>
 import { instancGroupBatchCreate, clustersSummary } from '@/api/galaxyCloud'
 import _ from 'lodash'
+
 export default {
   name: 'ApplyInstance',
   data() {
@@ -179,6 +207,7 @@ export default {
     deleteInstance(index) {
       if (this.rowArrList.length <= 0) return
       this.rowArrList.splice(index, 1)
+
       this.changeData()
     },
     addInstance() {
@@ -186,6 +215,7 @@ export default {
         return
       }
       this.rowArrList.push({ ...this.groupItem })
+
       this.changeData()
     },
     async submit() {
@@ -193,20 +223,29 @@ export default {
         this.$message('未选择K8s集群')
         return
       }
+
       if (this.rowArrList.length === 0) {
         this.$message('未添加实例组')
         return
       }
+
       for (let i = 0, n = this.rowArrList.length; i < n; i++) {
         const item = this.rowArrList[i]
+
         if (item.name === '') {
           this.$message('实例组名不可为空')
           return
         }
-        // TODO：可能加入提交验证
+
+        if (item.ssh_pwd === '') {
+          this.$message('密码不可为空')
+          return
+        }
+
         item.kubernetes_id = this.selectCluster
         item.instance_count = Number(item.instance_count)
       }
+
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
@@ -224,6 +263,7 @@ export default {
         for (const key in this.dataCluster) this.dataCluster[key] = ''
         return
       }
+
       this.showAvailable = true
       this.dataCluster = this.galaxyClusters.find(v => {
         return v.cluster_id === this.selectCluster
@@ -234,25 +274,26 @@ export default {
     },
     inputCheck(index, type, count, isFloat, isChange) {
       let nCount = Number(count)
+
       if (isChange && (Number.isNaN(nCount) || nCount <= 0)) {
         count = '1'
         nCount = 1
       }
+
       if (isFloat) {
         const fCount = count.toString().split('.')
         if (isChange || (fCount.length > 1 && fCount[1].length > this.fixed)) count = nCount.toFixed(3).toString()
       } else {
-        count = parseInt(count).toString()
+        count !== '' && (count = parseInt(count).toString())
       }
+
       this.rowArrList[index][type] = count
       // console.log(index, type, count)
+
       this.changeData()
     },
     inputPassword(index) {
-      let password = this.rowArrList[index].ssh_pwd
-      password = password.replace(/[^a-zA-Z0-9]/g, '')
-      password = password.substring(0, 6)
-      this.rowArrList[index].ssh_pwd = password
+      this.rowArrList[index].ssh_pwd = this.rowArrList[index].ssh_pwd.replace(/[^a-zA-Z0-9]/g, '')
     },
     passwordIn(event) {
       event.target.type = 'text'
@@ -264,14 +305,16 @@ export default {
       let cpu = 0
       let memory = 0
       let disk = 0
+
       this.rowArrList.forEach((v) => {
         cpu += v.cpu * v.instance_count
         memory += v.memory * v.instance_count
         disk += v.disk * v.instance_count
       })
+
       this.showAddCount.cpu = cpu
       this.showAddCount.memory = memory
-      this.showAddCount.disk = disk / 1024
+      this.showAddCount.disk = disk
     }
   }
 }
@@ -286,30 +329,37 @@ export default {
   padding: 10px;
   background-color: #ffffff;
   box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
+
   .header {
     padding: 10px;
     font-size: 20px;
   }
+
   .statistic {
     float: right;
     font-size: 16px;
     height: 25px;
     line-height: 25px;
-    margin-right: 35px;
+    margin-right: 10px;
+
     .num {
       display: inline-block;
       padding: 0 2px;
       color: #409EFF;
     }
   }
+
   .tips {
-    width: 670px;
-    margin: 20px 0 0 40px;
-    height: 20px;
-    line-height: 20px;
+    width: 100%;
+    margin-top: 10px;
+    height: 30px;
+    line-height: 30px;
     color: #777777;
-    float: left;
     font-size: 14px;
+    border: 1px solid #EBEEF5;
+    border-bottom: none;
+    padding: 0 5px;
+
     i {
       display: inline-block;
       width: 20px;
@@ -325,10 +375,12 @@ export default {
       font-weight: bolder;
     }
   }
+
   .content {
     padding: 10px 0 20px;
     width: 100%;
-    height: calc(~"100% - 200px");
+    height: calc(~"100% - 100px");
+
     .create-instance {
       display: flex;
       width: calc(~"100% - 65px");
@@ -340,72 +392,23 @@ export default {
       color: #8080ff;
       font-size: 16px;
       cursor: pointer;
+
       .plus {
         display: inline-block;
         padding: 0 10px;
       }
     }
-    .content-part {
-      height: calc(~"100% - 100px");
-      background: #fff;
-      overflow-y: scroll;
-      width: 100%;
-      .svg {
-        width: 35px;
-        height: 62px;
-        margin-right: 5px;
-      }
-      .flex-part {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        i {
-          margin-right: 4px;
-        }
-        > p {
-          width: calc(~"100% - 50px");
-          border: 1px solid #ccc;
-          box-shadow: 5px 5px 5px #e7e7e7;
-          display: flex;
-          align-items: center;
-          .index {
-            width: 20px;
-            box-shadow: 5px 0 5px #e7e7e7;
-            height: 82px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-right: 1px solid #ccc;
-          }
-          .group {
-            flex-basis: 24%;
-            margin-left: 20px;
-          }
-          .config-item {
-            flex-basis: 19%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            span {
-              padding: 0 5px;
-              color: #409EFF;
-            }
-          }
-        }
-      }
-      .input {
-        display: inline-block;
-        height: 60px;
-        line-height: 40px;
-        border-right: 1px solid #80FAFF;
-        // margin-right: 4px;
-        margin: 0 10px;
-      }
-    }
   }
+
   .buttons {
     display: flex;
     justify-content: center;
+  }
+
+  .box-table {
+    height: calc(~'100% - 100px');
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 </style>

@@ -96,8 +96,15 @@
         确定要删除Kubernetes集群吗？？
       </div>
       <div slot="footer" class="warning-footer">
-        <div style="color: #D9001B" @click="deleteGCluster(cluster.cluster_id)">删除</div>
-        <div @click="cancel">取消</div>
+        <el-button
+            size="medium"
+            type="danger"
+            @click="deleteGCluster(cluster.cluster_id)"
+        >删除</el-button>
+        <el-button
+            size="medium"
+            @click="cancel"
+        >取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -279,18 +286,10 @@ export default {
   .warning-title {
     color: #D9001B;
     font-weight: bolder;
+    text-align: center;
   }
   .warning-footer {
-    display: flex;
-    flex-direction: row;
-    div {
-      display: flex;
-      flex-basis: 50%;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid black;
-      padding: 10px 0;
-      cursor: pointer;
-    }
+    text-align: center;
+    padding-bottom: 10px;
   }
 </style>

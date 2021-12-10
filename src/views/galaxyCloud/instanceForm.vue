@@ -134,6 +134,13 @@
     padding: 2px 10px;
     border-radius: 5px;
   }
+  .normal,
+  .common,
+  .error {
+    padding: 2px 10px;
+    border-radius: 5px;
+    color: white;
+  }
   .normal {
     background-color: #2cb81a;
   }

@@ -38,8 +38,8 @@
     <div class="clusters-list">
       <div class="buttons">
         <el-button size="medium" type="primary" style="margin-left: 10px" @click="createGalaxyCluster">+创建集群</el-button>
-<!--        <el-button size="medium" style="margin-left: 40px" disabled>编辑</el-button>-->
-<!--        <el-button size="medium" disabled>删除</el-button>-->
+        <!--        <el-button size="medium" style="margin-left: 40px" disabled>编辑</el-button>-->
+        <!--        <el-button size="medium" disabled>删除</el-button>-->
       </div>
       <el-table v-loading="loading" :data="list" border style="margin: 10px; width: calc(100% - 30px)">
         <el-table-column type="selection" width="55" align="center" />
@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="{ row }">
-<!--            <span style="color: blue; cursor: pointer; margin-right: 5px">日志</span>-->
+            <!--            <span style="color: blue; cursor: pointer; margin-right: 5px">日志</span>-->
             <span style="color: #D9001B; cursor: pointer" @click="showDelete(row)">删除</span>
           </template>
         </el-table-column>
@@ -99,8 +99,15 @@
         确定要删除Kubernetes集群吗？？
       </div>
       <div slot="footer" class="warning-footer">
-        <div style="color: #D9001B" @click="deleteGCluster(cluster.cluster_id)">删除</div>
-        <div @click="cancel">取消</div>
+        <el-button
+          size="medium"
+          type="danger"
+          @click="deleteGCluster(cluster.cluster_id)"
+        >删除</el-button>
+        <el-button
+          size="medium"
+          @click="cancel"
+        >取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -262,19 +269,11 @@ export default {
   .warning-title {
     color: #D9001B;
     font-weight: bolder;
+    text-align: center;
   }
   .warning-footer {
-    display: flex;
-    flex-direction: row;
-    div {
-      display: flex;
-      flex-basis: 50%;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid black;
-      padding: 10px 0;
-      cursor: pointer;
-    }
+    text-align: center;
+    padding-bottom: 10px;
   }
   .galaxy-cluster-container {
     padding: 0 10px;
