@@ -2,7 +2,7 @@
   <div class="container">
     <el-row :gutter="20">
       <el-col :span="4" class="title">
-        <span class="asterisk">*</span> K8s
+        <span class="asterisk">*</span> K8s集群名
       </el-col>
       <el-col :span="20">
         <el-input v-model="cluster_name" size="medium" style="width: 30%" placeholder="请输入集群名" />
@@ -392,7 +392,7 @@ export default {
           overflow-y: scroll;
         }
         .transfer-cluster-nodes {
-          height: calc(~"100% - 194px");
+          height: calc(~"100% - 134px");
           border: 1px solid #d5d4d4;
           border-radius: 5px;
           padding: 10px;
