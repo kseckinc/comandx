@@ -1,5 +1,4 @@
 const bridgx_host = 'http://127.0.0.1:9090'
-// const bridgx_host = 'http://bridgx-api.internal.galaxy-future.org'
 
 const schedulx_host = 'http://127.0.0.1:9091'
 

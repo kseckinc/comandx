@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cd ../server && docker build -t 172.16.16.172:12380/bridgx/bridgx-fe-2:0.0.1 . && docker push 172.16.16.172:12380/bridgx/bridgx-fe-2:0.0.1
+cd ../server && docker build -t 127.0.0.1:12380/bridgx/bridgx-fe-2:0.0.1 . && docker push 127.0.0.1:12380/bridgx/bridgx-fe-2:0.0.1
