@@ -53,7 +53,7 @@
               <el-input
                 v-model="row.name"
                 style="width:100%;"
-                placeholder="支持英文和数字"
+                placeholder="支持小写英文和数字"
                 @input="inputName($index)"
               />
             </template>
@@ -165,9 +165,9 @@ export default {
       selectCluster: null,
       showAvailable: false,
       showAddCount: {
-        cpu: '',
-        memory: '',
-        disk: ''
+        cpu: 0,
+        memory: 0,
+        disk: 0
       },
       groupItem: {
         kubernetes_id: 0,
@@ -246,6 +246,19 @@ export default {
         item.instance_count = Number(item.instance_count)
       }
 
+      if (this.showAddCount.cpu > Number(this.dataCluster.free_cpu_cores)) {
+        this.$message('CPU总计超过可用数值')
+        return
+      }
+      if (this.showAddCount.memory > Number(this.dataCluster.free_memory_gi)) {
+        this.$message('内存总计超过可用数值')
+        return
+      }
+      if (this.showAddCount.disk > Number(this.dataCluster.free_disk_gi)) {
+        this.$message('硬盘总计超过可用数值')
+        return
+      }
+
       const res = await instancGroupBatchCreate(this.rowArrList)
       if (res.data.status === 'success') {
         this.$message.success('创建成功')
@@ -270,7 +283,7 @@ export default {
       })
     },
     inputName(index) {
-      this.rowArrList[index].name = this.rowArrList[index].name.replace(/[^a-zA-Z0-9]/g, '')
+      this.rowArrList[index].name = this.rowArrList[index].name.replace(/[^a-z0-9]/g, '')
     },
     inputCheck(index, type, count, isFloat, isChange) {
       let nCount = Number(count)
