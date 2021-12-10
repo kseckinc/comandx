@@ -1,9 +1,11 @@
 <template>
   <div class="login-container">
-    <img :src="logo" class="logo">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
+        <div class="log-container">
+          <img :src="logo" class="logo">
+        </div>
         <h3 class="title">用户登录</h3>
       </div>
 
@@ -42,8 +44,10 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:50px;" @click.native.prevent="handleLogin">登录</el-button>
+      <div class="guide">
+        <span @click="open('https://github.com/galaxy-future/comandx/blob/main/README.md')">部署手册</span><span @click="open('https://github.com/galaxy-future/comandx/blob/main/docs/getting-started.md')">快速指南</span>
+      </div>
     </el-form>
   </div>
 </template>
@@ -93,6 +97,9 @@ export default {
     }
   },
   methods: {
+    open(url) {
+      window.open(url)
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -165,8 +172,8 @@ $cursor: #fff;
   }
 
   .logo {
-    margin: 20px 0 0 20px;
-    width: 20%;
+    margin-bottom: 30px;
+    width: 70%;
   }
 }
 </style>
@@ -186,7 +193,7 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 140px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -213,6 +220,11 @@ $light_gray:#eee;
 
   .title-container {
     position: relative;
+    .log-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
 
     .title {
       font-size: 26px;
@@ -220,6 +232,16 @@ $light_gray:#eee;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
+    }
+  }
+  .guide {
+    color: white;
+    display: flex;
+    justify-content: center;
+    span {
+      display: inline-block;
+      padding: 0 20px;
+      cursor: pointer;
     }
   }
 
