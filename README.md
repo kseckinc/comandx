@@ -25,7 +25,7 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 联系我们
 ----
 [微博](https://weibo.com/galaxyfuture) | [知乎](https://www.zhihu.com/org/xing-yi-wei-lai) | [B站](https://space.bilibili.com/2057006251)
-| [微信公众号](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat_public_account.md)
+| [微信公众号](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat_official_account.md)
 | [企业微信交流群](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat.md)
 
 上手指南
