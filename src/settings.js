@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'BridgX',
+  title: 'Galaxy-Future',
 
   /**
    * @type {boolean} true | false

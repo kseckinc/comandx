@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'Bridgx',
+      title: 'Galaxy-Future',
       logo: logo,
       logoF: logoF
     }
