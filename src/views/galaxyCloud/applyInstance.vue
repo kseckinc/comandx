@@ -32,7 +32,7 @@
         </el-button>
         <div class="statistic" style="height:40px;line-height:40px">
           总计：
-          <span class="num">{{ rowArrList.length }}</span> 实例 |
+          <span class="num">{{ showAddCount.instance_count }}</span> 实例 |
           <span class="num">{{ showAddCount.cpu.toFixed(fixed) }}</span> 核 |
           <span class="num">{{ showAddCount.memory.toFixed(fixed) }}</span> G |
           <span class="num">{{ showAddCount.disk.toFixed(fixed) }}</span> G
@@ -167,7 +167,8 @@ export default {
       showAddCount: {
         cpu: 0,
         memory: 0,
-        disk: 0
+        disk: 0,
+        instance_count: 0
       },
       groupItem: {
         kubernetes_id: 0,
@@ -315,11 +316,13 @@ export default {
       event.target.type = 'password'
     },
     changeData() {
+      let instanceCount = 0
       let cpu = 0
       let memory = 0
       let disk = 0
 
       this.rowArrList.forEach((v) => {
+        instanceCount += Number(v.instance_count)
         cpu += v.cpu * v.instance_count
         memory += v.memory * v.instance_count
         disk += v.disk * v.instance_count
@@ -328,6 +331,7 @@ export default {
       this.showAddCount.cpu = cpu
       this.showAddCount.memory = memory
       this.showAddCount.disk = disk
+      this.showAddCount.instance_count = instanceCount
     }
   }
 }
