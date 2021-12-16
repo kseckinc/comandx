@@ -268,13 +268,15 @@ export async function instanceTypeList(provider, region_id, zone_id) {
   return _.get(res, 'data', [])
 }
 
-export async function imageList(provider, region_id) {
+export async function imageList(provider, region_id, instance_type, image_type) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/image/list',
     params: {
       provider,
-      region_id
+      region_id,
+      instance_type,
+      image_type
     },
     headers: {
       Authorization: ` Bearer ${token}`
