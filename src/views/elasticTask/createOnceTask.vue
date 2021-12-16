@@ -33,7 +33,7 @@
             <el-col :span="5"><div class="center-text">执行集群 </div></el-col>
             <el-col :span="15">
               <el-select v-model="task.cluster_name" placeholder="请选择" style="width: 400px" size="medium" @change="loadInstanceNum">
-                <el-option v-for="item in clusters" :key="item" :value="item" :label="item" />
+                <el-option v-for="item in clusters" :key="item.cluster_name" :value="item.cluster_name" :label="item.cluster_name" />
               </el-select>
             </el-col>
             <el-col :span="4">
@@ -46,7 +46,7 @@
           </el-row>
         </div>
       </div>
-      <div class="form">
+      <div class="form" style="margin-bottom: 10px">
         <div class="container">
           <el-row>
             <el-col :span="5"><div class="center-text">集群信息 </div></el-col>
@@ -55,6 +55,13 @@
                 <span v-show="instanceTypeDesc !== ''" style="padding-right: 30px">{{ instanceTypeDesc }}</span>
                 运行中<span style="color: #f4516c; font-weight: bolder">{{ instanceNum }}</span> 台
               </div>
+            </el-col>
+          </el-row>
+          <el-row v-if="cluster.provider !== ''">
+            <el-col :span="5"><div style="height: 36px"></div></el-col>
+            <el-col :span="19">
+              <span style="display: inline-block; padding-right: 30px">{{ cluster.provider | filterCloudProvider }}-{{ cluster.charge_type | parsePaidType }}</span>
+<!--              <span>集群用途: </span>-->
             </el-col>
           </el-row>
         </div>
@@ -145,6 +152,9 @@ export default {
       instanceNumLoading: false,
       instanceNum: 0,
       instanceTypeDesc: '',
+      cluster: {
+        provider: ''
+      },
       expandNumRadios: [{
         label: 1,
         name: '+1'
@@ -187,7 +197,7 @@ export default {
   },
   async mounted() {
     const res = await clusterDescribeAll()
-    this.clusters = _.get(res, 'cluster_list', []).map(i => i.cluster_name)
+    this.clusters = _.get(res, 'cluster_list', [])
   },
   methods: {
     async loadInstanceNum() {
@@ -196,6 +206,7 @@ export default {
         const res = await clusterInstanceStat(this.task.cluster_name)
         this.instanceNum = _.get(res, 'instance_count', 0)
         this.instanceTypeDesc = _.get(res, 'instance_type_desc', '')
+        this.cluster = this.clusters.find(i => i.cluster_name === this.task.cluster_name)
       } catch (e) {
         // do nothing
       }

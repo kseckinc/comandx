@@ -81,7 +81,7 @@
               <div v-loading="loading" class="transfer-cluster-container">
                 <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster" @click="chooseCluster(item, false)">
                   <span class="transfer-cluster-provider">{{ item.cloud_type | filterCloudProvider }}</span>
-                  <span class="transfer-cluster-name">{{ item.cluster_name }}({{ getNodeCount(item.nodes) }}台)</span>
+                  <span class="transfer-cluster-name">{{ item.cluster_name }}({{ item.total }}台)</span>
                   <div class="transfer-check-box">
                     <input type="checkbox" :checked="item.checked" style="cursor:pointer;">
                   </div>
@@ -298,12 +298,6 @@ export default {
       } else {
         this.$message.error('创建失败')
       }
-    },
-    getNodeCount(arr) {
-      if (_.isEmpty(arr)) {
-        return 0
-      }
-      return _.get(arr, 'length', 0)
     },
     cancel() {
       this.$router.push({ name: 'galaxyCloudClusterList' })

@@ -18,9 +18,6 @@ const cloudDiskTypes = {
     label: 'ESSD云盘'
   }],
   HuaweiCloud: [{
-    value: 'SATA',
-    label: '普通IO'
-  }, {
     value: 'SAS',
     label: '高IO'
   }, {
@@ -107,6 +104,47 @@ const taskStatus = [{
   value: 'FAILED'
 }]
 
+const imageTypes = [{
+  value: 'global',
+  label: '公共镜像'
+}, {
+  value: 'private',
+  label: '私有镜像'
+}]
+
+const chargeUnits = {
+  AlibabaCloud: [{
+    value: 'Week',
+    label: '周'
+  }, {
+    value: 'Month',
+    label: '月'
+  }],
+  HuaweiCloud: [{
+    value: 'Month',
+    label: '月'
+  }, {
+    value: 'Year',
+    label: '年'
+  }]
+}
+
+const protocols = {
+  AlibabaCloud: ['tcp', 'udp', 'icmp', 'gre', 'all'],
+  HuaweiCloud: ['tcp', 'udp', 'icmp', 'all']
+}
+
+const chargePeriods = {
+  AlibabaCloud: {
+    Week: [1, 2, 3, 4],
+    Month: [1, 2, 3, 4, 6, 12, 24, 36, 48, 60]
+  },
+  HuaweiCloud: {
+    Month: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    Year: [1, 2, 3]
+  }
+}
+
 export {
   cloudProviders,
   cloudDiskTypes,
@@ -115,5 +153,9 @@ export {
   systemDiskSizes,
   dataDiskSizes,
   ramUrl,
-  huaweiIpType
+  huaweiIpType,
+  imageTypes,
+  chargeUnits,
+  protocols,
+  chargePeriods
 }
