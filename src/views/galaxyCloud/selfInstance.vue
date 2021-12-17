@@ -7,6 +7,8 @@
           <el-input v-model="search.pod_ip" size="medium" placeholder="输入IP搜索" clearable style="width: 200px" @change="fetchData" />
           <span class="label">宿主机IP</span>
           <el-input v-model="search.node_ip" size="medium" placeholder="输入IP搜索" clearable style="width: 200px" @change="fetchData" />
+          <span class="label">实例组名称</span>
+          <el-input v-model="search.instance_group_name" size="medium" placeholder="输入实例组名称搜索" clearable style="width: 200px" @change="fetchData" />
         </div>
       </div>
       <div class="buttons">
@@ -181,7 +183,8 @@ export default {
       listLoading: true,
       search: {
         pod_ip: '',
-        node_ip: ''
+        node_ip: '',
+        instance_group_name: ''
       },
       listQuery: {
         page_number: 1,
@@ -216,7 +219,8 @@ export default {
     resetSearch() {
       this.search = {
         pod_ip: '',
-        node_ip: ''
+        node_ip: '',
+        instance_group_name: ''
       }
     },
     handleSelectionChange(val) {

@@ -28,7 +28,7 @@ routerApi.get('/name/:cluster_name', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/name/${ctx.params.cluster_name}`
+      url: `${host.getHost()}${prefix}/name/${encodeURIComponent(ctx.params.cluster_name)}`
     })
   } catch (e) {
     ctx.body = e.error
@@ -36,22 +36,19 @@ routerApi.get('/name/:cluster_name', async(ctx) => {
 })
 
 routerApi.get('/num', async(ctx) => {
-  ctx.body = {
-    code: 401
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}${prefix}/num`,
+      qs: {
+        account: ctx.query.account
+      }
+    })
+  } catch (e) {
+    ctx.body = e.error
   }
-  // try {
-  //   ctx.body = await request({
-  //     headers: {
-  //       authorization: ctx.header.authorization
-  //     },
-  //     url: `${host.getHost()}${prefix}/num`,
-  //     qs: {
-  //       account: ctx.query.account
-  //     }
-  //   })
-  // } catch (e) {
-  //   ctx.body = e.error
-  // }
 })
 
 routerApi.post('/create', async(ctx) => {

@@ -31,6 +31,8 @@ app.use(async(ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+const port = process.env.port || 80
+
 // routes
 app.use(cloud.routes())
 app.use(user.routes())
@@ -41,6 +43,6 @@ app.use(service.routes())
 app.use(galaxyCloud.routes())
 
 app.use(serve(path.join(__dirname, 'web'), { maxage: 1000 * 60 * 60 }))
-app.listen(80)
+app.listen(port)
 
 module.exports = app

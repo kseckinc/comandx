@@ -7,7 +7,7 @@ services:
 
   #######################  fe  ########################
   fe:
-    container_name: bridgx_fe
+    container_name: comandx
     restart: always
     network_mode: "host"
     volumes:

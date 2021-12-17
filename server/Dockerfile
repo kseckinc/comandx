@@ -1,13 +1,19 @@
 FROM node:8.9.3
 MAINTAINER yulong <yangyulong@galaxy-future.com>
-WORKDIR /bridgx-fe
+WORKDIR /commandx
 
 COPY package*.json ./
 
+ENV BRIDGX_HOST=""
+
+ENV SCHEDULX_HOST=""
+
+ENV K8S_HOST=""
+
+ENV PORT=""
+
 RUN npm install  --registry=http://registry.npm.taobao.org
 
-EXPOSE 8899
+COPY . /commandx
 
-COPY . /bridgx-fe
-
-ENTRYPOINT NODE_ENV=production node app.js >> fe.log 2>&1
+ENTRYPOINT bridgx_host=$BRIDGX_HOST schedulx_host=$SCHEDULX_HOST k8s_host=$K8S_HOST port=$PORT node app.js >> fe.log 2>&1

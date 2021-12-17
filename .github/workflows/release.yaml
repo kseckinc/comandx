@@ -18,7 +18,7 @@ jobs:
       - name: Build & Publish FE to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: galaxyfuture/bridgx-fe
+          name: galaxyfuture/comandx
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile

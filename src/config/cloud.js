@@ -1,21 +1,40 @@
 const cloudProviders = [{
   value: 'AlibabaCloud',
   label: '阿里云'
+}, {
+  value: 'HuaweiCloud',
+  label: '华为云'
 }]
 
-const alibabaCloudDiskTypes = [{
-  value: 'cloud_efficiency',
-  label: '高效云盘'
-}, {
-  value: 'cloud_ssd',
-  label: 'SSD云盘'
-}, {
-  value: 'cloud_essd',
-  label: 'ESSD云盘'
-}]
+const cloudDiskTypes = {
+  AlibabaCloud: [{
+    value: 'cloud_efficiency',
+    label: '高效云盘'
+  }, {
+    value: 'cloud_ssd',
+    label: 'SSD云盘'
+  }, {
+    value: 'cloud_essd',
+    label: 'ESSD云盘'
+  }],
+  HuaweiCloud: [{
+    value: 'SAS',
+    label: '高IO'
+  }, {
+    value: 'SSD',
+    label: '超高IO'
+  }, {
+    value: 'CO_P1',
+    label: '高IO (性能优化I型)'
+  }, {
+    value: 'UH_L1',
+    label: '高IO (性能优化I型)'
+  }]
+}
 
 const ramUrl = {
-  AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak'
+  AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak',
+  HuaweiCloud: ''
 }
 
 const systemDiskSizes = [{
@@ -43,10 +62,31 @@ const dataDiskSizes = [{
   label: '2T'
 }]
 
+const huaweiIpType = [{
+  value: '5_telcom',
+  label: '电信'
+}, {
+  value: '5_union',
+  label: '联通'
+}, {
+  value: '5_bgp',
+  label: '全动态BGP'
+}, {
+  value: '5_sbgp',
+  label: '静态BGP'
+}, {
+  value: '5_ipv6',
+  label: 'ipv6'
+}]
+
 const aksk = {
   AlibabaCloud: {
     key: 'AccessKey',
     secret: 'AccessKey Secret'
+  },
+  HuaweiCloud: {
+    key: 'AK',
+    secret: 'SK'
   }
 }
 
@@ -64,12 +104,58 @@ const taskStatus = [{
   value: 'FAILED'
 }]
 
+const imageTypes = [{
+  value: 'global',
+  label: '公共镜像'
+}, {
+  value: 'private',
+  label: '私有镜像'
+}]
+
+const chargeUnits = {
+  AlibabaCloud: [{
+    value: 'Week',
+    label: '周'
+  }, {
+    value: 'Month',
+    label: '月'
+  }],
+  HuaweiCloud: [{
+    value: 'Month',
+    label: '月'
+  }, {
+    value: 'Year',
+    label: '年'
+  }]
+}
+
+const protocols = {
+  AlibabaCloud: ['tcp', 'udp', 'icmp', 'gre', 'all'],
+  HuaweiCloud: ['tcp', 'udp', 'icmp', 'all']
+}
+
+const chargePeriods = {
+  AlibabaCloud: {
+    Week: [1, 2, 3, 4],
+    Month: [1, 2, 3, 4, 6, 12, 24, 36, 48, 60]
+  },
+  HuaweiCloud: {
+    Month: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    Year: [1, 2, 3]
+  }
+}
+
 export {
   cloudProviders,
-  alibabaCloudDiskTypes,
+  cloudDiskTypes,
   aksk,
   taskStatus,
   systemDiskSizes,
   dataDiskSizes,
-  ramUrl
+  ramUrl,
+  huaweiIpType,
+  imageTypes,
+  chargeUnits,
+  protocols,
+  chargePeriods
 }

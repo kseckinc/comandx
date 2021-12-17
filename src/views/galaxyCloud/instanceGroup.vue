@@ -22,7 +22,7 @@
     <div class="content">
       <div class="buttons">
         <el-button size="medium" type="primary" @click="applyInstance">+申请实例</el-button>
-        <el-button size="medium" :disabled="selectInstanceGroups.length < 1" @click="handleDelete">删除</el-button>
+        <el-button size="medium" :disabled="selectInstanceGroups.length < 1" @click="confirmDelete">删除</el-button>
       </div>
       <div class="table">
         <el-table
@@ -104,6 +104,20 @@
       </div>
 
     </el-dialog>
+    <el-dialog title="提示" :visible="confirmDeleteInstanceGroupDiglogVis" width="30%" @close="cancelDeleteInstance">
+      <div style="font-size:15px;text-align:center">
+        即将删除实例组及所属的全部实例，确定要删除吗？
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <el-button
+          type="primary"
+          @click="handleDelete()"
+        >删除</el-button>
+        <el-button
+          @click="cancelDeleteInstance()"
+        >取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -180,6 +194,7 @@ export default {
       curRowName: '',
       curRowId: '',
       dialogVisible: false,
+      confirmDeleteInstanceGroupDiglogVis: false,
       dialogForm: {
         instance_count: 0
       }
@@ -230,6 +245,7 @@ export default {
       const res = await instanceGroupDelete(params)
       if (res.data.status === 'success') {
         this.$message.success('删除成功')
+        this.confirmDeleteInstanceGroupDiglogVis = false
       } else {
         this.$message.error('删除失败')
       }
@@ -263,6 +279,12 @@ export default {
       Number.isNaN(count) && (count = 0)
       count = count < 0 ? 0 : count
       this.dialogForm.instance_count = parseInt(count)
+    },
+    confirmDelete() {
+      this.confirmDeleteInstanceGroupDiglogVis = true
+    },
+    cancelDeleteInstance() {
+      this.confirmDeleteInstanceGroupDiglogVis = false
     }
   }
 }
