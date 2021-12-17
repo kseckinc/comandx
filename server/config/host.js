@@ -11,6 +11,7 @@ function getSchedulXHost() {
 function getKubeHost() {
   return `http://${process.env.k8s_host || bridgx_host}`
 }
+
 exports.getHost = getBridgXHost
 exports.getSchedulxHost = getSchedulXHost
 exports.getKubeHost = getKubeHost
