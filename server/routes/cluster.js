@@ -48,7 +48,6 @@ routerApi.get('/num', async(ctx) => {
     })
   } catch (e) {
     ctx.body = e.error
-
   }
 })
 
