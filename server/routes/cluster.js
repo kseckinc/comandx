@@ -28,7 +28,7 @@ routerApi.get('/name/:cluster_name', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getHost()}${prefix}/name/${ctx.params.cluster_name}`
+      url: `${host.getHost()}${prefix}/name/${encodeURIComponent(ctx.params.cluster_name)}`
     })
   } catch (e) {
     ctx.body = e.error

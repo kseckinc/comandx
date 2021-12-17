@@ -56,7 +56,7 @@ export async function subnetDescribe(vpc_id) {
   return _.get(res, 'data.Switches', [])
 }
 
-export function subnetCreate(provider, zone_id, cidr_block, vpc_id, switch_name) {
+export function subnetCreate(provider, zone_id, cidr_block, vpc_id, switch_name, gateway_ip) {
   const token = getToken()
   return request({
     url: '/api/v1/subnet/create',
@@ -66,7 +66,8 @@ export function subnetCreate(provider, zone_id, cidr_block, vpc_id, switch_name)
       zone_id,
       cidr_block,
       vpc_id,
-      switch_name
+      switch_name,
+      gateway_ip
     },
     headers: {
       Authorization: ` Bearer ${token}`
@@ -267,13 +268,15 @@ export async function instanceTypeList(provider, region_id, zone_id) {
   return _.get(res, 'data', [])
 }
 
-export async function imageList(provider, region_id) {
+export async function imageList(provider, region_id, instance_type, image_type) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/image/list',
     params: {
       provider,
-      region_id
+      region_id,
+      instance_type,
+      image_type
     },
     headers: {
       Authorization: ` Bearer ${token}`

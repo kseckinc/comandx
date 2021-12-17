@@ -6,7 +6,7 @@ function getBridgXHost() {
   return `http://${process.env.bridgx_host || bridgx_host}`
 }
 function getSchedulXHost() {
-  return `http://${process.env.bridgx_host || schedulx_host}`
+  return `http://${process.env.schedulx_host || schedulx_host}`
 }
 function getKubeHost() {
   return `http://${process.env.k8s_host || bridgx_host}`

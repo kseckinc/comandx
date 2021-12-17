@@ -11,6 +11,34 @@
         <div v-if="step === 0" class="form">
           <div class="form-container">
             <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云厂商 </div></el-col>
+              <el-col :span="19">
+                <el-select v-model="cluster.provider" size="medium" placeholder="请选择">
+                  <el-option
+                    v-for="item in cloudProviders"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    @click.native.capture="changeProvider(item.value)"
+                  />
+                </el-select>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
+              <el-col :span="19">
+                <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
+                  <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
+                    <span>{{ p.account_name }}({{ p.account }})</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>集群名称 </div></el-col>
               <el-col :span="19">
                 <el-input v-model="cluster.name" size="medium" placeholder="请输入集群名称" maxlength="20" show-word-limit style="width: 400px" />
@@ -31,33 +59,6 @@
             <el-row>
               <el-col :span="5"><div style="height: 16px" /></el-col>
               <el-col :span="19"><div class="note">支持中文、英文、数字，限制50字符</div></el-col>
-            </el-row>
-          </div>
-          <div class="form-container">
-            <el-row>
-              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云厂商 </div></el-col>
-              <el-col :span="19">
-                <el-select v-model="cluster.provider" size="medium" placeholder="请选择" @change="loadRegion">
-                  <el-option
-                    v-for="item in cloudProviders"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="form-container">
-            <el-row>
-              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
-              <el-col :span="19">
-                <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
-                  <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
-                    <span>{{ p.account_name }}({{ p.account }})</span>
-                  </el-option>
-                </el-select>
-              </el-col>
             </el-row>
           </div>
           <div class="form-container">
@@ -83,7 +84,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>可用区 </div></el-col>
               <el-col :span="19">
-                <el-select v-model="cluster.zone_id" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" placeholder="请选择" @change="loadInstanceTypes">
+                <el-select v-model="cluster.zone_id" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" placeholder="请选择" @change="AfterZoneSelected">
                   <el-option
                     v-for="item in zones"
                     :key="item.ZoneId"
@@ -108,9 +109,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>网络类型 </div></el-col>
               <el-col :span="19">
-                <div style="height:36px; display: flex; align-items: center">
-                  专用网络VPC
-                </div>
+                <el-radio v-model="network_type" label="vpc" style="height:36px; display: flex; align-items: center">专用网络VPC</el-radio>
               </el-col>
             </el-row>
           </div>
@@ -194,8 +193,20 @@
             <el-row>
               <el-col :span="5"><div style="height: 36px" /></el-col>
               <el-col :span="19">
-                <div v-if="networkSwitch">
-                  <el-radio-group v-model="network_config.internet_charge_type" size="medium">
+                <div v-if="networkSwitch" style="display: flex; flex-direction: row; justify-content: left; align-items: center">
+                  <div v-if="cluster.provider === 'HuaweiCloud'" style="display: flex; flex-direction: row; align-items: center">
+                    <div class="asterisk">*</div><span>IP类型</span>
+                    <el-select v-model="network_config.internet_ip_type" size="medium" style="width: 130px; margin-left: 5px">
+                      <el-option
+                        v-for="item in huaweiIpType"
+                        :key="item.value"
+                        :value="item.value"
+                        :label="item.label"
+                      />
+                    </el-select>
+                  </div>
+                  <div class="asterisk" style="margin-left: 20px">*</div><span>付费方式</span>
+                  <el-radio-group v-model="network_config.internet_charge_type" size="medium" style="margin-left: 5px">
                     <el-radio-button label="PayByBandwidth">固定带宽</el-radio-button>
                     <el-radio-button label="PayByTraffic">按量付费</el-radio-button>
                   </el-radio-group>
@@ -220,8 +231,7 @@
                   <el-option v-for="item in chargePeriodOptions" :key="item" :value="item" :label="item" />
                 </el-select>
                 <el-select v-if="charge_config.charge_type === 'PrePaid'" v-model="charge_config.period_unit" style="margin-left: 5px; width: 80px">
-                  <el-option label="周" value="Week" />
-                  <el-option label="月" value="Month" />
+                  <el-option v-for="(u, idx) in chargeUnits[cluster.provider]" :key="idx" :value="u.value" :label="u.label" />
                 </el-select>
               </el-col>
             </el-row>
@@ -235,7 +245,7 @@
                   size="medium"
                   :disabled="cluster.region_id === '' || cluster.zone_id === ''"
                   placeholder="可输入机器信息匹配"
-                  style="width: 50%"
+                  style="width: calc( 40% + 220px )"
                   filterable
                 >
                   <el-option
@@ -256,7 +266,10 @@
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
                 <!--                  <el-radio-button label="private">自定义镜像</el-radio-button>-->
                 <!--                </el-radio-group>-->
-                <el-select v-model="cluster.image" size="medium" style="width: 50%" filterable placeholder="可输入镜像信息匹配">
+                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="loadImages">
+                  <el-option v-for="t in imageTypes" :key="t.value" :value="t.value" :label="t.label" />
+                </el-select>
+                <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
                   <el-option v-for="i in images" :key="i.ImageId" :value="i.ImageId" :label="i.OsName" />
                 </el-select>
               </el-col>
@@ -264,59 +277,54 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">系统盘类型 </div></el-col>
-              <el-col :span="3">
-                <el-select v-model="system_disk.category">
-                  <el-option
-                    v-for="item in alibabaCloudDiskTypes"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+              <el-col :span="5"><div class="center-text">系统盘 </div></el-col>
+              <el-col :span="19">
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                  <el-select v-model="system_disk.category" size="medium" placeholder="请选择系统盘类型" style="width: 200px">
+                    <el-option
+                      v-for="item in diskTypes"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                </div>
               </el-col>
-              <el-col :span="5"><div class="center-text">系统盘容量 </div></el-col>
-              <el-col :span="8">
-                <el-select v-model="system_disk.size">
-                  <el-option
-                    v-for="item in systemDiskSizes"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+            </el-row>
+          </div>
+          <div class="form-container">
+            <el-row>
+              <el-col :span="5">
+                <div class="center-text">
+                  数据盘
+                </div>
+              </el-col>
+              <el-col :span="19">
+                <div style="display: flex; flex-direction: row; align-items: center; height: 36px">
+                  <span style="color: #8c939d">
+                    您已选择<span style="display: inline-block; padding: 0 10px; color: red">{{ data_disks.length }}</span>块盘，还可以选择<span style="display: inline-block; padding: 0 10px; color: red">{{ 16 - data_disks.length }}</span>块盘
+                  </span>
+                  <el-button size="mini" type="primary" style="margin-left: 10px" @click="addItem">+增加数据盘</el-button>
+                </div>
               </el-col>
             </el-row>
           </div>
           <div v-for="(item, index) in data_disks" :key="index" class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">数据盘类型 </div></el-col>
-              <el-col :span="3">
-                <el-select v-model="item.category">
-                  <el-option
-                    v-for="t in alibabaCloudDiskTypes"
-                    :key="t.value"
-                    :label="t.label"
-                    :value="t.value"
-                  />
-                </el-select>
-              </el-col>
-              <el-col :span="5"><div class="center-text">数据盘容量 </div></el-col>
-              <el-col :span="8">
-                <el-select v-model="item.size">
-                  <el-option
-                    v-for="d in dataDiskSizes"
-                    :key="d.value"
-                    :label="d.label"
-                    :value="d.value"
-                  />
-                </el-select>
-                <el-button v-if="data_disks.length > 1" size="medium" type="text" style="margin-left: 10px" @click="deleteItem(index)">
-                  <span style="color: #f4516c">删除</span>
-                </el-button>
-                <el-button v-if="index === (data_disks.length - 1)" size="medium" type="text" style="margin-left: 10px" @click="addItem">
-                  <span>添加</span>
-                </el-button>
+              <el-col :span="5"><div style="height: 36px; display: flex; justify-content: flex-end; align-items: center; margin-right: 10px"><i class="el-icon-delete" style="cursor:pointer;" @click="deleteItem(index)" /></div></el-col>
+              <el-col :span="19">
+                <div style="display: flex; flex-direction: row; align-items: center; height: 36px">
+                  <el-select v-model="item.category" size="medium" style="width: 200px" placeholder="请选择数据盘类型">
+                    <el-option
+                      v-for="t in diskTypes"
+                      :key="t.value"
+                      :label="t.label"
+                      :value="t.value"
+                    />
+                  </el-select>
+                  <el-input v-model="item.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -422,6 +430,16 @@
             </el-select>
           </el-col>
         </el-row>
+        <el-row style="padding-bottom: 20px">
+          <el-col :span="5">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
+              网关IP
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <el-input v-model="subnet.gateway_ip" size="medium" />
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="5">
             <div style="display: flex; flex-direction: row-reverse; align-items: center; padding-right: 30px; height: 36px;font-size: 16px;font-weight: bolder;">
@@ -457,10 +475,10 @@
             传输层协议
           </span>
           <el-select v-model="item.protocol" size="mini" style="width: 100px">
-            <el-option v-for="i in protocols" :key="i" :value="i" :label="i" />
+            <el-option v-for="i in protocols[cluster.provider]" :key="i" :value="i" :label="i" />
           </el-select>
           <span style="margin-left: 20px">端口范围</span>
-          <el-input v-model="item.port_from" size="mini" style="width: 50px" /> / <el-input v-model="item.port_to" size="mini" style="width: 50px" />
+          <el-input v-model="item.port_from" size="mini" style="width: 50px" /> - <el-input v-model="item.port_to" size="mini" style="width: 50px" />
           <span style="margin-left: 20px">规则方向</span>
           <el-radio-group v-model="item.direction" size="mini">
             <el-radio-button label="ingress" />
@@ -480,7 +498,7 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, alibabaCloudDiskTypes, systemDiskSizes, dataDiskSizes } from '@/config/cloud'
+import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -497,8 +515,8 @@ import {
 } from '@/api/cloud'
 import { clusterCreate, clusterDescribe, clusterEdit } from '@/api/cluster'
 const data_disk_item = {
-  category: 'cloud_efficiency',
-  size: 50,
+  category: '',
+  size: '',
   performance_level: ''
 }
 
@@ -516,10 +534,11 @@ export default {
   data() {
     return {
       vpcCidrOptions: ['172.16.0.0/12', '10.0.0.0/8', '192.168.0.0/16'],
-      protocols: ['tcp', 'udp', 'icmp', 'gre', 'all'],
+      protocols,
       vpcAddVisible: false,
       subnetAddVisible: false,
       securityGroupsAddVisible: false,
+      chargeUnits,
       vpc: {
         vpc_name: '',
         cidr_block: ''
@@ -527,7 +546,8 @@ export default {
       subnet: {
         switch_name: '',
         vpc_id: '',
-        cidr_block: ''
+        cidr_block: '',
+        gateway_ip: ''
       },
       securityGroup: {
         security_group_name: ''
@@ -537,9 +557,11 @@ export default {
       }],
       step: 0,
       cloudProviders,
-      alibabaCloudDiskTypes,
+      cloudDiskTypes,
+      diskTypes: [],
       systemDiskSizes,
       dataDiskSizes,
+      huaweiIpType,
       providers: [{
         value: '',
         label: '全部'
@@ -556,27 +578,30 @@ export default {
         image: '',
         password: ''
       },
+      chargePeriods,
       charge_config: {
         charge_type: 'PostPaid',
         period: 1,
         period_unit: 'Month'
       },
+      network_type: 'vpc',
       network_config: {
         vpc: '',
         subnet_id: '',
         security_group: '',
         internet_charge_type: 'PayByTraffic',
-        internet_max_bandwidth_out: 0
+        internet_max_bandwidth_out: 0,
+        internet_ip_type: ''
       },
       networkSwitch: false,
       system_disk: {
-        category: 'cloud_efficiency',
-        size: 50,
+        category: '',
+        size: '',
         performance_level: ''
       },
-      data_disks: [{ ...data_disk_item }],
+      data_disks: [],
       data_disk_item: {
-        category: 'cloud_efficiency',
+        category: '',
         size: 0,
         performance_level: ''
       },
@@ -585,6 +610,12 @@ export default {
       securityGroups: [],
       instanceTypes: [],
       images: [],
+      image_config: {
+        id: '',
+        name: '',
+        type: ''
+      },
+      imageTypes,
       accounts: [],
       accountQuery: {
         page_number: 1,
@@ -596,15 +627,16 @@ export default {
       passwordWarning: '请牢记您所设置的密码',
       subnetDisabled: true,
       subnetNote: '子网的网段必须是其所属VPC网段的真子集且掩码需在16位到29位之间，可提供 8 ~ 65536 个地址',
-      subnetVpc: {}
+      subnetVpc: {},
+      cache: {
+        AlibabaCloud: {},
+        HuaweiCloud: {}
+      }
     }
   },
   computed: {
     chargePeriodOptions() {
-      if (this.charge_config.period_unit === 'Week') {
-        return [1, 2, 3, 4]
-      }
-      return [1, 2, 3, 4, 6, 12, 24, 36, 48, 60]
+      return _.get(this.chargePeriods, `${this.cluster.provider}.${this.charge_config.period_unit}`, [])
     },
     nextDisabled() {
       switch (this.step) {
@@ -636,6 +668,7 @@ export default {
     await this.loadRegion()
     await this.loadAccounts()
     await this.loadInstanceTypes()
+    await this.loadImages()
   },
   methods: {
     previous() {
@@ -658,6 +691,7 @@ export default {
       const cluster = await clusterDescribe(this.$route.params.name)
       if (!_.isEmpty(cluster)) {
         this.cluster = { ...cluster }
+        this.image_config = _.get(cluster, 'image_config')
         this.network_config = _.get(cluster, 'network_config')
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
@@ -667,8 +701,95 @@ export default {
       }
       this.againPassword = this.cluster.password
     },
+    async changeProvider(provider) {
+      this.handleCache(provider)
+      await this.loadAccounts()
+      await this.loadRegion()
+      await this.loadInstanceTypes()
+      await this.loadImages()
+    },
+    handleCache(provider) {
+      this.cacheProvider(this.cluster.provider)
+      if (_.isEmpty(this.cache[provider])) {
+        this.cleanCluster()
+        this.cluster.provider = provider
+        this.cleanNetConfig()
+        this.cleanImage()
+        this.cleanDisk()
+      } else {
+        this.loadCache(provider)
+      }
+    },
+    cleanImage() {
+      this.image_config = {
+        id: '',
+        type: '',
+        name: ''
+      }
+    },
+    loadCache(provider) {
+      const cache = this.cache[provider]
+      this.cluster = {
+        ...cache.cluster
+      }
+      this.network_config = {
+        ...cache.network_config
+      }
+      this.networkSwitch = cache.networkSwitch
+      this.system_disk = {
+        ...cache.system_disk
+      }
+      this.data_disks = _.cloneDeep(cache.data_disks)
+      this.imageType = cache.imageType
+    },
+    cacheProvider(provider) {
+      this.cache[provider] = {
+        cluster: {
+          ...this.cluster
+        },
+        network_config: {
+          ...this.network_config
+        },
+        networkSwitch: this.networkSwitch,
+        system_disk: { ...this.system_disk },
+        data_disks: _.cloneDeep(this.data_disks),
+        imageType: this.imageType
+      }
+    },
+    cleanCluster() {
+      this.cluster = {
+        name: '',
+        provider: '',
+        account_key: '',
+        region_id: '',
+        zone_id: '',
+        instance_type: '',
+        image: '',
+        password: ''
+      }
+    },
+    cleanNetConfig() {
+      this.network_config = {
+        vpc: '',
+        subnet_id: '',
+        security_group: '',
+        internet_charge_type: 'PayByTraffic',
+        internet_max_bandwidth_out: 0,
+        internet_ip_type: ''
+      }
+      this.networkSwitch = false
+    },
+    cleanDisk() {
+      this.system_disk = {
+        category: '',
+        size: '',
+        performance_level: ''
+      }
+      this.data_disks = []
+    },
     async loadRegion() {
       this.regions = await regionList(this.cluster.provider)
+      this.diskTypes = _.get(this.cloudDiskTypes, this.cluster.provider, [])
       if (this.cluster.region_id === '' && this.regions !== null && this.regions.length > 0) {
         this.cluster.region_id = _.get(this.regions, '0.RegionId', '')
       }
@@ -676,7 +797,7 @@ export default {
       await this.loadCloud()
     },
     async loadAccounts() {
-      const res = await cloudAccountList('', '', '', this.accountQuery.page_number, this.accountQuery.page_size)
+      const res = await cloudAccountList('', this.cluster.provider, '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.get(res, 'account_list', [])
       if (this.accounts.length === 1) {
         this.cluster.account_key = _.get(this.accounts, '0.account', '')
@@ -690,6 +811,7 @@ export default {
     async afterRegionSelected() {
       await this.loadZoneAndVpc()
       this.cluster.zone_id = ''
+      this.cleanNetConfig()
     },
     async loadZoneAndVpc() {
       this.zones = await zoneList(this.cluster.provider, this.cluster.region_id)
@@ -697,7 +819,9 @@ export default {
         this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
       }
       this.vpcs = await vpcDescribe(this.cluster.region_id)
-      this.images = await imageList(this.cluster.provider, this.cluster.region_id)
+    },
+    async loadImages() {
+      this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
@@ -707,6 +831,10 @@ export default {
       this.network_config.security_group = ''
       this.network_config.subnet_id = ''
       await this.loadCloud()
+    },
+    async AfterZoneSelected() {
+      await this.loadInstanceTypes()
+      this.cleanNetConfig()
     },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
@@ -727,6 +855,9 @@ export default {
           security_group: this.network_config.security_group
         }
       }
+      if (this.cluster.provider === 'HuaweiCloud') {
+        network_config.internet_ip_type = this.network_config.internet_ip_type
+      }
       let charge_config
       if (this.charge_config.charge_type === 'PrePaid') {
         charge_config = { ...this.charge_config }
@@ -735,13 +866,26 @@ export default {
           charge_type: this.charge_config.charge_type
         }
       }
+      const image = this.images.find(i => i.ImageId === this.cluster.image)
+      const image_config = {
+        type: this.image_config.type,
+        id: image.ImageId,
+        name: image.OsName
+      }
       const data = {
         ...this.cluster,
         network_config,
+        image_config,
         storage_config: {
           disks: {
-            system_disk: { ...this.system_disk },
-            data_disk: this.data_disks
+            system_disk: {
+              ...this.system_disk,
+              size: +this.system_disk.size
+            },
+            data_disk: this.data_disks.map(i => ({
+              ...i,
+              size: +i.size
+            }))
           }
         },
         charge_config
@@ -811,7 +955,7 @@ export default {
       this.vpcAddVisible = false
     },
     async submitSubnet() {
-      const res = await subnetCreate(this.cluster.provider, this.cluster.zone_id, this.subnet.cidr_block, this.subnet.vpc_id, this.subnet.switch_name)
+      const res = await subnetCreate(this.cluster.provider, this.cluster.zone_id, this.subnet.cidr_block, this.subnet.vpc_id, this.subnet.switch_name, this.subnet.gateway_ip)
       if (res.code === 200) {
         this.$message.success('创建成功!')
       }
@@ -827,8 +971,9 @@ export default {
     async submitSecurityGroup() {
       const res = await securityGroupCreateWithRule(this.cluster.region_id, this.network_config.vpc, this.securityGroup.security_group_name, this.rules.map(i => ({
         protocol: i.protocol,
-        port_range: `${i.port_from}/${i.port_to}`,
-        direction: i.protocol
+        port_from: +i.port_from,
+        port_to: +i.port_to,
+        direction: i.direction
       })))
       if (res.code === 200) {
         this.$message.success('创建成功!')
@@ -892,12 +1037,12 @@ export default {
     padding-right: 30px;
     justify-content: flex-end;
     align-items: center;
-    .asterisk {
-      display: flex;
-      align-items: center;
-      padding-right: 5px;
-      color: #f4516c;
-    }
+  }
+  .asterisk {
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+    color: #f4516c;
   }
   .note {
     padding-top: 5px;
