@@ -269,7 +269,7 @@
                 <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="loadImages">
                   <el-option v-for="t in imageTypes" :key="t.value" :value="t.value" :label="t.label" />
                 </el-select>
-                <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="imageType === ''">
+                <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
                   <el-option v-for="i in images" :key="i.ImageId" :value="i.ImageId" :label="i.OsName" />
                 </el-select>
               </el-col>
@@ -668,6 +668,7 @@ export default {
     await this.loadRegion()
     await this.loadAccounts()
     await this.loadInstanceTypes()
+    await this.loadImages()
   },
   methods: {
     previous() {
@@ -820,7 +821,7 @@ export default {
       this.vpcs = await vpcDescribe(this.cluster.region_id)
     },
     async loadImages() {
-      this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.imageType)
+      this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
