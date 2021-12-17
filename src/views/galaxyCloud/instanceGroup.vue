@@ -104,7 +104,6 @@
       </div>
 
     </el-dialog>
-
     <el-dialog title="提示" :visible="confirmDeleteInstanceGroupDiglogVis" width="30%" @close="cancelDeleteInstance">
       <div style="font-size:15px;text-align:center">
         即将删除实例组及所属的全部实例，确定要删除吗？
