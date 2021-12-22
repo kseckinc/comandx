@@ -166,7 +166,7 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true
-      const res = await clusterDescribeAll('', '', '', 1, this.clusterQuery.page_size)
+      const res = await clusterDescribeAll('', '', '', '', 'standard', 1, this.clusterQuery.page_size)
       this.clusters = [{
         value: '',
         label: '全部'
@@ -189,7 +189,7 @@ export default {
     },
     async loadMore() {
       this.clusterQuery.page_number++
-      const res = await clusterDescribeAll('', '', '', this.clusterQuery.page_number, this.clusterQuery.page_size)
+      const res = await clusterDescribeAll('', '', '', '', 'standard', this.clusterQuery.page_number, this.clusterQuery.page_size)
       this.clusters = _.concat(this.clusters, _.get(res, 'cluster_list', []).map(i => ({
         value: i.cluster_name,
         label: i.cluster_name

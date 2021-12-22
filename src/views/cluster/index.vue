@@ -263,7 +263,7 @@ export default {
         account: '',
         account_name: '全部'
       }, ..._.get(cRes, 'account_list', [])]
-      const res = await clusterDescribeAll(this.search.cluster_name, this.search.provider, this.search.ak, this.listQuery.page_number, this.listQuery.page_size)
+      const res = await clusterDescribeAll(this.search.cluster_name, this.search.provider, this.search.ak, '', 'standard', this.listQuery.page_number, this.listQuery.page_size)
       this.list = _.get(res, 'cluster_list', [])
       this.total = res.pager.total
       this.listLoading = false

@@ -212,7 +212,7 @@ export default {
     },
     async submitAdd() {
       try {
-        const res = await cloudAccountAdd(this.addForm.account_name, this.addForm.provider, this.addForm.key, this.addForm.secret)
+        const res = await cloudAccountAdd(this.addForm.account_name, this.addForm.provider, (this.addForm.key).trim(), (this.addForm.secret).trim())
         if (res.code === 200) {
           this.$message.success('添加成功')
           this.addForm = {

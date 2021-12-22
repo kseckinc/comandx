@@ -27,13 +27,14 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云厂商账户 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
                   <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
                     <span>{{ p.account_name }}({{ p.account }})</span>
                   </el-option>
                 </el-select>
+                <el-button type="text" style="margin-left: 10px" @click="transferTo('provider')">添加云厂商账户</el-button>
               </el-col>
             </el-row>
           </div>
@@ -398,7 +399,7 @@
         </div>
         <div class="submit-buttons">
           <el-button v-if="step===3" type="primary" style="margin-top: 12px;" size="medium" :disabled="submitDisabled" @click="submit">完成</el-button>
-          <el-button style="margin-top: 12px;" size="medium" type="info" plain @click="cancel">取消</el-button>
+          <el-button type="info" style="margin-top: 12px;" size="medium" plain @click="cancel">取消</el-button>
         </div>
       </div>
     </div>
@@ -631,7 +632,8 @@ export default {
       accounts: [],
       accountQuery: {
         page_number: 1,
-        page_size: 50
+        page_size: 50,
+        total: 0
       },
       passwordTips: '8～30 个字符，必须同时包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;\'<>,.?/ 中的特殊符号），其中 Windows 实例不能以斜线号（/）开头',
       passwordIllegal: false,
@@ -688,6 +690,9 @@ export default {
     },
     next() {
       if (this.step++ > 3) this.step = 0
+    },
+    transferTo(name) {
+      this.$router.push({ name })
     },
     checkCidr() {
       const vpc = this.vpcs.find(i => i.VpcId === this.subnet.vpc_id)
@@ -811,13 +816,17 @@ export default {
     async loadAccounts() {
       const res = await cloudAccountList('', this.cluster.provider, '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.get(res, 'account_list', [])
+      this.accountQuery.total = _.get(res, 'pager.total', 0)
       if (this.accounts.length === 1) {
         this.cluster.account_key = _.get(this.accounts, '0.account', '')
       }
     },
     async loadMore() {
+      if (this.accounts.length === this.accountQuery.total) {
+        return
+      }
       this.accountQuery.page_number++
-      const res = await cloudAccountList('', '', this.accountQuery.page_number, this.accountQuery.page_size)
+      const res = await cloudAccountList('', this.cluster.provider, '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.concat(this.accounts, ..._.get(res, 'account_list', []))
     },
     async afterRegionSelected() {
@@ -916,8 +925,13 @@ export default {
         this.$message.success(text)
         this.createDialogVisible = false
         this.$router.push({ name: 'clusterList' })
+      } else {
+        if (/cluster_cluster_name_uindex/.test(res.data.msg)) {
+          this.$message.error('集群名已占用')
+        } else {
+          this.$message.error(res.data.msg)
+        }
       }
-      this.$router.push({ path: '/cluster/list' })
     },
     cancel() {
       this.$router.push({ name: 'clusterList' })

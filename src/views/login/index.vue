@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="{ backgroundImage: bgImage }">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -85,7 +85,8 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      logo
+      logo,
+      bgImage: `url('${require('../../assets/login-bg.jpg')}')`
     }
   },
   watch: {

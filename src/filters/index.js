@@ -61,6 +61,15 @@ const paidTypes = {
   PrePaid: '包年包月'
 }
 
+const networkPaidTypes = {
+  PayByTraffic: '按使用流量计费',
+  PayByBandwidth: '按固定带宽计费'
+}
+
+export function parseNetworkPaidType(type) {
+  return _.get(networkPaidTypes, type, '未知')
+}
+
 export function parsePaidType(type) {
   return _.get(paidTypes, type, '未知')
 }
@@ -79,6 +88,16 @@ const gClusterStatuses = {
   // 'Install flannel': '安装flannel',
   // 'Install Node': '安装node',
   // 'Done': '初始化完成'
+}
+
+export function parseTest(result) {
+  return result
+}
+export function parseUsage(usage) {
+  if (usage === 'unused') {
+    return '未使用'
+  }
+  return usage
 }
 
 export function parseTaskAction(action) {
