@@ -71,6 +71,19 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 #### 4、用户手册  
 通过[用户手册](https://github.com/galaxy-future/comandx/blob/main/docs/user-manual.md)，用户可以掌握BridgX的功能使用全貌，方便快速查找使用感兴趣的功能。
 
+视频教程
+------
+[ComandX安装](https://www.bilibili.com/video/BV1n34y167o8/) <br>
+[添加云账户](https://www.bilibili.com/video/BV1Jr4y1S7q4/)  <br>
+[创建集群](https://www.bilibili.com/video/BV1Wb4y1v7jw/)   <br>
+[手动扩缩容](https://www.bilibili.com/video/BV1bm4y197QD/)  <br>
+
+
+技术文章
+------
+[《云原生技术如何每分钟级迁移TB级数据》](https://zhuanlan.zhihu.com/p/442746588)<br>
+[《企业迁移到K8s的最佳实践》](https://zhuanlan.zhihu.com/p/445131885) <br>
+[《来自一线大厂的十大云原生成本优化手段》](https://zhuanlan.zhihu.com/p/448405809)<br>
 
 行为准则
 ------
