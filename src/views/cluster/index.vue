@@ -188,7 +188,7 @@
 <script>
 import { clusterDescribeAll, clusterDelete } from '@/api/cluster'
 import { cloudAccountList } from '@/api/cloud'
-import { cloudProviders, alibabaCloudDiskTypes } from '@/config/cloud'
+import { cloudProviders } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -212,7 +212,6 @@ export default {
   data() {
     return {
       cloudProviders,
-      aliyunDiskTypes: alibabaCloudDiskTypes,
       providers: [{
         value: '',
         label: '全部'

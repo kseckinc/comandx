@@ -73,7 +73,7 @@
             </div>
             <div>
               <el-table :data="machines" border size="medium" max-height="350">
-                <el-table-column label="连通性检测" align="center">
+                <el-table-column label="连通性检测" align="center" min-width="100">
                   <template slot-scope="{ row }">
                     {{ row.test || parseTest }}
                   </template>
@@ -83,17 +83,17 @@
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-                <el-table-column label="机器IP" align="center">
+                <el-table-column label="机器IP" align="center" min-width="100">
                   <template slot-scope="{ row }">
                     <el-input v-model="row.instance_ip" size="mini" placeholder="10.0.0.1"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="登录名" align="center">
+                <el-table-column label="登录名" align="center" min-width="100">
                   <template slot-scope="{ row }">
                     <el-input v-model="row.login_name" size="mini" placeholder="请输入登录名"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="密码" align="center">
+                <el-table-column label="密码" align="center" min-width="100">
                   <template slot-scope="{ row }">
                     <el-input v-model="row.login_password" size="mini" placeholder="请输入密码"></el-input>
                   </template>
