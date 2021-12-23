@@ -109,10 +109,10 @@
                 <el-row style="margin-top: 5px">
                   <el-col :span="2"><div style="display: flex; align-items: center; height: 28px">其他: </div></el-col>
                   <el-col v-if="task.type === 'expand'" :span="22">
-                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" @change="handleChange" /> 台
+                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" @focus="handleChange" /> 台
                   </el-col>
                   <el-col v-if="task.type === 'shrink'" :span="22">
-                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" :max="instanceNum" @change="handleChange" /> 台
+                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" :max="instanceNum" @focus="handleChange" /> 台
                   </el-col>
                 </el-row>
               </el-col>

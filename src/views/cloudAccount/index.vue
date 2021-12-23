@@ -248,11 +248,20 @@ export default {
       this.editVisible = true
     },
     async deleteAccounts() {
-      const res = await cloudAccountDelete(this.selectAccounts.map(i => i.id))
-      if (res.code === 200) {
-        this.$message.success('删除成功')
+      try {
+        await this.$confirm('该操作将影响云厂商账号关联的所有云服务器相关操作, 确定要删除吗?', '警告', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        const res = await cloudAccountDelete(this.selectAccounts.map(i => i.id))
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+        }
+        await this.fetchData()
+      } catch (e) {
+        // do nothing
       }
-      await this.fetchData()
     },
     gotoRam() {
       const url = _.get(ramUrl, this.addForm.provider, '')

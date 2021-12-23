@@ -126,7 +126,7 @@ export async function clusterInstanceStat(cluster_name) {
   return _.get(res, 'data')
 }
 
-export async function createCustomPublicCluster(name, desc, provider, instance_list) {
+export async function createCustomPublicCluster(name, desc, provider, account_key, instance_list) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/cluster/create_custom_public',
@@ -138,6 +138,7 @@ export async function createCustomPublicCluster(name, desc, provider, instance_l
       name,
       desc,
       provider,
+      account_key,
       instance_list
     }
   })
@@ -188,13 +189,13 @@ export async function customClusterDelete(ids) {
   return res
 }
 
-export async function clusterMachineCheck(machine_list) {
+export async function clusterMachineCheck(instance_list) {
   const token = getToken()
   const res = await request({
-    url: '/api/v1/cluster/machine/check',
+    url: '/api/v1/cluster/instance/check',
     method: 'post',
     data: {
-      machine_list
+      instance_list
     },
     headers: {
       Authorization: ` Bearer ${token}`

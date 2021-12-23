@@ -207,14 +207,14 @@ routerApi.delete('/custom/delete/:ids', async(ctx) => {
   }
 })
 
-routerApi.post('/machine/check', async(ctx) => {
+routerApi.post('/instance/check', async(ctx) => {
   try {
     ctx.body = await request({
       headers: {
         authorization: ctx.header.authorization
       },
       method: 'POST',
-      url: `${host.getHost()}${prefix}/machine/check`,
+      url: `${host.getHost()}${prefix}/instance/check`,
       body: ctx.request.body,
       json: true
     })

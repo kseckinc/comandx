@@ -8,13 +8,15 @@ export function checkBridgX() {
   })
 }
 
-export async function vpcDescribe(region_id) {
+export async function vpcDescribe(region_id, provider, account_key) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/vpc/describe',
     method: 'get',
     params: {
-      region_id
+      region_id,
+      provider,
+      account_key
     },
     headers: {
       Authorization: ` Bearer ${token}`
