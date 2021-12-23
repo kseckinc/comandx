@@ -714,6 +714,7 @@ export default {
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
         this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
         this.charge_config = _.get(cluster, 'charge_config')
+        this.computing_power_type = _.get(cluster, 'computing_power_type') || 'CPU'
         await this.loadInstanceTypes()
       }
       this.againPassword = this.cluster.password
@@ -839,7 +840,7 @@ export default {
       if (this.cluster.zone_id === '' && this.zones !== null && this.zones.length > 0) {
         this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
       }
-      this.vpcs = await vpcDescribe(this.cluster.region_id)
+      this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
     },
     async loadImages() {
       this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
@@ -862,6 +863,7 @@ export default {
         const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.computing_power_type)
         this.instanceTypes = _.orderBy(data, ['core', 'memory'])
       }
+      this.cluster.instance_type = ''
     },
     async submit() {
       let network_config

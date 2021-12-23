@@ -4,7 +4,7 @@
       <div class="search">
         <div class="search-item">
           <span class="label">集群名</span>
-          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @change="fetchData" />
+          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @change="fetchData" @clear="fetchData" />
         </div>
         <div class="search-item">
           <span class="label">云厂商</span>
@@ -49,7 +49,11 @@
           </el-table-column>
           <el-table-column label="在线机器数" prop="instance_count" align="center" />
           <el-table-column label="集群机型" prop="instance_type" align="center" min-width="160px" />
-          <el-table-column label="集群作用" prop="usage" align="center" />
+          <el-table-column label="使用方" align="center">
+            <template slot-scope="{ row }">
+              {{ row.usage | parseUsage }}
+            </template>
+          </el-table-column>
           <el-table-column label="云厂商" width="150px" align="center">
             <template slot-scope="{row}">
               {{ row.provider | filterCloudProvider }}
@@ -274,6 +278,7 @@ export default {
         ak: '',
         provider: ''
       }
+      this.fetchData()
     },
     handleSelectionChange(val) {
       this.selectClusters = val

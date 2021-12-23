@@ -23,7 +23,7 @@
           </el-col>
         </el-row>
         <el-row v-show="type === 'public'" style="margin-top: 20px">
-          <el-col :span="8"><div class="center-text"><div class="asterisk">*</div>云厂商账户</div></el-col>
+          <el-col :span="8"><div class="center-text">云厂商账户</div></el-col>
           <el-col :span="16">
             <el-select v-model="account_key" v-load-more="loadMore" size="medium">
               <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
@@ -33,7 +33,19 @@
             <el-button type="text" style="margin-left: 10px" @click="transferTo('provider')">添加云厂商账户</el-button>
           </el-col>
         </el-row>
-        <el-row style="margin-top: 20px">
+        <el-row v-show="type === 'public'">
+          <el-col :span="8"><div style="height: 20px" /></el-col>
+          <el-col :span="16">
+            <div class="insert-machine-notes">
+              <i class="el-icon-info" style="color: green; font-size: 16px" />
+              <div class="notes">
+                1、如集群仅用于演示测试，可不提供云厂商账户；用于生产环境，则要求必须提供云厂商账户<br>
+                2、如未提供云厂商账户，对集群内机器的访问需要通agent，详情请参考<span style="color: blue; cursor: pointer" @click="openUrl('')">《Agent下载安装说明》</span>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 10px">
           <el-col :span="8"><div class="center-text" style="align-items: start"><div class="asterisk">*</div>机器列表</div></el-col>
           <el-col :span="16">
             <div class="insert-machine-notes">
@@ -103,7 +115,7 @@
       </div>
       <div class="footer">
         <div>
-          <el-button size="medium" type="primary" :disabled="submitDisabled && cluster.name === ''" @click="submit">提交</el-button>
+          <el-button size="medium" type="primary" :disabled="submitDisabled || cluster.name === '' || !providerCheck" @click="submit">提交</el-button>
           <el-button size="medium" @click="cancel">取消</el-button>
         </div>
       </div>
@@ -124,6 +136,11 @@ export default {
   components: { UploadExcelComponent },
   directives: {
     loadMore
+  },
+  computed: {
+    providerCheck() {
+      return !(this.type === 'public' && (this.provider === ''))
+    }
   },
   data() {
     return {
@@ -171,6 +188,9 @@ export default {
     async changeProvider() {
       this.account_key = ''
       await this.loadAccounts()
+    },
+    openUrl(url) {
+      window.open(url)
     },
     transferTo(name) {
       this.$router.push({ name })
@@ -225,9 +245,9 @@ export default {
     },
     async checkMachine() {
       const res = await clusterMachineCheck(this.machines.map(i => ({
-        ip: i.instance_ip,
-        username: i.login_name,
-        password: i.login_password
+        instance_ip: i.instance_ip,
+        login_name: i.login_name,
+        login_password: i.login_password
       })))
       if (_.get(res, 'is_all_pass', false)) {
         this.machines = this.machines.map(i => ({
@@ -257,7 +277,7 @@ export default {
       }))
       switch (this.type) {
         case 'public':
-          res = await createCustomPublicCluster(this.cluster.name, this.cluster.desc, this.provider, instance_list)
+          res = await createCustomPublicCluster(this.cluster.name, this.cluster.desc, this.provider, this.account_key, instance_list)
           text = '录入成功'
           break
         case 'private':
@@ -266,8 +286,19 @@ export default {
           break
         default:
       }
-      if (res.data.code === 200) {
+      if (res.code === 200) {
         this.$message.success(text)
+        switch (this.type) {
+          case 'public':
+            this.$router.push({ name: 'publicCluster' })
+            break
+          case 'private':
+            this.$router.push({ name: 'privateCluster' })
+            break
+          default:
+        }
+      } else {
+        this.$message.error(res.msg)
       }
     },
     cancel() {

@@ -4,11 +4,11 @@
       <div class="search">
         <div class="search-item">
           <span class="label">集群名</span>
-          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @blur="fetchData" />
+          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @blur="fetchData" @clear="fetchData" />
         </div>
         <div class="search-item">
           <span class="label">使用方</span>
-          <el-input v-model="search.usage" size="medium" placeholder="输入使用方名搜索" clearable style="width: 200px" @blur="fetchData" />
+          <el-input v-model="search.usage" size="medium" placeholder="输入使用方名搜索" clearable style="width: 200px" @blur="fetchData" @clear="fetchData" />
         </div>
         <div v-show="showProvider" class="search-item">
           <span class="label">云厂商</span>
@@ -121,9 +121,9 @@ export default {
         usage: '',
         provider: ''
       }
+      this.fetchData()
     },
     handleCreate() {
-      console.log(this.$route.name)
       if (this.$route.name === 'privateCluster') {
         this.$router.push({ name: 'privateClusterCreate' })
       } else {
@@ -139,7 +139,7 @@ export default {
     edit() {},
     async handleDelete() {
       const res = await customClusterDelete(this.selectClusters.map(i => i.cluster_id))
-      if (res.data.code === 200) {
+      if (res.code === 200) {
         this.$message.success('删除成功')
       }
       await this.fetchData()

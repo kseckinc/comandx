@@ -11,7 +11,7 @@
       </el-row>
       <el-row v-show="cluster.provider !== 'PrivateCloud'">
         <el-col :span="8"><div class="text key">云厂商</div></el-col>
-        <el-col :span="12"><div class="text value">{{ cluster.provider }}</div></el-col>
+        <el-col :span="12"><div class="text value">{{ cluster.provider | filterCloudProvider }}</div></el-col>
       </el-row>
       <el-row v-show="cluster.provider !== 'PrivateCloud'">
         <el-col :span="8"><div class="text key">云厂商账户</div></el-col>
