@@ -305,11 +305,20 @@ export default {
       this.$router.push({ name: 'clusterInfo', params: { name }})
     },
     async handleDelete() {
-      const res = await clusterDelete(this.selectClusters.map(i => i.cluster_id))
-      if (res.code === 200) {
-        this.$message.success('删除成功')
+      try {
+        await this.$confirm('确定删除吗?', '警告', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        const res = await clusterDelete(this.selectClusters.map(i => i.cluster_id))
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          await this.fetchData()
+        }
+      } catch (e) {
+        // do nothing
       }
-      await this.fetchData()
     },
     async loadMore() {
       this.accountQuery.page_number++

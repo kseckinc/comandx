@@ -241,7 +241,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>算力类型 </div></el-col>
               <el-col :span="19">
-                <el-radio-group v-model="computing_power_type" @change="loadInstanceTypes">
+                <el-radio-group v-model="cluster.computing_power_type" @change="changeComputedType">
                   <el-radio-button label="CPU">CPU</el-radio-button>
                   <el-radio-button label="GPU">GPU</el-radio-button>
                 </el-radio-group>
@@ -300,7 +300,7 @@
                       :value="item.value"
                     />
                   </el-select>
-                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('system', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -335,7 +335,7 @@
                       :value="t.value"
                     />
                   </el-select>
-                  <el-input v-model="item.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="item.size" placeholder="磁盘空间20-32768" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('data', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -588,7 +588,8 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: ''
+        password: '',
+        computing_power_type: 'CPU'
       },
       chargePeriods,
       charge_config: {
@@ -597,7 +598,6 @@ export default {
         period_unit: 'Month'
       },
       network_type: 'vpc',
-      computing_power_type: 'CPU',
       network_config: {
         vpc: '',
         subnet_id: '',
@@ -659,10 +659,13 @@ export default {
         case 1:
           return _.isEmpty(this.network_config.vpc) || _.isEmpty(this.network_config.subnet_id) || _.isEmpty(this.network_config.security_group)
         case 2:
-          return _.isEmpty(this.cluster.image) || _.isEmpty(this.cluster.instance_type)
+          return _.isEmpty(this.cluster.image) || _.isEmpty(this.cluster.instance_type) || !this.diskCheck
         default:
       }
       return true
+    },
+    diskCheck() {
+      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1
     },
     submitDisabled() {
       return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal
@@ -712,9 +715,8 @@ export default {
         this.network_config = _.get(cluster, 'network_config')
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
-        this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
+        this.data_disks = _.get(cluster, 'storage_config.disks.data_disk') || []
         this.charge_config = _.get(cluster, 'charge_config')
-        this.computing_power_type = _.get(cluster, 'computing_power_type') || 'CPU'
         await this.loadInstanceTypes()
       }
       this.againPassword = this.cluster.password
@@ -847,7 +849,7 @@ export default {
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
-      this.subnets = await subnetDescribe(this.network_config.vpc)
+      this.subnets = await subnetDescribe(this.network_config.vpc, this.cluster.zone_id)
     },
     async afterVpcChange() {
       this.network_config.security_group = ''
@@ -858,12 +860,15 @@ export default {
       await this.loadInstanceTypes()
       this.cleanNetConfig()
     },
+    changeComputedType() {
+      this.loadInstanceTypes()
+      this.cluster.instance_type = ''
+    },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
-        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.computing_power_type)
+        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.cluster.computing_power_type)
         this.instanceTypes = _.orderBy(data, ['core', 'memory'])
       }
-      this.cluster.instance_type = ''
     },
     async submit() {
       let network_config
@@ -895,21 +900,25 @@ export default {
         id: image.ImageId,
         name: image.OsName
       }
+      const disks = {}
+      if (this.system_disk.size !== '') {
+        disks['system_disk'] = {
+          ...this.system_disk,
+          size: +this.system_disk.size
+        }
+      }
+      if (this.data_disks.filter(i => i.size === '').length < 1) {
+        disks['data_disk'] = this.data_disks.map(i => ({
+          ...i,
+          size: +i.size
+        }))
+      }
       const data = {
         ...this.cluster,
         network_config,
         image_config,
         storage_config: {
-          disks: {
-            system_disk: {
-              ...this.system_disk,
-              size: +this.system_disk.size
-            },
-            data_disk: this.data_disks.map(i => ({
-              ...i,
-              size: +i.size
-            }))
-          }
+          disks
         },
         charge_config
       }
@@ -962,6 +971,32 @@ export default {
         vpc_id: '',
         cidr_block: ''
       }
+    },
+    checkNum(type, message) {
+      let alert = false
+      switch (type) {
+        case 'system':
+          if (isNaN(+this.system_disk.size) || +this.system_disk.size < 1) {
+            this.system_disk.size = ''
+            if (message) {
+              this.$message.error('系统盘大小不合规!')
+            }
+          }
+          return false
+        case 'data':
+          this.data_disks.forEach((i) => {
+            if (isNaN(+i.size) || +i.size < 1) {
+              i.size = ''
+              alert = true
+            }
+          })
+          if (alert && message) {
+            this.$message.error('数据盘大小不合规!')
+          }
+          return false
+        default:
+      }
+      return true
     },
     addSecurityGroup() {
       this.securityGroupsAddVisible = true

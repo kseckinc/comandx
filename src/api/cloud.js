@@ -43,13 +43,14 @@ export function vpcCreate(provider, region_id, cidr_block, vpc_name, ak) {
   })
 }
 
-export async function subnetDescribe(vpc_id) {
+export async function subnetDescribe(vpc_id, zone_id) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/subnet/describe',
     method: 'get',
     params: {
-      vpc_id
+      vpc_id,
+      zone_id
     },
     headers: {
       Authorization: ` Bearer ${token}`
