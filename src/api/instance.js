@@ -77,3 +77,19 @@ export async function instanceUsageStatistics(cluster_name, date, page_number, p
   })
   return _.get(res, 'data')
 }
+
+export async function customList(cluster_name, page_number, page_size) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/instance/list_custom',
+    params: {
+      cluster_name,
+      page_number,
+      page_size
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return _.get(res, 'data', [])
+}

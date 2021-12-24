@@ -145,4 +145,82 @@ routerApi.get('/instance_stat', async(ctx) => {
   }
 })
 
+routerApi.post('/create_custom_public', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      method: 'POST',
+      url: `${host.getHost()}${prefix}/create_custom_public`,
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.post('/create_custom_private', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      method: 'POST',
+      url: `${host.getHost()}${prefix}/create_custom_private`,
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.get('/custom/detail', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}${prefix}/custom/detail`,
+      qs: ctx.query,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.delete('/custom/delete/:ids', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}${prefix}/custom/delete/${ctx.params.ids}`,
+      method: 'DELETE',
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
+routerApi.post('/instance/check', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      method: 'POST',
+      url: `${host.getHost()}${prefix}/instance/check`,
+      body: ctx.request.body,
+      json: true
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
 module.exports = routerApi

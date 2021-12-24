@@ -32,7 +32,7 @@
           <el-row>
             <el-col :span="5"><div class="center-text">执行集群 </div></el-col>
             <el-col :span="15">
-              <el-select v-model="task.cluster_name" placeholder="请选择" style="width: 400px" size="medium" @change="loadInstanceNum">
+              <el-select v-model="task.cluster_name" v-load-more="loadMore" placeholder="请选择" style="width: 400px" size="medium" @change="loadInstanceNum">
                 <el-option v-for="item in clusters" :key="item.cluster_name" :value="item.cluster_name" :label="item.cluster_name" />
               </el-select>
             </el-col>
@@ -109,10 +109,10 @@
                 <el-row style="margin-top: 5px">
                   <el-col :span="2"><div style="display: flex; align-items: center; height: 28px">其他: </div></el-col>
                   <el-col v-if="task.type === 'expand'" :span="22">
-                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" @change="handleChange" /> 台
+                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" @focus="handleChange" /> 台
                   </el-col>
                   <el-col v-if="task.type === 'shrink'" :span="22">
-                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" :max="instanceNum" @change="handleChange" /> 台
+                    <el-input-number v-model="task.otherNum" controls-position="right" size="mini" style="width: 100px;" :max="instanceNum" @focus="handleChange" /> 台
                   </el-col>
                 </el-row>
               </el-col>
@@ -144,9 +144,14 @@
 <script>
 import { clusterExpand, clusterShrink, clusterDescribeAll, clusterInstanceStat } from '@/api/cluster'
 import _ from 'lodash'
+import loadMore from '@/directive/el-select-load-more'
+import { cloudAccountList } from '@/api/cloud'
 
 export default {
   name: 'CreateOnceTask',
+  directives: {
+    loadMore
+  },
   data() {
     return {
       instanceNumLoading: false,
@@ -183,7 +188,12 @@ export default {
         otherNum: null
       },
       clusters: [],
-      taskNameIllegal: false
+      taskNameIllegal: false,
+      listQuery: {
+        page_size: 50,
+        page_number: 1,
+        total: 0
+      }
     }
   },
   computed: {
@@ -196,8 +206,9 @@ export default {
     }
   },
   async mounted() {
-    const res = await clusterDescribeAll()
+    const res = await clusterDescribeAll('', '', '', '', 'standard', this.listQuery.page_number, this.listQuery.page_size)
     this.clusters = _.get(res, 'cluster_list', [])
+    this.listQuery.total = _.get(res, 'pager.total', 0)
   },
   methods: {
     async loadInstanceNum() {
@@ -211,6 +222,15 @@ export default {
         // do nothing
       }
       this.instanceNumLoading = false
+    },
+    async loadMore() {
+      if (this.clusters.length === this.listQuery.total) {
+        return
+      }
+      this.listQuery.page_number++
+      const res = await clusterDescribeAll('', '', '', '', 'standard', this.listQuery.page_number, this.listQuery.page_size)
+      this.clusters = _.concat(this.clusters, ..._.get(res, 'cluster_list', []))
+      this.listQuery.total = _.get(res, 'pager.total', 0)
     },
     async submit() {
       if (this.task.num === 0 && this.task.otherNum === 0) {

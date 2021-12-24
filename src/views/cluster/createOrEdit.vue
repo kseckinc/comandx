@@ -27,13 +27,14 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云账号 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>云厂商账户 </div></el-col>
               <el-col :span="19">
                 <el-select v-model="cluster.account_key" v-load-more="loadMore" size="medium">
                   <el-option v-for="(p, idx) in accounts" :key="idx" :label="p.account_name" :value="p.account">
                     <span>{{ p.account_name }}({{ p.account }})</span>
                   </el-option>
                 </el-select>
+                <el-button type="text" style="margin-left: 10px" @click="transferTo('provider')">添加云厂商账户</el-button>
               </el-col>
             </el-row>
           </div>
@@ -240,7 +241,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>算力类型 </div></el-col>
               <el-col :span="19">
-                <el-radio-group v-model="computing_power_type" @change="loadInstanceTypes">
+                <el-radio-group v-model="cluster.computing_power_type" @change="changeComputedType">
                   <el-radio-button label="CPU">CPU</el-radio-button>
                   <el-radio-button label="GPU">GPU</el-radio-button>
                 </el-radio-group>
@@ -299,7 +300,7 @@
                       :value="item.value"
                     />
                   </el-select>
-                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('system', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -334,7 +335,7 @@
                       :value="t.value"
                     />
                   </el-select>
-                  <el-input v-model="item.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="item.size" placeholder="磁盘空间20-32768" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('data', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -398,7 +399,7 @@
         </div>
         <div class="submit-buttons">
           <el-button v-if="step===3" type="primary" style="margin-top: 12px;" size="medium" :disabled="submitDisabled" @click="submit">完成</el-button>
-          <el-button style="margin-top: 12px;" size="medium" type="info" plain @click="cancel">取消</el-button>
+          <el-button type="info" style="margin-top: 12px;" size="medium" plain @click="cancel">取消</el-button>
         </div>
       </div>
     </div>
@@ -587,7 +588,8 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: ''
+        password: '',
+        computing_power_type: 'CPU'
       },
       chargePeriods,
       charge_config: {
@@ -596,7 +598,6 @@ export default {
         period_unit: 'Month'
       },
       network_type: 'vpc',
-      computing_power_type: 'CPU',
       network_config: {
         vpc: '',
         subnet_id: '',
@@ -631,7 +632,8 @@ export default {
       accounts: [],
       accountQuery: {
         page_number: 1,
-        page_size: 50
+        page_size: 50,
+        total: 0
       },
       passwordTips: '8～30 个字符，必须同时包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;\'<>,.?/ 中的特殊符号），其中 Windows 实例不能以斜线号（/）开头',
       passwordIllegal: false,
@@ -657,10 +659,13 @@ export default {
         case 1:
           return _.isEmpty(this.network_config.vpc) || _.isEmpty(this.network_config.subnet_id) || _.isEmpty(this.network_config.security_group)
         case 2:
-          return _.isEmpty(this.cluster.image) || _.isEmpty(this.cluster.instance_type)
+          return _.isEmpty(this.cluster.image) || _.isEmpty(this.cluster.instance_type) || !this.diskCheck
         default:
       }
       return true
+    },
+    diskCheck() {
+      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1
     },
     submitDisabled() {
       return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal
@@ -689,6 +694,9 @@ export default {
     next() {
       if (this.step++ > 3) this.step = 0
     },
+    transferTo(name) {
+      this.$router.push({ name })
+    },
     checkCidr() {
       const vpc = this.vpcs.find(i => i.VpcId === this.subnet.vpc_id)
       if (vpc !== undefined && justifySubnet(vpc.CidrBlock, this.subnet.cidr_block)) {
@@ -707,7 +715,7 @@ export default {
         this.network_config = _.get(cluster, 'network_config')
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
-        this.data_disks = _.get(cluster, 'storage_config.disks.data_disk')
+        this.data_disks = _.get(cluster, 'storage_config.disks.data_disk') || []
         this.charge_config = _.get(cluster, 'charge_config')
         await this.loadInstanceTypes()
       }
@@ -811,13 +819,17 @@ export default {
     async loadAccounts() {
       const res = await cloudAccountList('', this.cluster.provider, '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.get(res, 'account_list', [])
+      this.accountQuery.total = _.get(res, 'pager.total', 0)
       if (this.accounts.length === 1) {
         this.cluster.account_key = _.get(this.accounts, '0.account', '')
       }
     },
     async loadMore() {
+      if (this.accounts.length === this.accountQuery.total) {
+        return
+      }
       this.accountQuery.page_number++
-      const res = await cloudAccountList('', '', this.accountQuery.page_number, this.accountQuery.page_size)
+      const res = await cloudAccountList('', this.cluster.provider, '', this.accountQuery.page_number, this.accountQuery.page_size)
       this.accounts = _.concat(this.accounts, ..._.get(res, 'account_list', []))
     },
     async afterRegionSelected() {
@@ -830,14 +842,14 @@ export default {
       if (this.cluster.zone_id === '' && this.zones !== null && this.zones.length > 0) {
         this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
       }
-      this.vpcs = await vpcDescribe(this.cluster.region_id)
+      this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
     },
     async loadImages() {
       this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
-      this.subnets = await subnetDescribe(this.network_config.vpc)
+      this.subnets = await subnetDescribe(this.network_config.vpc, this.cluster.zone_id)
     },
     async afterVpcChange() {
       this.network_config.security_group = ''
@@ -848,9 +860,13 @@ export default {
       await this.loadInstanceTypes()
       this.cleanNetConfig()
     },
+    changeComputedType() {
+      this.loadInstanceTypes()
+      this.cluster.instance_type = ''
+    },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
-        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.computing_power_type)
+        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.cluster.computing_power_type)
         this.instanceTypes = _.orderBy(data, ['core', 'memory'])
       }
     },
@@ -884,21 +900,25 @@ export default {
         id: image.ImageId,
         name: image.OsName
       }
+      const disks = {}
+      if (this.system_disk.size !== '') {
+        disks['system_disk'] = {
+          ...this.system_disk,
+          size: +this.system_disk.size
+        }
+      }
+      if (this.data_disks.filter(i => i.size === '').length < 1) {
+        disks['data_disk'] = this.data_disks.map(i => ({
+          ...i,
+          size: +i.size
+        }))
+      }
       const data = {
         ...this.cluster,
         network_config,
         image_config,
         storage_config: {
-          disks: {
-            system_disk: {
-              ...this.system_disk,
-              size: +this.system_disk.size
-            },
-            data_disk: this.data_disks.map(i => ({
-              ...i,
-              size: +i.size
-            }))
-          }
+          disks
         },
         charge_config
       }
@@ -916,8 +936,13 @@ export default {
         this.$message.success(text)
         this.createDialogVisible = false
         this.$router.push({ name: 'clusterList' })
+      } else {
+        if (/cluster_cluster_name_uindex/.test(res.data.msg)) {
+          this.$message.error('集群名已占用')
+        } else {
+          this.$message.error(res.data.msg)
+        }
       }
-      this.$router.push({ path: '/cluster/list' })
     },
     cancel() {
       this.$router.push({ name: 'clusterList' })
@@ -946,6 +971,32 @@ export default {
         vpc_id: '',
         cidr_block: ''
       }
+    },
+    checkNum(type, message) {
+      let alert = false
+      switch (type) {
+        case 'system':
+          if (isNaN(+this.system_disk.size) || +this.system_disk.size < 1) {
+            this.system_disk.size = ''
+            if (message) {
+              this.$message.error('系统盘大小不合规!')
+            }
+          }
+          return false
+        case 'data':
+          this.data_disks.forEach((i) => {
+            if (isNaN(+i.size) || +i.size < 1) {
+              i.size = ''
+              alert = true
+            }
+          })
+          if (alert && message) {
+            this.$message.error('数据盘大小不合规!')
+          }
+          return false
+        default:
+      }
+      return true
     },
     addSecurityGroup() {
       this.securityGroupsAddVisible = true

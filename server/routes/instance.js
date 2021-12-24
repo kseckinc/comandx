@@ -77,4 +77,18 @@ routerApi.get('/usage_statistics', async(ctx) => {
   }
 })
 
+routerApi.get('/list_custom', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getHost()}${prefix}/list_custom`,
+      qs: ctx.query
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
 module.exports = routerApi

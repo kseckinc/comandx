@@ -93,6 +93,7 @@
                   layout="prev, pager, next"
                   style="float: right"
                   :total="query.total"
+                  :page-size="query.page_size"
                   hide-on-single-page
                   :current-page.sync="query.page_number"
                   @current-change="fetchData"
@@ -359,7 +360,7 @@ export default {
       flex-basis: 40%;
       flex-direction: column;
       .transfer-title {
-        box-shadow: 0 0px 5px #b0afaf;
+        box-shadow: 0 0 5px #b0afaf;
         .transfer-step {
           font-weight: bolder;
           color: black;

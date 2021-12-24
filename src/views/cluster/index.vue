@@ -4,7 +4,7 @@
       <div class="search">
         <div class="search-item">
           <span class="label">集群名</span>
-          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @change="fetchData" />
+          <el-input v-model="search.cluster_name" size="medium" placeholder="输入集群名称搜索" clearable style="width: 200px" @change="fetchData" @clear="fetchData" />
         </div>
         <div class="search-item">
           <span class="label">云厂商</span>
@@ -49,7 +49,11 @@
           </el-table-column>
           <el-table-column label="在线机器数" prop="instance_count" align="center" />
           <el-table-column label="集群机型" prop="instance_type" align="center" min-width="160px" />
-          <el-table-column label="集群作用" prop="usage" align="center" />
+          <el-table-column label="使用方" align="center">
+            <template slot-scope="{ row }">
+              {{ row.usage | parseUsage }}
+            </template>
+          </el-table-column>
           <el-table-column label="云厂商" width="150px" align="center">
             <template slot-scope="{row}">
               {{ row.provider | filterCloudProvider }}
@@ -184,7 +188,7 @@
 <script>
 import { clusterDescribeAll, clusterDelete } from '@/api/cluster'
 import { cloudAccountList } from '@/api/cloud'
-import { cloudProviders, alibabaCloudDiskTypes } from '@/config/cloud'
+import { cloudProviders } from '@/config/cloud'
 import Pagination from '@/components/Pagination'
 import loadMore from '@/directive/el-select-load-more'
 import _ from 'lodash'
@@ -208,7 +212,6 @@ export default {
   data() {
     return {
       cloudProviders,
-      aliyunDiskTypes: alibabaCloudDiskTypes,
       providers: [{
         value: '',
         label: '全部'
@@ -263,7 +266,7 @@ export default {
         account: '',
         account_name: '全部'
       }, ..._.get(cRes, 'account_list', [])]
-      const res = await clusterDescribeAll(this.search.cluster_name, this.search.provider, this.search.ak, this.listQuery.page_number, this.listQuery.page_size)
+      const res = await clusterDescribeAll(this.search.cluster_name, this.search.provider, this.search.ak, '', 'standard', this.listQuery.page_number, this.listQuery.page_size)
       this.list = _.get(res, 'cluster_list', [])
       this.total = res.pager.total
       this.listLoading = false
@@ -274,6 +277,7 @@ export default {
         ak: '',
         provider: ''
       }
+      this.fetchData()
     },
     handleSelectionChange(val) {
       this.selectClusters = val
@@ -301,11 +305,20 @@ export default {
       this.$router.push({ name: 'clusterInfo', params: { name }})
     },
     async handleDelete() {
-      const res = await clusterDelete(this.selectClusters.map(i => i.cluster_id))
-      if (res.code === 200) {
-        this.$message.success('删除成功')
+      try {
+        await this.$confirm('确定删除吗?', '警告', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        const res = await clusterDelete(this.selectClusters.map(i => i.cluster_id))
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          await this.fetchData()
+        }
+      } catch (e) {
+        // do nothing
       }
-      await this.fetchData()
     },
     async loadMore() {
       this.accountQuery.page_number++

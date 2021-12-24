@@ -8,13 +8,15 @@ export function checkBridgX() {
   })
 }
 
-export async function vpcDescribe(region_id) {
+export async function vpcDescribe(region_id, provider, account_key) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/vpc/describe',
     method: 'get',
     params: {
-      region_id
+      region_id,
+      provider,
+      account_key
     },
     headers: {
       Authorization: ` Bearer ${token}`
@@ -41,13 +43,14 @@ export function vpcCreate(provider, region_id, cidr_block, vpc_name, ak) {
   })
 }
 
-export async function subnetDescribe(vpc_id) {
+export async function subnetDescribe(vpc_id, zone_id) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/subnet/describe',
     method: 'get',
     params: {
-      vpc_id
+      vpc_id,
+      zone_id
     },
     headers: {
       Authorization: ` Bearer ${token}`

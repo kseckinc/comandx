@@ -244,7 +244,8 @@ export default {
       },
       clusterQuery: {
         page_number: 1,
-        page_size: 50
+        page_size: 50,
+        total: 0
       },
       total: 0,
       selectTasks: [],
@@ -270,7 +271,8 @@ export default {
       const res = await taskDescribeAll(this.search.taskName, this.search.cluster, this.search.status, this.listQuery.page_number, this.listQuery.page_size)
       this.list = res.task_list
       this.total = res.pager.total
-      const cRes = await clusterDescribeAll('', '', '', 1, this.clusterQuery.page_size)
+      const cRes = await clusterDescribeAll('', '', '', '', 'standard', this.clusterQuery.page_number, this.clusterQuery.page_size)
+      this.clusterQuery.total = _.get(cRes, 'pager.total', 0)
       this.clusterOptions = [{
         value: '',
         label: '全部'
@@ -316,12 +318,16 @@ export default {
       this.instanceLoading = false
     },
     async loadMore() {
+      if (this.clusterOptions.length === this.clusterQuery.total) {
+        return
+      }
       this.clusterQuery.page_number++
-      const res = await clusterDescribeAll('', '', '', this.clusterQuery.page_number, this.clusterQuery.page_size)
+      const res = await clusterDescribeAll('', '', '', '', '', this.clusterQuery.page_number, this.clusterQuery.page_size)
       this.clusterOptions = _.concat(this.clusterOptions, _.get(res, 'cluster_list', []).map(i => ({
         value: i.cluster_name,
         label: i.cluster_name
       })))
+      this.clusterQuery.total = _.get(res, 'total', 0)
     },
     getPercent(success, total) {
       if (total === 0) {
