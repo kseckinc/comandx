@@ -598,6 +598,7 @@ export default {
         period_unit: 'Month'
       },
       network_type: 'vpc',
+      computing_power_type: 'CPU',
       network_config: {
         vpc: '',
         subnet_id: '',
