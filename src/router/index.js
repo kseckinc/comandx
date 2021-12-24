@@ -70,17 +70,17 @@ export const constantRoutes = [
       path: '/cluster/list',
       name: 'clusterList',
       component: () => import('@/views/cluster/index'),
-      meta: { title: '公有云集群(购买)', icon: '' }
+      meta: { title: '标准集群', icon: '' }
     }, {
       path: '/cluster/public',
       name: 'publicCluster',
       component: () => import('@/views/cluster/privateCluster'),
-      meta: { title: '公有云集群(录入)', icon: '' }
+      meta: { title: '自定义集群(公有云)', icon: '' }
     }, {
       path: '/cluster/private',
       name: 'privateCluster',
       component: () => import('@/views/cluster/privateCluster'),
-      meta: { title: '私有云集群', icon: '' }
+      meta: { title: '自定义集群(私有云)', icon: '' }
     }, {
       path: '/cluster/edit/:name',
       name: 'clusterEdit',
