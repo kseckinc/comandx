@@ -34,7 +34,7 @@ const cloudDiskTypes = {
 
 const ramUrl = {
   AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak',
-  HuaweiCloud: ''
+  HuaweiCloud: 'https://console.huaweicloud.com/iam/?region=cn-north-4&locale=zh-cn#/mine/accessKey'
 }
 
 const systemDiskSizes = [{

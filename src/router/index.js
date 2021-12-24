@@ -65,12 +65,22 @@ export const constantRoutes = [
       path: '/cluster/create',
       name: 'clusterCreate',
       component: () => import('@/views/cluster/createOrEdit'),
-      meta: { title: '创建集群', icon: '' }
+      meta: { title: '创建公有云集群', icon: '' }
     }, {
       path: '/cluster/list',
       name: 'clusterList',
       component: () => import('@/views/cluster/index'),
-      meta: { title: '集群列表', icon: '' }
+      meta: { title: '标准集群', icon: '' }
+    }, {
+      path: '/cluster/public',
+      name: 'publicCluster',
+      component: () => import('@/views/cluster/privateCluster'),
+      meta: { title: '自定义集群(公有云)', icon: '' }
+    }, {
+      path: '/cluster/private',
+      name: 'privateCluster',
+      component: () => import('@/views/cluster/privateCluster'),
+      meta: { title: '自定义集群(私有云)', icon: '' }
     }, {
       path: '/cluster/edit/:name',
       name: 'clusterEdit',
@@ -82,6 +92,30 @@ export const constantRoutes = [
       name: 'clusterInfo',
       component: () => import('@/views/cluster/detail'),
       meta: { title: '集群信息', icon: '' },
+      hidden: true
+    }, {
+      path: '/cluster/public/add',
+      name: 'publicClusterAdd',
+      component: () => import('@/views/cluster/createOrEditPrivate'),
+      meta: { title: '录入公有云集群', icon: '' },
+      hidden: true
+    }, {
+      path: '/cluster/private/create',
+      name: 'privateClusterCreate',
+      component: () => import('@/views/cluster/createOrEditPrivate'),
+      meta: { title: '创建私有云集群', icon: '' },
+      hidden: true
+    }, {
+      path: '/cluster/private/:name/detail',
+      name: 'privateClusterDetail',
+      component: () => import('@/views/cluster/privateClusterDetail'),
+      meta: { title: '私有云集群详情', icon: '' },
+      hidden: true
+    }, {
+      path: '/cluster/public/:name/detail',
+      name: 'publicClusterDetail',
+      component: () => import('@/views/cluster/privateClusterDetail'),
+      meta: { title: '公有云集群(录入)详情', icon: '' },
       hidden: true
     }]
   },

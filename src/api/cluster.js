@@ -18,12 +18,12 @@ export async function clusterNum(account) {
   return _.get(res, 'data.cluster_num', 0)
 }
 
-export async function clusterDescribeAll(cluster_name, provider, account, page_number, page_size) {
+export async function clusterDescribeAll(cluster_name, provider, account, usage, cluster_type, page_number, page_size) {
   const token = getToken()
   const res = await request({
     url: '/api/v1/cluster/describe_all',
     method: 'get',
-    params: { cluster_name, provider, account, page_number, page_size },
+    params: { cluster_name, provider, account, page_number, page_size, cluster_type, usage },
     headers: {
       Authorization: ` Bearer ${token}`
     }
@@ -118,6 +118,84 @@ export async function clusterInstanceStat(cluster_name) {
     url: '/api/v1/cluster/instance_stat',
     params: {
       cluster_name
+    },
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return _.get(res, 'data')
+}
+
+export async function createCustomPublicCluster(name, desc, provider, account_key, instance_list) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/cluster/create_custom_public',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    },
+    method: 'post',
+    data: {
+      name,
+      desc,
+      provider,
+      account_key,
+      instance_list
+    }
+  })
+  return res
+}
+
+export async function createCustomPrivateCluster(name, desc, instance_list) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/cluster/create_custom_private',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    },
+    method: 'post',
+    data: {
+      name,
+      desc,
+      instance_list
+    }
+  })
+  return res
+}
+
+export async function customClusterDetail(cluster_id, cluster_name) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/cluster/custom/detail',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    },
+    params: {
+      cluster_id,
+      cluster_name
+    }
+  })
+  return _.get(res, 'data')
+}
+
+export async function customClusterDelete(ids) {
+  const token = getToken()
+  const res = await request({
+    url: `/api/v1/cluster/delete/${ids.join(',')}`,
+    method: 'delete',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    }
+  })
+  return res
+}
+
+export async function clusterMachineCheck(instance_list) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/cluster/instance/check',
+    method: 'post',
+    data: {
+      instance_list
     },
     headers: {
       Authorization: ` Bearer ${token}`

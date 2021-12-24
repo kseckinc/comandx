@@ -49,11 +49,7 @@
           </template>
         </el-table-column>
         <el-table-column label="ID" prop="cluster_id" align="center" width="90px" />
-        <el-table-column label="集群名称" align="center">
-          <template slot-scope="{ row }">
-            <span style="color: blue; cursor: pointer" @click="clusterInfo(row.cluster_name)"> {{ row.cluster_name }} </span>
-          </template>
-        </el-table-column>
+        <el-table-column label="集群名称" align="center" prop="cluster_name" />
         <el-table-column label="CPU(已用/全部)" align="center" min-width="130px">
           <template slot-scope="{ row }">
             <span style="color:#B8741A">{{ (row.all_cpu_cores - row.free_cpu_cores) | formatPrecision(3) }}核</span><span class="division">/</span>{{ row.all_cpu_cores | formatPrecision(3) }}核

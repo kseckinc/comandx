@@ -2,18 +2,130 @@
   <div>
     <el-card>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="基础信息" name="info">
-          <div class="info-title">
-            {{ cluster.name }}
-          </div>
-          <el-card>
-            <el-row>
-              <el-col :span="3" class="info-label">云厂商</el-col>
-              <el-col :span="9" class="info-content">{{ cluster.provider | filterCloudProvider }}</el-col>
-              <el-col :span="3" class="info-label">创建时间</el-col>
-              <el-col :span="9" class="info-content">{{ cluster.create_at | formatMomentZone }}</el-col>
-            </el-row>
-          </el-card>
+        <el-tab-pane label="基础信息" name="info" class="base_info">
+          <el-row class="base_title">
+            <el-col :span="3" class="info-label">基础信息</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">ID</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.id }}</el-col>
+            <el-col :span="3" class="info-label">集群名称</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.name }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">云厂商</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.provider }}</el-col>
+            <el-col :span="3" class="info-label">云厂商账户</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.account_key || '空' }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">算力类型</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.computed_type }}</el-col>
+            <el-col :span="3" class="info-label">付费方式</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.charge_config.charge_type | parsePaidType }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">可用地域</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.region_id }}</el-col>
+            <el-col :span="3" class="info-label">可用区</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.zone_id }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">登录用户名</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.username }}</el-col>
+            <el-col :span="3" class="info-label">登录密码</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.password }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">集群使用方</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.usage }}</el-col>
+            <el-col :span="3" class="info-label">集群描述</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.desc }}</el-col>
+          </el-row>
+          <el-row class="base_title">
+            <el-col :span="3" class="info-label">机器配置</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">集群机型</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.instance_type }}</el-col>
+            <el-col :span="3" class="info-label">操作系统镜像</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.image_config.name }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">CPU(核)</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.instance_core }}</el-col>
+            <el-col :span="3" class="info-label">内存(G)</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.instance_memory }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">系统盘种类</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.storage_config.disks.system_disk.category }}</el-col>
+            <el-col :span="3" class="info-label">系统盘大小(G)</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.storage_config.disks.system_disk.size }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">数据盘(块)</el-col>
+            <el-col :span="9" class="info-content">
+              <el-tooltip placement="top" effect="light">
+                <div slot="content">
+                  <el-table size="mini" :data="cluster.storage_config.disks.data_disk">
+                    <el-table-column label="序号" align="center" width="60">
+                      <template slot-scope="scope">{{ scope.$index + 1 }}</template>
+                    </el-table-column>
+                    <el-table-column label="数据盘类型" align="center" width="150">
+                      <template slot-scope="{ row }">{{ row.category }}</template>
+                    </el-table-column>
+                    <el-table-column label="数据盘大小(G)" prop="size" align="center" width="100" />
+                  </el-table>
+                </div>
+                <span style="color: blue; cursor:pointer;">{{ cluster.storage_config.disks.data_disk.length }}</span>
+              </el-tooltip>
+            </el-col>
+            <el-col :span="3" class="info-label">数据盘总大小(G)</el-col>
+            <el-col :span="9" class="info-content">
+              <el-tooltip placement="top" effect="light">
+                <div slot="content">
+                  <el-table size="mini" :data="cluster.storage_config.disks.data_disk">
+                    <el-table-column label="序号" align="center" width="60">
+                      <template slot-scope="scope">{{ scope.$index + 1 }}</template>
+                    </el-table-column>
+                    <el-table-column label="数据盘类型" align="center" width="150">
+                      <template slot-scope="{ row }">{{ row.category }}</template>
+                    </el-table-column>
+                    <el-table-column label="数据盘大小(G)" prop="size" align="center" width="100" />
+                  </el-table>
+                </div>
+                <span style="color: blue; cursor:pointer;">{{ dataDiskTotalSize }}</span>
+              </el-tooltip>
+            </el-col>
+          </el-row>
+          <el-row class="base_title">
+            <el-col :span="3" class="info-label">网络配置</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">网络类型</el-col>
+            <el-col :span="9" class="info-content">VPC专有网络</el-col>
+            <el-col :span="3" class="info-label">VPC</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.network_config.vpc }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">子网</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.network_config.subnet_id }}</el-col>
+            <el-col :span="3" class="info-label">安全组</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.network_config.security_group }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="3" class="info-label">是否公网访问</el-col>
+            <el-col :span="9" class="info-content">{{ networkSwitch ? '是' : '否' }}</el-col>
+            <el-col v-show="networkSwitch" :span="3" class="info-label">IP类型</el-col>
+            <el-col v-show="networkSwitch" :span="9" class="info-content">{{ cluster.network_config.internet_ip_type }}</el-col>
+          </el-row>
+          <el-row v-show="networkSwitch">
+            <el-col :span="3" class="info-label">付费方式</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.network_config.internet_charge_type | parseNetworkPaidType }}</el-col>
+            <el-col :span="3" class="info-label">带宽(M)</el-col>
+            <el-col :span="9" class="info-content">{{ cluster.network_config.internet_max_bandwidth_out }}</el-col>
+          </el-row>
         </el-tab-pane>
         <el-tab-pane label="机器列表" name="instance">
           <div style="margin-bottom: 20px; float: right">
@@ -147,14 +259,26 @@ export default {
       instanceTotal: 0,
       downloading: false,
       filterStatuses,
-      cluster: {},
+      cluster: {
+        charge_config: {},
+        image_config: {},
+        storage_config: {
+          disks: {
+            system_disk: {},
+            data_disk: []
+          }
+        },
+        network_config: {}
+      },
+      networkSwitch: false,
       history: [],
       historyQuery: {
         total: 0,
         page_size: 10,
         page_number: 1
       },
-      historyLoading: false
+      historyLoading: false,
+      dataDiskTotalSize: 0
     }
   },
   mounted() {
@@ -164,9 +288,11 @@ export default {
     async fetchData() {
       if (this.$route.params.name !== '') {
         const res = await instanceDescribeAll('', '', '', '', this.$route.params.name, filterStatuses, this.instanceListQuery.page_number, this.instanceListQuery.page_size)
-        this.instanceList = _.get(res, 'instance_list', [])
+        this.instanceList = _.get(res, 'instance_list', []) || []
         this.instanceTotal = _.get(res, 'pager.total', 0)
         this.cluster = await clusterDescribe(this.$route.params.name)
+        this.dataDiskTotalSize = _.sum(this.cluster.storage_config.disks.data_disk.map(i => i.size))
+        this.networkSwitch = this.cluster.network_config.internet_charge_type !== ''
         await this.fetchHistory()
       }
     },
@@ -206,27 +332,44 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .info-title {
-    font-size: 20px;
+.info-title {
+  font-size: 20px;
+  padding: 10px;
+}
+.info-label {
+  color: #7f7f7f;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.info-content {
+  color: #333333;
+  padding-left: 20px;
+}
+.task-action-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  .task-action-svg {
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.base_info {
+  .info-label,
+  .info-content {
     padding: 10px;
   }
+}
+
+.base_title {
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bolder;
+
   .info-label {
-    color: #7f7f7f;
-    display: flex;
-    flex-direction: row-reverse;
+    color: #8080e1;
   }
-  .info-content {
-    color: #333333;
-    padding-left: 20px;
-  }
-  .task-action-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    .task-action-svg {
-      height: 18px;
-      width: 18px;
-    }
-  }
+}
 </style>

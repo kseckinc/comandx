@@ -9,7 +9,7 @@
               <span style="font-size: 16px; color: darkgrey; font-weight: bolder">
                 任务信息
               </span>
-              <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 24}" :xl="{span: 12}" style="margin-top: 20px">
+              <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 24}" :xl="{span: 12}" style="margin-top: 20px; width: 100%">
                 <transaction-table />
               </el-col>
             </el-row>
