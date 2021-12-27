@@ -1,6 +1,15 @@
 ![image](https://user-images.githubusercontent.com/94337797/145354238-42473c28-a928-4ec5-84fb-7204db088283.png)
 =====
 
+
+语言(language)
+----
+
+[English](https://github.com/galaxy-future/comandx/blob/main/docs/EN-README.md)
+
+简介
+--------
+
 ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX的Web可视化展示界面，提供简洁易用的操作体验。
 
 它具有如下关键特性：
