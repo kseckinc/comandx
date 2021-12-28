@@ -60,10 +60,10 @@ Getting Started Guide
       - When the system is running, type http://127.0.0.1 into your browser to see the management console interface, with the default username root and password 123456.
 #### 3.Quick Start  
 
-The [Quick Start Guide](https://github.com/galaxy-future/comandx/blob/main/docs/getting-started.md) allows you to master the basic cluster creation, rapid scale-up and scale-down, K8s clustering, and other operational processes.
+The [Quick Start Guide](https://github.com/galaxy-future/comandx/blob/main/docs/en-getting-started.md) allows you to master the basic cluster creation, rapid scale-up and scale-down, K8s clustering, and other operational processes.
 
 #### 4.User Manual  
-The [user manual](https://github.com/galaxy-future/comandx/blob/main/docs/user-manual.md) allows users to get a complete overview of BridgX 's features and to quickly identify which features they are interested in using.
+The [User Manual](https://github.com/galaxy-future/comandx/blob/main/docs/en-user-manual.md) allows users to get a complete overview of BridgX 's features and to quickly identify which features they are interested in using.
 
 Video Tutorial
 ------
