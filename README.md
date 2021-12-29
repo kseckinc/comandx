@@ -86,6 +86,7 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 [添加云账户](https://www.bilibili.com/video/BV1Jr4y1S7q4/)  <br>
 [创建集群](https://www.bilibili.com/video/BV1Wb4y1v7jw/)   <br>
 [手动扩缩容](https://www.bilibili.com/video/BV1bm4y197QD/)  <br>
+[K8s集群创建与Pod切割](https://www.bilibili.com/video/BV1FY411p7rE/)<br>
 
 
 技术文章
