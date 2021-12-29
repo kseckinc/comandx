@@ -71,6 +71,7 @@ Video Tutorial
 [Adding The Cloud Vendor Account](https://www.bilibili.com/video/BV1Jr4y1S7q4/)  <br>
 [Create Cluster](https://www.bilibili.com/video/BV1Wb4y1v7jw/)   <br>
 [Manual Scaling](https://www.bilibili.com/video/BV1bm4y197QD/)  <br>
+[K8s Cluster Creation and Pod cutting](https://www.bilibili.com/video/BV1FY411p7rE/) <br>
 
 
 Technical Articles
