@@ -3,14 +3,14 @@
 
 ComandX is an observable interface-based O&M solution. It is a web-based visual presentation interface for BridgX and SchedulX, providing a simple and easy-to-use operating experience.
 It has the following key features:
-1. Support for cluster creation and management;
-2. Support for scaling up and scaling down tasks;
-3. Support for K8s cluster creation and management;
-4. Support for service deployment and orchestration;
-5. Support for cloud server management;
-6. Support for cloud account management;
-7. Support for fees management;
-8. Support for Dashboard global display.
+1. cluster creation and management;
+2. scaling up and scaling down tasks;
+3. K8s cluster creation and management;
+4. service deployment and orchestration;
+5. cloud server management;
+6. cloud account management;
+7. fees management;
+8. Dashboard global display.
 
 
 
