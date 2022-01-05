@@ -12,7 +12,7 @@
               size="medium"
             >
               <el-table-column label="ID" prop="service_cluster_id" align="center" />
-              <el-table-column label="集群名称" prop="service_cluster" align="center" />
+              <el-table-column label="集群名称" prop="bridgx_cluster" align="center" />
               <el-table-column label="在线机器数" prop="instance_count" align="center" />
               <el-table-column label="集群机型" prop="instance_type_desc" align="center" />
               <el-table-column label="云厂商" align="center">

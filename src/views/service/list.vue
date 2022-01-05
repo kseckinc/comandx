@@ -167,7 +167,7 @@
         <el-form-item label="操作动作">
           <el-radio-group v-model="dialogForm.operateType" size="mini">
             <el-radio-button label="expand" value="expand">扩容</el-radio-button>
-            <el-radio-button label="shrink" value="shrink">缩容</el-radio-button>
+            <el-radio-button label="shrink" value="shrink" :disabled="shrinkDisabled">缩容</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="集群信息">
@@ -195,13 +195,19 @@
           </el-slider>
         </el-form-item>
         <el-form-item label="操作台数" v-show="dialogForm.expandType === 'instanceNum'">
-          <el-radio-group v-model="dialogForm.operateCount" size="mini">
+          <el-radio-group v-if="dialogForm.operateType === 'expand'" v-model="dialogForm.operateCount" size="mini">
             <el-radio-button
-              v-for="item in numRadios"
-              :key="item.label"
-              :label="item.label"
-            ><span v-if="dialogForm.operateType === 'expand'">+</span>
-              <span v-else>-</span>{{ item.name }}</el-radio-button>
+                v-for="item in numRadios"
+                :key="item.label"
+                :label="item.label"
+            >{{ item.name }}</el-radio-button>
+          </el-radio-group>
+          <el-radio-group v-else v-model="dialogForm.operateCount" size="mini">
+            <el-radio-button
+                v-for="item in shrinkNumRadios"
+                :key="item.label"
+                :label="item.label"
+            >{{ item.name }}</el-radio-button>
           </el-radio-group>
           <div>
             其他：
@@ -346,7 +352,20 @@ export default {
         description: ''
       },
       currentRowServiceClusterId: '',
-      currentRowServiceName: ''
+      currentRowServiceName: '',
+      shrinkNums: [1, 5, 10, 50, 100, 200],
+    }
+  },
+  computed: {
+    shrinkDisabled() {
+      return this.dialogForm.cluster.instance_count === 0
+    },
+    shrinkNumRadios() {
+      const nums = [...this.shrinkNums.filter(i => i < this.dialogForm.cluster.instance_count), this.dialogForm.cluster.instance_count]
+      return nums.map(i => ({
+        label: i,
+        name: `-${i}`
+      }))
     }
   },
   created() {

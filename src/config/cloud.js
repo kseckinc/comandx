@@ -4,6 +4,9 @@ const cloudProviders = [{
 }, {
   value: 'HuaweiCloud',
   label: '华为云'
+}, {
+  value: 'TencentCloud',
+  label: '腾讯云'
 }]
 
 const cloudDiskTypes = {
@@ -29,12 +32,29 @@ const cloudDiskTypes = {
   }, {
     value: 'UH_L1',
     label: '高IO (性能优化I型)'
+  }],
+  TencentCloud: [{
+    value: 'LOCAL_BASIC',
+    label: '本地硬盘'
+  }, {
+    value: 'LOCAL_SSD',
+    label: '本地SSD硬盘'
+  }, {
+    value: 'CLOUD_BASIC',
+    label: '普通云硬盘'
+  }, {
+    value: 'CLOUD_SSD',
+    label: 'SSD云硬盘'
+  }, {
+    value: 'CLOUD_PREMIUM',
+    label: '高性能云硬盘'
   }]
 }
 
 const ramUrl = {
   AlibabaCloud: 'https://ram.console.aliyun.com/manage/ak',
-  HuaweiCloud: 'https://console.huaweicloud.com/iam/?region=cn-north-4&locale=zh-cn#/mine/accessKey'
+  HuaweiCloud: 'https://console.huaweicloud.com/iam/?region=cn-north-4&locale=zh-cn#/mine/accessKey',
+  TencentCloud: 'https://console.cloud.tencent.com/cam/capi'
 }
 
 const systemDiskSizes = [{
@@ -87,6 +107,10 @@ const aksk = {
   HuaweiCloud: {
     key: 'AK',
     secret: 'SK'
+  },
+  TencentCloud: {
+    key: 'AK',
+    secret: 'SK'
   }
 }
 
@@ -126,12 +150,17 @@ const chargeUnits = {
   }, {
     value: 'Year',
     label: '年'
+  }],
+  TencentCloud: [{
+    value: 'Month',
+    label: '月'
   }]
 }
 
 const protocols = {
   AlibabaCloud: ['tcp', 'udp', 'icmp', 'gre', 'all'],
-  HuaweiCloud: ['tcp', 'udp', 'icmp', 'all']
+  HuaweiCloud: ['tcp', 'udp', 'icmp', 'all'],
+  TencentCloud: ['tcp', 'udp', 'icmp', 'gre', 'all']
 }
 
 const chargePeriods = {
@@ -142,6 +171,9 @@ const chargePeriods = {
   HuaweiCloud: {
     Month: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     Year: [1, 2, 3]
+  },
+  TencentCloud: {
+    Month: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60]
   }
 }
 

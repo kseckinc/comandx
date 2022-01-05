@@ -155,21 +155,21 @@ export default {
       this.qps = {
         timestamp: qps ? _.get(qps, '0.timestamps', []).map(i => i * 1000) : [],
         val: {
-          name: qps ? _.get(qps, '0.cluster', '') : '',
+          name: this.cluster.bridgx_cluster,
           data: qps ? _.get(qps, '0.values', []) : []
         }
       }
       this.instanceCount = {
         timestamp: instanceCount ? _.get(instanceCount, '0.timestamps', []).map(i => i * 1000) : [],
         val: {
-          name: instanceCount ? _.get(instanceCount, '0.cluster', '') : '',
+          name: this.cluster.bridgx_cluster,
           data: instanceCount ? _.get(instanceCount, '0.values', []) : []
         }
       }
       this.redundancy = {
         timestamp: redundancy ? _.get(redundancy, '0.timestamps', []).map(i => i * 1000) : [],
         val: {
-          name: redundancy ? _.get(redundancy, '0.cluster', '') : '',
+          name: this.cluster.bridgx_cluster,
           data: redundancy ? _.get(redundancy, '0.values', []) : []
         }
       }

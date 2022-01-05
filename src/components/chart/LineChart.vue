@@ -151,6 +151,15 @@ export default {
           animationEasing: 'cubicInOut'
         }]
       }
+      if (this.type === '机器数') {
+        options.yAxis.minInterval = 1
+        options.yAxis.type = 'value'
+      }
+      if (this.type === '冗余度') {
+        options.yAxis.axisLabel = {
+          formatter: (value) => `${value * 100}%`
+        }
+      }
       if (markLine !== null && markLine.min !== null && markLine.max !== null && values.data.length !== 0) {
         options.series[0].markLine = {
           symbol:'none',

@@ -153,8 +153,8 @@ export default {
           || this.rule.benchmark_qps === '' || this.rule.min_redundancy === ''
           || this.rule.max_redundancy === '' || this.rule.min_instance_count === ''
           || this.rule.max_instance_count === '' || this.rule.execute_ratio === ''
-          || (+this.rule.max_redundancy) < (+this.rule.min_redundancy)
-          || +this.rule.max_instance_count < +this.rule.min_instance_count
+          || (+this.rule.max_redundancy) <= (+this.rule.min_redundancy)
+          || +this.rule.max_instance_count <= +this.rule.min_instance_count
     }
   },
   mounted() {
