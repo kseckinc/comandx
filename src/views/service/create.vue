@@ -15,6 +15,8 @@
           v-model="form.service_info.service_name"
           size="medium"
           placeholder="请输入服务名称"
+          maxlength="32"
+          show-word-limit
           style="width: 400px"
         />
         <div class="note">支持中文、英文、数字，限制32字符</div>

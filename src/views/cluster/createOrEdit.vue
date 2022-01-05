@@ -278,7 +278,7 @@
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
                 <!--                  <el-radio-button label="private">自定义镜像</el-radio-button>-->
                 <!--                </el-radio-group>-->
-                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="loadImages">
+                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="changeImageType">
                   <el-option v-for="t in imageTypes" :key="t.value" :value="t.value" :label="t.label" />
                 </el-select>
                 <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
@@ -845,8 +845,23 @@ export default {
       }
       this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
     },
+    changeImageType() {
+      this.loadImages()
+      this.cluster.image = ''
+    },
     async loadImages() {
-      this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
+      const images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
+      if (images !== null) {
+        this.images = images.map((i) => {
+          if (this.image_config.type === 'private') {
+            return {
+              ...i,
+              OsName: i.ImageName
+            }
+          }
+          return {...i}
+        })
+      }
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)

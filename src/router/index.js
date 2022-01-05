@@ -206,16 +206,28 @@ export const constantRoutes = [
       component: () => import('@/views/service/list'),
       meta: { title: '服务列表', icon: '' }
     }, {
-      path: '/service/history/:service_name/:service_cluster_id',
-      name: 'serviceHistory',
-      component: () => import('@/views/service/history'),
-      meta: { title: '扩缩容记录', icon: '' },
+      path: '/service/:service_name/monitor',
+      name: 'serviceMonitor',
+      component: () => import('@/views/service/monitor'),
+      meta: { title: '服务列表', icon: '' },
       hidden: true
     }, {
       path: '/service/:service_name/:service_cluster_id/template',
       name: 'templateList',
       component: () => import('@/views/template/index'),
-      meta: { title: '扩缩容流程列表', icon: '' },
+      meta: { title: '服务列表', icon: '' },
+      hidden: true
+    }, {
+      path: '/service/:service_name/:service_cluster_id/create',
+      name: 'createRule',
+      component: () => import('@/views/template/createOrEditRule'),
+      meta: { title: '服务列表', icon: '' },
+      hidden: true
+    }, {
+      path: '/service/:service_name/:service_cluster_id/update/:rule_id',
+      name: 'updateRule',
+      component: () => import('@/views/template/createOrEditRule'),
+      meta: { title: '服务列表', icon: '' },
       hidden: true
     }, {
       path: '/service/:service_name/:service_cluster_id/template-create',

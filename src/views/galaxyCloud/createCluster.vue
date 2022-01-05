@@ -77,7 +77,7 @@
               </div>
             </div>
             <div class="transfer-content">
-              <el-input v-model="search" size="medium" placeholder="搜索集群名称或IP" @click="searchCluster" />
+              <el-input v-model="search" size="medium" placeholder="搜索集群名称或IP" @change="searchCluster" />
               <div v-loading="loading" class="transfer-cluster-container">
                 <div v-for="(item, idx) in clusters" :key="idx" class="transfer-cluster" @click="chooseCluster(item, false)">
                   <span class="transfer-cluster-provider">{{ item.cloud_type | filterCloudProvider }}</span>

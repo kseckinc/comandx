@@ -208,6 +208,9 @@ export default {
   async mounted() {
     const res = await clusterDescribeAll('', '', '', '', 'standard', this.listQuery.page_number, this.listQuery.page_size)
     this.clusters = _.get(res, 'cluster_list', [])
+    if (!_.isEmpty(this.$route.query.cluster)) {
+      this.task.cluster_name = this.$route.query.cluster
+    }
     this.listQuery.total = _.get(res, 'pager.total', 0)
   },
   methods: {
