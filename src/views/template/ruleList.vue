@@ -1,14 +1,18 @@
 <template>
   <div>
     <div>
-      <el-button size="medium" type="primary" @click="createRule">+创建规则</el-button>
+      <el-button size="medium" type="primary" @click="createRule" :disabled="list.length > 0">+创建规则</el-button>
       <el-button size="medium" :disabled="selection.length !== 1" @click="editRule">编辑</el-button>
       <el-button size="medium" :disabled="selection.length < 1" @click="deleteRules" >删除</el-button>
     </div>
     <el-table :data="list" fit border highlight-current-row size="medium" style="margin-top: 10px" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="规则名称" prop="name" align="center" />
-      <el-table-column label="关联集群" prop="cluster_name" align="center" />
+      <el-table-column label="关联集群" align="center">
+        <template>
+          {{ bridgx_cluster }}
+        </template>
+      </el-table-column>
       <el-table-column label="度量指标" prop="metric_name" align="center" />
       <el-table-column label="单机QPS" prop="benchmark_qps" align="center" />
       <el-table-column label="冗余度范围" align="center">
@@ -40,6 +44,12 @@ import _ from 'lodash'
 
 export default {
   name: 'RuleList',
+  props: {
+    bridgx_cluster: {
+      type: String,
+      require: true
+    }
+  },
   components: {},
   data() {
     return {

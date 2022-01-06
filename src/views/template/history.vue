@@ -61,7 +61,17 @@
         <el-table-column label="扩缩容执行状态" align="center">
           <template slot-scope="{ row }">
             <span v-if="row.task_status_desc === '成功'" style="color: rgb(0,168,67)">{{ row.task_status_desc }}</span>
-            <span v-if="row.task_status_desc === '失败'" style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">{{ row.task_status_desc }}</span>
+            <div v-if="row.task_status_desc === '失败'" style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">
+              <el-tooltip placement="top">
+                <div slot="content" style="white-space: pre-wrap;">
+                  {{ row.msg }}
+                </div>
+                <span v-clipboard:copy="row.msg" v-clipboard:success="clipboardSuccess"
+                      style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">
+                  {{ row.task_status_desc }}
+                </span>
+              </el-tooltip>
+            </div>
             <span v-if="row.task_status_desc === '已创建'" style="color: rgb(0,168,67)">{{ row.task_status_desc }}</span>
             <span v-if="row.task_status_desc === '进行中'" style="color: rgb(0,168,67)">{{ row.task_status_desc }}</span>
           </template>
@@ -82,12 +92,13 @@
 import { getHistoryList } from '@/api/service'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
+import clipboard from '@/directive/clipboard/index'
 import _ from 'lodash'
 
 export default {
   name: 'History',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves, clipboard },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -125,6 +136,9 @@ export default {
       this.historyList = _.get(res, 'schedule_task_list', [])
       this.total = res.pager.total
       this.listLoading = false
+    },
+    clipboardSuccess() {
+      this.$message.success('已复制到剪切板')
     }
   }
 }

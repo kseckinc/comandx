@@ -128,8 +128,9 @@
                 </el-select>
                 <el-tooltip class="item" effect="light" placement="top">
                   <div slot="content">
-                    专有网络是您专有的云上私有网络，建议使用RFC私网地址<br>作为
-                    专有网络的网段如10.0.0.0/8，172.16.0.0/12，<br>192.168.0.0/16
+                    专有网络是您专有的云上私有网络，建议使用RFC私网地址<br>作为专有网络的网段如
+                    <span v-if="cluster.provider !== 'TencentCloud'">10.0.0.0/8，172.16.0.0/12，<br>192.168.0.0/16</span>
+                    <span v-else>10.0.0.0/16, 172.16.0.0/16, <br>192.168.0.0/16</span>
                   </div>
                   <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
                 </el-tooltip>
@@ -261,8 +262,8 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in instanceTypes"
-                    :key="item.instance_type"
+                    v-for="(item, idx) in instanceTypes"
+                    :key="idx"
                     :value="item.instance_type"
                     :label="item.instance_type + '(' + item.core + '核' + item.memory + 'G)'"
                   />
@@ -410,7 +411,7 @@
         </el-form-item>
         <el-form-item label="VPC网段 ">
           <el-select v-model="vpc.cidr_block" size="medium">
-            <el-option v-for="item in vpcCidrOptions" :key="item" :label="item" :value="item" />
+            <el-option v-for="item in vpcCidrOptions[cluster.provider]" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <div style="display: flex; justify-content: center">
@@ -510,7 +511,7 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods } from '@/config/cloud'
+import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods, vpcCidrOptions } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -545,7 +546,7 @@ export default {
   },
   data() {
     return {
-      vpcCidrOptions: ['172.16.0.0/12', '10.0.0.0/8', '192.168.0.0/16'],
+      vpcCidrOptions,
       protocols,
       vpcAddVisible: false,
       subnetAddVisible: false,
@@ -598,7 +599,6 @@ export default {
         period_unit: 'Month'
       },
       network_type: 'vpc',
-      computing_power_type: 'CPU',
       network_config: {
         vpc: '',
         subnet_id: '',
@@ -786,7 +786,8 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: ''
+        password: '',
+        computing_power_type: 'CPU'
       }
     },
     cleanNetConfig() {
@@ -835,7 +836,7 @@ export default {
     },
     async afterRegionSelected() {
       await this.loadZoneAndVpc()
-      this.cluster.zone_id = ''
+      this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
       this.cleanNetConfig()
     },
     async loadZoneAndVpc() {

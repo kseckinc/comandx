@@ -4,10 +4,12 @@ const cloudProviders = [{
 }, {
   value: 'HuaweiCloud',
   label: '华为云'
-}, {
-  value: 'TencentCloud',
-  label: '腾讯云'
-}]
+}
+// , {
+//   value: 'TencentCloud',
+//   label: '腾讯云'
+// }
+]
 
 const cloudDiskTypes = {
   AlibabaCloud: [{
@@ -33,13 +35,15 @@ const cloudDiskTypes = {
     value: 'UH_L1',
     label: '高IO (性能优化I型)'
   }],
-  TencentCloud: [{
-    value: 'LOCAL_BASIC',
-    label: '本地硬盘'
-  }, {
-    value: 'LOCAL_SSD',
-    label: '本地SSD硬盘'
-  }, {
+  TencentCloud: [
+  // {
+  //   value: 'LOCAL_BASIC',
+  //   label: '本地硬盘'
+  // }, {
+  //   value: 'LOCAL_SSD',
+  //   label: '本地SSD硬盘'
+  // },
+  {
     value: 'CLOUD_BASIC',
     label: '普通云硬盘'
   }, {
@@ -49,6 +53,12 @@ const cloudDiskTypes = {
     value: 'CLOUD_PREMIUM',
     label: '高性能云硬盘'
   }]
+}
+
+const vpcCidrOptions = {
+  AlibabaCloud: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
+  HuaweiCloud: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
+  TencentCloud: ['10.0.0.0/16', '172.16.0.0/16', '192.168.0.0/16']
 }
 
 const ramUrl = {
@@ -189,5 +199,6 @@ export {
   imageTypes,
   chargeUnits,
   protocols,
-  chargePeriods
+  chargePeriods,
+  vpcCidrOptions
 }

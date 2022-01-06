@@ -4,12 +4,12 @@
       <div style="flex: 1">
         <el-row>
           <el-col :span="8"><div class="center-text"><div class="asterisk">*</div>规则名称</div></el-col>
-          <el-col :span="16"><el-input v-model="rule.name" placeholder="请输入规则名称" style="width: 400px" size="medium" /></el-col>
+          <el-col :span="16"><el-input v-model="rule.name" placeholder="请输入规则名称" maxlength="20" style="width: 400px" size="medium" /></el-col>
         </el-row>
         <el-row>
           <el-col :span="8"><div style="height: 16px" /></el-col>
           <el-col :span="16">
-            <div class="note">
+            <div class="note" :class="{ 'text-red': !ruleNameValidate }">
               支持中文、英文、数字，限制20字符
             </div>
           </el-col>
@@ -124,6 +124,7 @@
 <script>
 import { getPredictRule, predictRuleCreate, predictRuleUpdate } from '@/api/cube'
 import { serviceClusterList } from '@/api/service'
+import { validInput } from '@/utils/validate'
 import _ from 'lodash'
 export default {
   name: 'CreateOrEditRule',
@@ -145,11 +146,18 @@ export default {
     }
   },
   computed: {
+    ruleNameValidate() {
+      if (this.rule.name === '') {
+        return true
+      }
+      const res = validInput(this.rule.name)
+      return res.type && res.count <= 20
+    },
     switchStatus() {
       return this.rule.status === 'enable'
     },
     disabled() {
-      return this.rule.name === '' || this.rule.cluster_name === ''
+      return this.rule.name === '' || !this.ruleNameValidate || this.rule.cluster_name === ''
           || this.rule.benchmark_qps === '' || this.rule.min_redundancy === ''
           || this.rule.max_redundancy === '' || this.rule.min_instance_count === ''
           || this.rule.max_instance_count === '' || this.rule.execute_ratio === ''
@@ -196,11 +204,11 @@ export default {
       if (isNaN(+this.rule.execute_ratio) || +this.rule.execute_ratio < 1 || +this.rule.execute_ratio > 100) {
         this.rule.execute_ratio = ''
       }
-      if (this.rule.max_instance_count !== '' && this.rule.min_instance_count !== '' && +this.rule.max_instance_count < +this.rule.min_instance_count) {
-        this.$message.error('机器数上限小于下限!')
+      if (this.rule.max_instance_count !== '' && this.rule.min_instance_count !== '' && +this.rule.max_instance_count <= +this.rule.min_instance_count) {
+        this.$message.error('机器数上限不大于下限!')
       }
-      if (this.rule.max_redundancy !== '' && this.rule.min_redundancy !== '' && +this.rule.max_redundancy < +this.rule.min_redundancy) {
-        this.$message.error('冗余度上限小于下限!')
+      if (this.rule.max_redundancy !== '' && this.rule.min_redundancy !== '' && +this.rule.max_redundancy <= +this.rule.min_redundancy) {
+        this.$message.error('冗余度上限不大于下限!')
       }
     },
     async submit() {
@@ -275,6 +283,9 @@ export default {
       align-items: center;
       padding-right: 5px;
       color: #f4516c;
+    }
+    .text-red {
+      color: red!important;
     }
     .note {
       padding-top: 5px;
