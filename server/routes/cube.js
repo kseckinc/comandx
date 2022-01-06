@@ -13,7 +13,7 @@ routerApi.post('/predict/rule/create', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/create`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/create`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -29,7 +29,7 @@ routerApi.post('/predict/rule/update', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/update`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/update`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -45,7 +45,7 @@ routerApi.get('/predict/rule/list', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/list`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/list`,
       qs: ctx.query,
       json: true
     })
@@ -60,7 +60,7 @@ routerApi.get('/predict/rule/:id', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/${ctx.params.id}`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/${ctx.params.id}`,
       json: true
     })
   } catch (e) {
@@ -74,7 +74,7 @@ routerApi.post('/predict/rule/batch/delete', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/batch/delete`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/batch/delete`,
       method: 'POST',
       body: ctx.request.body,
       json: true
@@ -90,7 +90,7 @@ routerApi.post('/predict/rule/:id/enable', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/${ctx.params.id}/enable`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/${ctx.params.id}/enable`,
       method: 'POST',
       json: true
     })
@@ -105,7 +105,7 @@ routerApi.post('/predict/rule/:id/disable', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/predict/rule/${ctx.params.id}/disable`,
+      url: `${host.getCudgxHost()}${prefix}/predict/rule/${ctx.params.id}/disable`,
       method: 'POST',
       json: true
     })

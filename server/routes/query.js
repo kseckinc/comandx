@@ -13,7 +13,7 @@ routerApi.get('/redundancy/qps_average', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/redundancy/qps_average`,
+      url: `${host.getCudgxHost()}${prefix}/redundancy/qps_average`,
       qs: ctx.query,
       json: true
     })
@@ -28,7 +28,7 @@ routerApi.get('/redundancy/instance_count', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/redundancy/instance_count`,
+      url: `${host.getCudgxHost()}${prefix}/redundancy/instance_count`,
       qs: ctx.query,
       json: true
     })
@@ -43,7 +43,7 @@ routerApi.get('/redundancy/qps_total', async(ctx) => {
       headers: {
         authorization: ctx.header.authorization
       },
-      url: `${host.getCubeHost()}${prefix}/redundancy/qps_total`,
+      url: `${host.getCudgxHost()}${prefix}/redundancy/qps_total`,
       qs: ctx.query,
       json: true
     })
