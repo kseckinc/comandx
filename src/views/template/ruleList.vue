@@ -10,7 +10,7 @@
       <el-table-column label="规则名称" prop="name" align="center" />
       <el-table-column label="关联集群" align="center">
         <template>
-          {{ bridgx_cluster }}
+          {{ clusterName }}
         </template>
       </el-table-column>
       <el-table-column label="度量指标" prop="metric_name" align="center" />
@@ -41,15 +41,10 @@
 <script>
 import { disablePredictRule, enablePredictRule, getPredictRuleList, predictRuleDelete } from '@/api/cube'
 import _ from 'lodash'
+import { serviceClusterList } from '@/api/service'
 
 export default {
   name: 'RuleList',
-  props: {
-    bridgx_cluster: {
-      type: String,
-      require: true
-    }
-  },
   components: {},
   data() {
     return {
@@ -59,7 +54,8 @@ export default {
         page_number: 1,
         total: 0
       },
-      selection: []
+      selection: [],
+      clusterName: ''
     }
   },
   mounted() {
@@ -72,6 +68,9 @@ export default {
       this.query.page_size = _.get(res, 'pager.page_size', 10)
       this.query.page_number = _.get(res, 'pager.page_number', 1)
       this.query.total = _.get(res, 'pager.total', 0)
+      const cRes = await serviceClusterList(this.$route.params.service_name)
+      const clusters = _.get(cRes, 'cluster_list', [])
+      this.clusterName = _.get(clusters, '0.bridgx_name') || ''
     },
     handleSelectionChange(val) {
       this.selection = val
