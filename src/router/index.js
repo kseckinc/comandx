@@ -65,7 +65,7 @@ export const constantRoutes = [
       path: '/cluster/create',
       name: 'clusterCreate',
       component: () => import('@/views/cluster/createOrEdit'),
-      meta: { title: '创建公有云集群', icon: '' }
+      meta: { title: '创建标准集群', icon: '' }
     }, {
       path: '/cluster/list',
       name: 'clusterList',

@@ -70,7 +70,7 @@ export default {
       this.query.total = _.get(res, 'pager.total', 0)
       const cRes = await serviceClusterList(this.$route.params.service_name)
       const clusters = _.get(cRes, 'cluster_list', [])
-      this.clusterName = _.get(clusters, '0.bridgx_name') || ''
+      this.clusterName = _.get(clusters, '0.bridgx_cluster') || ''
     },
     handleSelectionChange(val) {
       this.selection = val
