@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container" :style="{ backgroundImage: bgImage }">
+  <div class="login-container" :style="{ backgroundImage: bgImage, backgroundSize: '100% 100%' }">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">

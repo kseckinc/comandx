@@ -227,7 +227,7 @@
           </el-table>
           <pagination v-show="historyQuery.total>0" :total="historyQuery.total" :page.sync="historyQuery.page_number" :limit.sync="historyQuery.page_size" @pagination="fetchHistory" />
         </el-tab-pane>
-        <el-tab-pane label="日志" name="log">日志</el-tab-pane>
+        <el-tab-pane label="变更历史" name="log">变更历史</el-tab-pane>
       </el-tabs>
     </el-card>
   </div>

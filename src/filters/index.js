@@ -7,6 +7,8 @@ export function filterCloudProvider(string) {
       return '阿里云'
     case 'HuaweiCloud':
       return '华为云'
+    case 'TencentCloud':
+      return '腾讯云'
     default:
       return '未知云厂商'
   }

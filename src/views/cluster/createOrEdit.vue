@@ -128,8 +128,9 @@
                 </el-select>
                 <el-tooltip class="item" effect="light" placement="top">
                   <div slot="content">
-                    专有网络是您专有的云上私有网络，建议使用RFC私网地址<br>作为
-                    专有网络的网段如10.0.0.0/8，172.16.0.0/12，<br>192.168.0.0/16
+                    专有网络是您专有的云上私有网络，建议使用RFC私网地址<br>作为专有网络的网段如
+                    <span v-if="cluster.provider !== 'TencentCloud'">10.0.0.0/8，172.16.0.0/12，<br>192.168.0.0/16</span>
+                    <span v-else>10.0.0.0/16, 172.16.0.0/16, <br>192.168.0.0/16</span>
                   </div>
                   <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
                 </el-tooltip>
@@ -261,8 +262,8 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in instanceTypes"
-                    :key="item.instance_type"
+                    v-for="(item, idx) in instanceTypes"
+                    :key="idx"
                     :value="item.instance_type"
                     :label="item.instance_type + '(' + item.core + '核' + item.memory + 'G)'"
                   />
@@ -278,7 +279,7 @@
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
                 <!--                  <el-radio-button label="private">自定义镜像</el-radio-button>-->
                 <!--                </el-radio-group>-->
-                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="loadImages">
+                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="changeImageType">
                   <el-option v-for="t in imageTypes" :key="t.value" :value="t.value" :label="t.label" />
                 </el-select>
                 <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
@@ -289,7 +290,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">系统盘 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>系统盘 </div></el-col>
               <el-col :span="19">
                 <div style="display: flex; flex-direction: row; align-items: center;">
                   <el-select v-model="system_disk.category" size="medium" placeholder="请选择系统盘类型" style="width: 200px">
@@ -410,7 +411,7 @@
         </el-form-item>
         <el-form-item label="VPC网段 ">
           <el-select v-model="vpc.cidr_block" size="medium">
-            <el-option v-for="item in vpcCidrOptions" :key="item" :label="item" :value="item" />
+            <el-option v-for="item in vpcCidrOptions[cluster.provider]" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <div style="display: flex; justify-content: center">
@@ -490,7 +491,7 @@
             <el-option v-for="i in protocols[cluster.provider]" :key="i" :value="i" :label="i" />
           </el-select>
           <span style="margin-left: 20px">端口范围</span>
-          <el-input v-model="item.port_from" size="mini" style="width: 50px" /> - <el-input v-model="item.port_to" size="mini" style="width: 50px" />
+          <el-input v-model="item.port_from" size="mini" style="width: 70px" /> - <el-input v-model="item.port_to" size="mini" style="width: 70px" />
           <span style="margin-left: 20px">规则方向</span>
           <el-radio-group v-model="item.direction" size="mini">
             <el-radio-button label="ingress" />
@@ -510,7 +511,7 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods } from '@/config/cloud'
+import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods, vpcCidrOptions } from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -545,7 +546,7 @@ export default {
   },
   data() {
     return {
-      vpcCidrOptions: ['172.16.0.0/12', '10.0.0.0/8', '192.168.0.0/16'],
+      vpcCidrOptions,
       protocols,
       vpcAddVisible: false,
       subnetAddVisible: false,
@@ -598,7 +599,6 @@ export default {
         period_unit: 'Month'
       },
       network_type: 'vpc',
-      computing_power_type: 'CPU',
       network_config: {
         vpc: '',
         subnet_id: '',
@@ -666,7 +666,7 @@ export default {
       return true
     },
     diskCheck() {
-      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1
+      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1 && this.system_disk.size !== '' && this.system_disk.category !== ''
     },
     submitDisabled() {
       return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal
@@ -786,7 +786,8 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: ''
+        password: '',
+        computing_power_type: 'CPU'
       }
     },
     cleanNetConfig() {
@@ -835,7 +836,7 @@ export default {
     },
     async afterRegionSelected() {
       await this.loadZoneAndVpc()
-      this.cluster.zone_id = ''
+      this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
       this.cleanNetConfig()
     },
     async loadZoneAndVpc() {
@@ -845,8 +846,23 @@ export default {
       }
       this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
     },
+    changeImageType() {
+      this.loadImages()
+      this.cluster.image = ''
+    },
     async loadImages() {
-      this.images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
+      const images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
+      if (images !== null) {
+        this.images = images.map((i) => {
+          if (this.image_config.type === 'private') {
+            return {
+              ...i,
+              OsName: i.ImageName
+            }
+          }
+          return {...i}
+        })
+      }
     },
     async loadCloud() {
       this.securityGroups = await securityGroupDescribe(this.network_config.vpc)

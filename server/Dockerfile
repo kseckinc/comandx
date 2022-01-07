@@ -10,10 +10,12 @@ ENV SCHEDULX_HOST=""
 
 ENV K8S_HOST=""
 
+ENV CUDGX_HOST=""
+
 ENV PORT=""
 
 RUN npm install  --registry=http://registry.npm.taobao.org
 
 COPY . /commandx
 
-ENTRYPOINT bridgx_host=$BRIDGX_HOST schedulx_host=$SCHEDULX_HOST k8s_host=$K8S_HOST port=$PORT node app.js >> fe.log 2>&1
+ENTRYPOINT bridgx_host=$BRIDGX_HOST schedulx_host=$SCHEDULX_HOST k8s_host=$K8S_HOST cudgx_host=$CUDGX_HOST port=$PORT node app.js >> fe.log 2>&1

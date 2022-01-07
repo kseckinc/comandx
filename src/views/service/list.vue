@@ -64,7 +64,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="50px" />
-          <el-table-column label="序号" width="50px" align="center">
+          <el-table-column label="ID" width="50px" align="center">
             <template slot-scope="{ row }">
               <span>{{ row.service_id }}</span>
             </template>
@@ -84,6 +84,7 @@
               <span>{{ row.cluster_num }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="服务描述" prop="description" align="center" />
           <!--
           <el-table-column label="自动扩缩容策略" min-width="60px" align="center">
             <template slot-scope="{ row }">
@@ -98,24 +99,15 @@
               {{ row.auto_decision === 'on' ? "开启" : "关闭" }}
             </template>
           </el-table-column> -->
-          <el-table-column label="扩缩容状态" min-width="50px" align="center">
-            <template slot-scope="{ row }">
-              <span v-if="row.task_type_status === 'SUCC'" style="color: rgb(0,168,67)">成功</span>
-              <span v-if="row.task_type_status === 'FAIL'" style="display: inline-block; background-color: #f4516c; color: white; padding: 2px 5px; border-radius: 10px">失败</span>
-              <span v-if="row.task_type_status === 'INIT'" style="color: rgb(0,168,67)">未进行</span>
-              <span v-if="row.task_type_status === 'RUNNING'" style="color: rgb(0,168,67)">运行中</span>
-            </template>
-          </el-table-column>
           <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
+            <template slot-scope="{ row }">
+              <el-button type="text" @click="transferTo('serviceMonitor', row)" :disabled="row.tmpl_expand_id === '' || row.tmpl_expand_id === 0">
+                服务监控
+              </el-button>
               <el-button
                 type="text"
-                @click="process(scope.row)"
+                @click="process(row)"
               >扩缩容</el-button>
-              <el-button
-                type="text"
-                @click="processHistory(scope.row)"
-              >扩缩容历史</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -155,38 +147,75 @@
       <el-form
         ref="dialogForm"
         :model="dialogForm"
-        label-width="80px"
+        label-width="100px"
         label-position="right"
         :rules="rules"
       >
+        <el-form-item label="执行集群">
+          <el-select v-model="dialogForm.cluster" size="mini">
+            <el-option v-for="(c, idx) in clusters" :key="idx" :label="c.bridgx_cluster" :value="c" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="操作动作">
-          <el-radio-group v-model="dialogForm.operateType" size="medium">
+          <el-radio-group v-model="dialogForm.operateType" size="mini">
             <el-radio-button label="expand" value="expand">扩容</el-radio-button>
-            <el-radio-button label="shrink" value="shrink">缩容</el-radio-button>
+            <el-radio-button label="shrink" value="shrink" :disabled="shrinkDisabled">缩容</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="操作台数">
-          <el-radio-group v-model="dialogForm.operateCount" size="medium">
+        <el-form-item label="集群信息">
+          <span>{{ dialogForm.cluster.instance_type_desc }}</span>
+          <span style="display: inline-block; margin-left: 15px">{{ dialogForm.cluster.provider | filterCloudProvider }}-{{ dialogForm.cluster.charge_type | parsePaidType }}-{{ dialogForm.cluster.computing_power_type }}</span>
+          <span style="display: inline-block; margin-left: 15px">运行中<span style="color: red">{{ dialogForm.cluster.instance_count }}</span>台</span>
+        </el-form-item>
+<!--        <el-form-item label="自动扩缩容">-->
+<!--          停用-->
+<!--        </el-form-item>-->
+        <el-form-item label="扩容方式">
+          <el-radio-group v-model="dialogForm.expandType">
+            <el-radio label="instanceNum">按机器数</el-radio>
+            <el-radio label="redundancy" disabled>按冗余度</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="冗余度" v-show="dialogForm.expandType === 'redundancy'">
+          <el-slider
+              style="width: 80%"
+              :format-tooltip="format"
+              v-model="dialogForm.redundancy"
+              :min="100"
+              :max="300"
+              :marks="marks">
+          </el-slider>
+        </el-form-item>
+        <el-form-item label="操作台数" v-show="dialogForm.expandType === 'instanceNum'">
+          <el-radio-group v-if="dialogForm.operateType === 'expand'" v-model="dialogForm.operateCount" size="mini">
             <el-radio-button
-              v-for="item in numRadios"
-              :key="item.label"
-              :label="item.label"
-            ><span v-if="dialogForm.operateType === 'expand'">+</span>
-              <span v-else>-</span>{{ item.name }}</el-radio-button>
+                v-for="item in numRadios"
+                :key="item.label"
+                :label="item.label"
+            >{{ item.name }}</el-radio-button>
+          </el-radio-group>
+          <el-radio-group v-else v-model="dialogForm.operateCount" size="mini">
+            <el-radio-button
+                v-for="item in shrinkNumRadios"
+                :key="item.label"
+                :label="item.label"
+            >{{ item.name }}</el-radio-button>
           </el-radio-group>
           <div>
             其他：
             <el-input
               v-model="dialogForm.otherNum"
               prop="otherNum"
+              size="mini"
               style="width: 80px"
             />
             台
           </div>
         </el-form-item>
         <el-form-item>
-          <div style="margin-left:20%"><el-button type="primary" @click="submitDialog">立即执行</el-button>
-            <el-button @click="cancelDialog">取消</el-button></div>
+          <div style="margin-left:20%">
+            <el-button type="primary" size="medium" @click="submitDialog">立即执行</el-button>
+            <el-button size="medium" @click="cancelDialog">取消</el-button></div>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -208,7 +237,15 @@
 </template>
 
 <script>
-import { getServiceList, serviceExpand, serviceShrink, serviceDelete, serviceEdit, getTemplateList } from '@/api/service'
+import {
+  getServiceList,
+  serviceExpand,
+  serviceShrink,
+  serviceDelete,
+  serviceEdit,
+  getTemplateList,
+  serviceClusterList
+} from '@/api/service'
 // import { cloudAccountList } from "@/api/cloud";
 import { languageMap } from '@/config/service'
 import waves from '@/directive/waves' // waves directive
@@ -245,9 +282,21 @@ export default {
         service_name: '',
         language: ''
       },
+      marks: {
+        100: '100%',
+        300: {
+          style: {
+            width: '40px'
+          },
+          label: this.$createElement('span', '300%')
+        },
+        154: {
+          label: this.$createElement('span', '当前冗余度: 154%')
+        }
+      },
       listQuery: {
         page_num: 1,
-        page_size: 20
+        page_size: 10
       },
       selectServices: [],
       languageMap: languageMap,
@@ -277,19 +326,38 @@ export default {
           name: '200'
         }
       ],
+      clusters: [],
+      cluster: {},
       serviceList: [],
       templateList: [],
       dialogForm: {
+        cluster: '',
         dialogTemplate: 0,
         operateType: 'expand',
         otherNum: '',
-        operateCount: 5
+        operateCount: 0,
+        expandType: 'instanceNum',
+        redundancy: 200,
       },
+      format: (val) => `${val}%`,
       editServiceDialogForm: {
         description: ''
       },
       currentRowServiceClusterId: '',
-      currentRowServiceName: ''
+      currentRowServiceName: '',
+      shrinkNums: [1, 5, 10, 50, 100, 200],
+    }
+  },
+  computed: {
+    shrinkDisabled() {
+      return this.dialogForm.cluster.instance_count === 0
+    },
+    shrinkNumRadios() {
+      const nums = [...this.shrinkNums.filter(i => i < this.dialogForm.cluster.instance_count), this.dialogForm.cluster.instance_count]
+      return nums.map(i => ({
+        label: i,
+        name: `-${i}`
+      }))
     }
   },
   created() {
@@ -317,13 +385,18 @@ export default {
         page_size: 20
       }
     },
-    process(row) {
+    async process(row) {
       this.currentRowServiceClusterId = row.service_cluster_id
       this.currentRowServiceName = row.service_name
+      const cRes = await serviceClusterList(row.service_name)
+      this.clusters = _.get(cRes, 'cluster_list', [])
+      if (this.clusters.length > 0) {
+        this.dialogForm.cluster = _.get(this.clusters, '0')
+      }
       if (row.tmpl_expand_id === '' || row.tmpl_expand_id === 0) {
         this.warningDialogVisible = true
       } else {
-        this.getTemplateList(row)
+        await this.getTemplateList(row)
         this.dialogVisible = true
       }
     },
@@ -338,6 +411,11 @@ export default {
       if (this.templateList.length !== 0) {
         this.dialogForm.dialogTemplate = this.templateList[0].tmpl_expand_id
       }
+    },
+    transferTo(name, service) {
+      this.$router.push({ name, params: {
+        service_name: service.service_name
+      }})
     },
     async submitDialog() {
       if (
@@ -423,9 +501,6 @@ export default {
       }
       await this.getList()
     },
-    processHistory(row) {
-      this.$router.push({ path: `/service/history/${row.service_name}/${row.service_cluster_id}` })
-    },
     goTemplateIndex(row) {
       this.$router.push({ path: `/service/${row.service_name}/${row.service_cluster_id}/template` })
     },
@@ -437,6 +512,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  .el-slider__stop {
+    background: #f1f5fc;
+  }
+</style>
 
 <style lang="less" scoped>
 .container {
