@@ -290,7 +290,7 @@
           </div>
           <div class="form-container">
             <el-row>
-              <el-col :span="5"><div class="center-text">系统盘 </div></el-col>
+              <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>系统盘 </div></el-col>
               <el-col :span="19">
                 <div style="display: flex; flex-direction: row; align-items: center;">
                   <el-select v-model="system_disk.category" size="medium" placeholder="请选择系统盘类型" style="width: 200px">
@@ -491,7 +491,7 @@
             <el-option v-for="i in protocols[cluster.provider]" :key="i" :value="i" :label="i" />
           </el-select>
           <span style="margin-left: 20px">端口范围</span>
-          <el-input v-model="item.port_from" size="mini" style="width: 50px" /> - <el-input v-model="item.port_to" size="mini" style="width: 50px" />
+          <el-input v-model="item.port_from" size="mini" style="width: 70px" /> - <el-input v-model="item.port_to" size="mini" style="width: 70px" />
           <span style="margin-left: 20px">规则方向</span>
           <el-radio-group v-model="item.direction" size="mini">
             <el-radio-button label="ingress" />
@@ -666,7 +666,7 @@ export default {
       return true
     },
     diskCheck() {
-      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1
+      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1 && this.system_disk.size !== '' && this.system_disk.category !== ''
     },
     submitDisabled() {
       return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal

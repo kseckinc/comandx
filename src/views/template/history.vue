@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column label="执行触发" min-width="100px" align="center">
           <template slot-scope="{ row }">
-            {{ row.task_exec_type === "manual" ? "手工执行" : "自动化" }}
+            {{ row.task_exec_type === "manual" ? "手动执行" : "自动化" }}
           </template>
         </el-table-column>
         <el-table-column label="执行方" align="center">

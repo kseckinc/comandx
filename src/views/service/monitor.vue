@@ -26,6 +26,11 @@
         </el-table-column>
         <el-table-column label="ID" prop="task_id" align="center" />
         <el-table-column label="执行方" prop="task_exec_opr" align="center" />
+        <el-table-column label="执行方式" align="center">
+          <template slot-scope="{ row }">
+            {{ row.task_exec_type === "manual" ? "手动执行" : "自动化" }}
+          </template>
+        </el-table-column>
         <el-table-column label="执行动作" align="center" >
           <template slot-scope="{ row }">
             <span>{{ row.schedule_type === "expand" ? "扩容" : "缩容" }}</span>
