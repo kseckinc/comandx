@@ -166,10 +166,10 @@ export default {
     }
   },
   mounted() {
-    this.init()
     if (this.$route.name === 'updateRule') {
       this.fetchData()
     }
+    this.init()
   },
   methods: {
     async init() {
@@ -215,6 +215,7 @@ export default {
       let res
       const data = {
         ...this.rule,
+        cluster_name: 'default',
         service_name: this.$route.params.service_name,
         benchmark_qps: +this.rule.benchmark_qps,
         min_redundancy: +this.rule.min_redundancy,
