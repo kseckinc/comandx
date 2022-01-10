@@ -2,7 +2,7 @@ const bridgx_host = '127.0.0.1:9090'
 
 const schedulx_host = '127.0.0.1:9091'
 
-const cudgx_host = '127.0.0.1:9092'
+const cudgx_host = '127.0.0.1:19003'
 
 function getBridgXHost() {
   return `http://${process.env.bridgx_host || bridgx_host}`
