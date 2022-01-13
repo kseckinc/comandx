@@ -76,11 +76,11 @@ export default {
       this.setOptions(this.timestamps, this.values, this.markLine)
     },
     formatValue(value) {
-      return `${(value * 100).toFixed(2)}%`
+      return value.toFixed(2)
     },
     setOptions(timestamps, values, markLine) {
       const data = _.zip(timestamps, values.data)
-      data.push([+new Date() + 25000, null])
+      data.push([+new Date() + 300000, null])
       const options = {
         name: this.type,
         xAxis: {
@@ -94,11 +94,11 @@ export default {
             formatter: (value) => {
               const time = Moment(+value)
               if (time.second() === 0) {
-                return time.format('HH:mm:ss')
+                return time.format('HH:mm')
               }
-              if (time.second() % 5 === 0) {
-                return time.format('mm:ss')
-              }
+              // if (time.second() % 5 === 0) {
+              //   return time.format('mm:ss')
+              // }
               return ''
             }
           },
@@ -157,7 +157,7 @@ export default {
       }
       if (this.type === '冗余度') {
         options.yAxis.axisLabel = {
-          formatter: (value) => `${value * 100}%`
+          formatter: this.formatValue
         }
       }
       if (markLine !== null && markLine.min !== null && markLine.max !== null && values.data.length !== 0) {
