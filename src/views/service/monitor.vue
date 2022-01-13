@@ -152,7 +152,7 @@ export default {
       this.listLoading = false
     },
     async loadChartData() {
-      const begin = Moment().subtract(2, 'minutes')
+      const begin = Moment().subtract(30, 'minutes')
       const end = Moment()
       const qps = await redundancyQpsTotal(this.$route.params.service_name, this.cluster.service_cluster, this.formatTime(begin), this.formatTime(end))
       const instanceCount = await redundancyInstanceCount(this.$route.params.service_name, this.cluster.service_cluster, this.formatTime(begin), this.formatTime(end))
