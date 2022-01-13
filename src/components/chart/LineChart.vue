@@ -93,7 +93,7 @@ export default {
           axisLabel: {
             formatter: (value) => {
               const time = Moment(+value)
-              if (time.second() === 0) {
+              if (time.minutes() % 5 === 0 && time.second() === 0) {
                 return time.format('HH:mm')
               }
               // if (time.second() % 5 === 0) {
@@ -146,6 +146,7 @@ export default {
           },
           smooth: true,
           type: 'line',
+          symbol: 'circle',
           data,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
