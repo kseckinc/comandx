@@ -25,11 +25,11 @@
 
 # 第二步：创建机型模板
 
-1. 集群管理->创建集群
-![image](https://user-images.githubusercontent.com/94337797/145361751-04cb5b6f-614f-41e5-b402-f2a478e64d92.png)
+1. 集群管理->创建公有云集群
+![image](https://user-images.githubusercontent.com/94337797/147357848-915daa45-d8b2-4063-945e-856cfa27ab12.png)
 
 2. 进入云厂商配置页面，进行配置
-![image](https://user-images.githubusercontent.com/94337797/145344282-048440e9-0005-40db-a39f-ecae0c6bd038.png)
+![image](https://user-images.githubusercontent.com/94337797/147357890-18ecdae4-49ea-4454-9663-f5439a983bed.png)
 
 
 3. 点击下一步进入网络配置页面：
@@ -37,10 +37,10 @@
 
 
 4. 网络配置完成后，点击下一步，进行机器规格配置
-![image](https://user-images.githubusercontent.com/94337797/145344954-acb888f2-92c1-4060-899c-af3718c57bfe.png)
+![image](https://user-images.githubusercontent.com/94337797/147357978-36bc0d9b-887f-4d5e-94a9-3680f57b7e55.png)
 
 
-5. 机器规格配置完成后，点击下一步，进行存储磁盘配置，配置完成后，点击提交，创建集群成功
+5. 机器规格配置完成后，点击下一步，进行机器密码配置，配置完成后，点击提交，创建集群成功
 ![image](https://user-images.githubusercontent.com/94337797/145345058-82aa08bd-ad3b-46d6-874e-1f25648d5895.png)
 
 
@@ -76,7 +76,7 @@
 3. 配置完成后，点击开始创建按钮，页面跳转到集群列表页面，显示集群的状态
 ![image](https://user-images.githubusercontent.com/94337797/145349578-227627ec-c289-4601-a6f3-72d54d2e8a78.png)
 
-4. K8s集群创建成功后，在K8s集群->申请实例页面，申请实例
+4. K8s集群创建成功后，在K8s集群->申请实例页面，申请实例组，申请实例成功则可以再实例列表里看到申请的实例。
 ![image](https://user-images.githubusercontent.com/94337797/145353434-83190fef-cb4c-40d8-8426-871fb55f0201.png)
 
 

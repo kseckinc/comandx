@@ -640,7 +640,8 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: ''
+        password: '',
+        computing_power_type: 'CPU'
       },
       cores: [],
       mems: [],
