@@ -118,13 +118,22 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>VPC </div></el-col>
               <el-col :span="19">
-                <el-select v-model="network_config.vpc" :disabled="cluster.region_id === ''" size="medium" style="width: 400px" @change="afterVpcChange">
+                <el-select v-model="network_config.vpc" :disabled="cluster.region_id === ''" size="medium" style="width: 400px"
+                           @change="afterVpcChange"
+                           popper-class="select-customize">
                   <el-option
                     v-for="item in vpcs"
                     :key="item.VpcId"
                     :value="item.VpcId"
                     :label="item.VpcName"
-                  />
+                  >
+                    <div>
+                      <div>专有网络ID: {{ item.VpcId }}</div>
+                      <div>专有网络名称: {{ item.VpcName }}</div>
+                      <div>目标网段: {{ item.CidrBlock }}</div>
+                      <div>创建时间: {{ item.CreateAt | formatMomentZone('YYYY年MM月DD日 HH:mm') }}</div>
+                    </div>
+                  </el-option>
                 </el-select>
                 <el-tooltip class="item" effect="light" placement="top">
                   <div slot="content">
@@ -134,6 +143,7 @@
                   </div>
                   <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
                 </el-tooltip>
+<!--                <i class="el-icon-refresh" style="color: #409EFF; cursor: pointer" @click="refreshVPC" />-->
                 <el-button size="medium" type="primary" style="margin-left: 10px; width: 126px" :disabled="cluster.region_id === '' || cluster.account_key === ''" @click="addVpc">添加VPC</el-button>
               </el-col>
             </el-row>
@@ -142,13 +152,21 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>子网 </div></el-col>
               <el-col :span="19">
-                <el-select v-model="network_config.subnet_id" size="medium" :disabled="network_config.vpc === ''" style="width: 400px">
+                <el-select v-model="network_config.subnet_id" size="medium" :disabled="network_config.vpc === ''"
+                           style="width: 400px" popper-class="select-customize">
                   <el-option
                     v-for="item in subnets"
                     :key="item.SwitchId"
                     :value="item.SwitchId"
                     :label="item.SwitchName"
-                  />
+                  >
+                    <div>
+                      <div>虚拟交换机ID: {{ item.SwitchId }}</div>
+                      <div>虚拟交换机名称: {{ item.SwitchName }}</div>
+                      <div>网段: {{ item.CidrBlock }}</div>
+                      <div>可用区: {{ getZoneName(item.ZoneId) }} </div>
+                    </div>
+                  </el-option>
                 </el-select>
                 <el-tooltip class="item" effect="light" placement="top">
                   <div slot="content">
@@ -156,6 +174,7 @@
                   </div>
                   <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
                 </el-tooltip>
+<!--                <i class="el-icon-refresh" style="color: #409EFF; cursor: pointer" @click="refreshSubnet" />-->
                 <el-button size="medium" type="primary" style="margin-left: 10px;" @click="addSubnet">添加网络子网</el-button>
               </el-col>
             </el-row>
@@ -178,6 +197,7 @@
                   </div>
                   <i class="el-icon-question" style="color: green; font-size: 16px; margin-left: 5px" />
                 </el-tooltip>
+<!--                <i class="el-icon-refresh" style="color: #409EFF; cursor: pointer" @click="refreshSecurityGroup" />-->
                 <el-button size="medium" type="primary" style="margin-left: 10px;width: 126px" @click="addSecurityGroup">添加安全组</el-button>
               </el-col>
             </el-row>
@@ -242,7 +262,7 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>算力类型 </div></el-col>
               <el-col :span="19">
-                <el-radio-group v-model="cluster.computing_power_type" @change="changeComputedType">
+                <el-radio-group v-model="instance_type_config.computing_power_type" @change="changeComputedType">
                   <el-radio-button label="CPU">CPU</el-radio-button>
                   <el-radio-button label="GPU">GPU</el-radio-button>
                 </el-radio-group>
@@ -253,19 +273,35 @@
             <el-row>
               <el-col :span="5"><div class="center-text"><div class="asterisk">*</div>机器规格 </div></el-col>
               <el-col :span="19">
+                筛选:
+                <el-select v-model="instance_type_config.core" size="medium" style="width: 150px" clearable filterable placeholder="请选择 vCPU" @change="changeCoreOrMemory">
+                  <el-option v-for="(c, idx) in filterCores" :key="idx" :value="c" :label="c">
+                    {{ c }} vCPU
+                  </el-option>
+                </el-select>
+                <el-select v-model="instance_type_config.mem" size="medium" style="width: 150px;margin-left: 10px" clearable filterable placeholder="请选择内存" @change="changeCoreOrMemory">
+                  <el-option v-for="(m, idx) in filterMems" :key="idx" :value="m" :label="m">
+                    {{ m }} GiB
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 10px">
+              <el-col :span="5"><div style="height: 36px" /></el-col>
+              <el-col :span="19">
                 <el-select
-                  v-model="cluster.instance_type"
-                  size="medium"
-                  :disabled="cluster.region_id === '' || cluster.zone_id === ''"
-                  placeholder="可输入机器信息匹配"
-                  style="width: calc( 40% + 220px )"
-                  filterable
+                    v-model="cluster.instance_type"
+                    size="medium"
+                    :disabled="cluster.region_id === '' || cluster.zone_id === ''"
+                    placeholder="可输入机器信息匹配"
+                    style="width: calc( 25% + 340px )"
+                    filterable
                 >
                   <el-option
-                    v-for="(item, idx) in instanceTypes"
-                    :key="idx"
-                    :value="item.instance_type"
-                    :label="item.instance_type + '(' + item.core + '核' + item.memory + 'G)'"
+                      v-for="(item, idx) in filterInstanceTypes"
+                      :key="idx"
+                      :value="item.instance_type"
+                      :label="item.instance_type"
                   />
                 </el-select>
               </el-col>
@@ -279,11 +315,14 @@
                 <!--                  <el-radio-button label="public">云厂商镜像</el-radio-button>-->
                 <!--                  <el-radio-button label="private">自定义镜像</el-radio-button>-->
                 <!--                </el-radio-group>-->
-                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 200px" @change="changeImageType">
+                <el-select v-model="image_config.type" size="medium" placeholder="请选择镜像类别" style="width: 150px" @change="changeImageType">
                   <el-option v-for="t in imageTypes" :key="t.value" :value="t.value" :label="t.label" />
                 </el-select>
-                <el-select v-model="cluster.image" size="medium" style="width: 40%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
-                  <el-option v-for="i in images" :key="i.ImageId" :value="i.ImageId" :label="i.OsName" />
+                <el-select v-model="image_config.platform" size="medium" placeholder="请选择镜像平台" style="width: 150px; margin-left: 20px" :disabled="image_config.type === ''" clearable filterable @change="changeImagePlatform">
+                  <el-option v-for="(i, idx) in Object.keys(imagePlatforms)" :key="idx" :value="i" :label="i" />
+                </el-select>
+                <el-select v-model="cluster.image" size="medium" style="width: 25%; margin-left: 20px" filterable placeholder="可输入镜像信息匹配" :disabled="image_config.type === ''">
+                  <el-option v-for="i in filterImages" :key="i.image_id" :value="i.image_id" :label="i.os_name" />
                 </el-select>
               </el-col>
             </el-row>
@@ -301,7 +340,7 @@
                       :value="item.value"
                     />
                   </el-select>
-                  <el-input v-model="system_disk.size" placeholder="磁盘空间20-500" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('system', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="system_disk.size" :placeholder="`磁盘空间${diskLimit.system_disk.min}-${diskLimit.system_disk.max}`" size="medium" style="width: 160px; margin-left: 20px" @blur="checkNum('system', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -318,7 +357,7 @@
                   <span style="color: #8c939d">
                     您已选择<span style="display: inline-block; padding: 0 10px; color: red">{{ data_disks.length }}</span>块盘，还可以选择<span style="display: inline-block; padding: 0 10px; color: red">{{ 16 - data_disks.length }}</span>块盘
                   </span>
-                  <el-button size="mini" type="primary" style="margin-left: 10px" @click="addItem">+增加数据盘</el-button>
+                  <el-button size="mini" type="primary" style="margin-left: 10px" @click="addItem" :disabled="data_disks.length > 15">+增加数据盘</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -336,7 +375,7 @@
                       :value="t.value"
                     />
                   </el-select>
-                  <el-input v-model="item.size" placeholder="磁盘空间20-32768" size="medium" style="width: 150px; margin-left: 20px" @blur="checkNum('data', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
+                  <el-input v-model="item.size" :placeholder="`磁盘空间${diskLimit.data_disk.min}-${diskLimit.data_disk.max}`" size="medium" style="width: 160px; margin-left: 20px" @blur="checkNum('data', true)" /><span style="display: inline-block; margin-left: 5px">GiB</span>
                 </div>
               </el-col>
             </el-row>
@@ -511,7 +550,19 @@
 <script>
 import _ from 'lodash'
 import { justifySubnet, passwordLegitimacy } from '@/utils'
-import { cloudProviders, cloudDiskTypes, systemDiskSizes, dataDiskSizes, huaweiIpType, imageTypes, chargeUnits, protocols, chargePeriods, vpcCidrOptions } from '@/config/cloud'
+import {
+  cloudProviders,
+  cloudDiskTypes,
+  systemDiskSizes,
+  dataDiskSizes,
+  huaweiIpType,
+  imageTypes,
+  chargeUnits,
+  protocols,
+  chargePeriods,
+  vpcCidrOptions,
+  providerDiskLimits
+} from '@/config/cloud'
 import loadMore from '@/directive/el-select-load-more'
 import {
   securityGroupDescribe,
@@ -589,7 +640,14 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: '',
+        password: ''
+      },
+      cores: [],
+      mems: [],
+      pairs: [],
+      instance_type_config: {
+        core: '',
+        mem: '',
         computing_power_type: 'CPU'
       },
       chargePeriods,
@@ -624,10 +682,12 @@ export default {
       securityGroups: [],
       instanceTypes: [],
       images: [],
+      imagePlatforms: [],
       image_config: {
         id: '',
         name: '',
-        type: ''
+        type: '',
+        platform: ''
       },
       imageTypes,
       accounts: [],
@@ -650,6 +710,35 @@ export default {
     }
   },
   computed: {
+    filterInstanceTypes() {
+      return this.instanceTypes.filter((i) => {
+        let coreFilter = true
+        let memFilter = true
+        if (this.instance_type_config.core !== '') {
+          coreFilter = i.core === this.instance_type_config.core
+        }
+        if (this.instance_type_config.mem !== '') {
+          memFilter = i.memory === this.instance_type_config.mem
+        }
+        return coreFilter && memFilter && (this.instance_type_config.computing_power_type === 'GPU' ? i.is_gpu : !i.is_gpu)
+               && (i.charge_type === this.charge_config.charge_type || i.charge_type === 'All')
+      })
+    },
+    filterCores() {
+      if (this.instance_type_config.mem === '') {
+        return this.cores
+      }
+      return this.pairs.filter(i => i[1] === this.instance_type_config.mem).map(i => i[0])
+    },
+    filterMems() {
+      if (this.instance_type_config.core === '') {
+        return this.mems
+      }
+      return this.pairs.filter(i => i[0] === this.instance_type_config.core).map(i => i[1])
+    },
+    filterImages() {
+      return this.images.filter(i => i.platform === this.image_config.platform)
+    },
     chargePeriodOptions() {
       return _.get(this.chargePeriods, `${this.cluster.provider}.${this.charge_config.period_unit}`, [])
     },
@@ -666,13 +755,17 @@ export default {
       return true
     },
     diskCheck() {
-      return this.data_disks.filter(i => i.size === '' || i.category === '').length < 1 && this.system_disk.size !== '' && this.system_disk.category !== ''
+      return this.data_disks.filter(i => i.size === '' || i.category === '' || +i.size < this.diskLimit.data_disk.min || +i.size > this.diskLimit.data_disk.max).length < 1
+          && this.system_disk.size !== '' && this.system_disk.category !== '' && +this.system_disk.size >= this.diskLimit.system_disk.min && +this.system_disk.size <= this.diskLimit.system_disk.max
     },
     submitDisabled() {
       return this.cluster.password === '' || this.cluster.password !== this.againPassword || this.passwordIllegal
     },
     againPasswordIllegal() {
       return this.cluster.password !== this.againPassword
+    },
+    diskLimit() {
+      return _.get(providerDiskLimits, this.cluster.provider)
     }
   },
   async mounted() {
@@ -712,15 +805,26 @@ export default {
       const cluster = await clusterDescribe(this.$route.params.name)
       if (!_.isEmpty(cluster)) {
         this.cluster = { ...cluster }
-        this.image_config = _.get(cluster, 'image_config')
+        this.image_config.type = _.get(cluster, 'image_config.type')
+        this.image_config.id = _.get(cluster, 'image_config.id')
+        this.image_config.name = _.get(cluster, 'image_config.name')
         this.network_config = _.get(cluster, 'network_config')
         this.networkSwitch = this.network_config.internet_max_bandwidth_out > 0
         this.system_disk = _.get(cluster, 'storage_config.disks.system_disk')
         this.data_disks = _.get(cluster, 'storage_config.disks.data_disk') || []
         this.charge_config = _.get(cluster, 'charge_config')
+        this.instance_type_config = {
+          mem: _.get(cluster, 'extend_config.memory', ''),
+          core: _.get(cluster, 'extend_config.core', ''),
+          computing_power_type: _.get(cluster, 'extend_config.cpu_type', '')
+        }
         await this.loadInstanceTypes()
       }
       this.againPassword = this.cluster.password
+    },
+    getZoneName(id) {
+      const zone = this.zones.find(i => i.ZoneId === id)
+      return zone ? zone.LocalName : id
     },
     async changeProvider(provider) {
       this.handleCache(provider)
@@ -786,9 +890,9 @@ export default {
         zone_id: '',
         instance_type: '',
         image: '',
-        password: '',
-        computing_power_type: 'CPU'
+        password: ''
       }
+      this.instance_type_config.computing_power_type = 'CPU'
     },
     cleanNetConfig() {
       this.network_config = {
@@ -837,7 +941,21 @@ export default {
     async afterRegionSelected() {
       await this.loadZoneAndVpc()
       this.cluster.zone_id = _.get(this.zones, '0.ZoneId', '')
+      await this.loadInstanceTypes()
       this.cleanNetConfig()
+      await this.autoSelectVpcAndSubnet()
+    },
+    async autoSelectVpcAndSubnet() {
+      if (this.network_config.vpc === '' && this.vpcs !== null && this.vpcs.length === 1) {
+        this.network_config.vpc = this.vpcs[0].VpcId
+      }
+      await this.loadCloud()
+      if (this.network_config.subnet_id === '' && this.subnets !== null && this.subnets.length === 1) {
+        this.network_config.subnet_id = this.subnets[0].SwitchId
+      }
+      if (this.network_config.security_group === '' && this.securityGroups !== null && this.securityGroups.length === 1) {
+        this.network_config.security_group = this.securityGroups[0].SecurityGroupId
+      }
     },
     async loadZoneAndVpc() {
       this.zones = await zoneList(this.cluster.provider, this.cluster.region_id)
@@ -846,9 +964,13 @@ export default {
       }
       this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
     },
+    async loadVpc() {
+      this.vpcs = await vpcDescribe(this.cluster.region_id, this.cluster.provider, this.cluster.account_key)
+    },
     changeImageType() {
       this.loadImages()
       this.cluster.image = ''
+      this.image_config.platform = ''
     },
     async loadImages() {
       const images = await imageList(this.cluster.provider, this.cluster.region_id, this.cluster.instance_type, this.image_config.type)
@@ -857,11 +979,22 @@ export default {
           if (this.image_config.type === 'private') {
             return {
               ...i,
-              OsName: i.ImageName
+              os_name: i.image_name
             }
           }
           return {...i}
         })
+      }
+      this.imagePlatforms = _.groupBy(this.images, 'platform')
+      this.loadImagePlatform()
+    },
+    changeImagePlatform() {
+      this.cluster.image = ''
+    },
+    loadImagePlatform() {
+      if (this.cluster.image !== '') {
+        const info = this.images.find(i => i.image_id === this.cluster.image)
+        this.image_config.platform = info.platform
       }
     },
     async loadCloud() {
@@ -878,14 +1011,41 @@ export default {
       this.cleanNetConfig()
     },
     changeComputedType() {
-      this.loadInstanceTypes()
+      this.cluster.instance_type = ''
+      this.instance_type_config.core= ''
+      this.instance_type_config.mem = ''
+    },
+    changeCoreOrMemory() {
       this.cluster.instance_type = ''
     },
     async loadInstanceTypes() {
       if (this.cluster.region_id !== '' && this.cluster.zone_id !== '') {
-        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id, this.cluster.computing_power_type)
+        const data = await instanceTypeList(this.cluster.provider, this.cluster.region_id, this.cluster.zone_id)
         this.instanceTypes = _.orderBy(data, ['core', 'memory'])
       }
+      this.generateInstanceType()
+      this.loadCoreAndMem()
+    },
+    loadCoreAndMem() {
+      if (this.cluster.instance_type !== '') {
+        const info = this.instanceTypes.find(i => i.instance_type === this.cluster.instance_type)
+        this.instance_type_config.core = info.core
+        this.instance_type_config.mem = info.memory
+        this.instance_type_config.computing_power_type = info.is_gpu ? 'GPU' : 'CPU'
+      }
+    },
+    generateInstanceType() {
+      const cores = []
+      const mems = []
+      const pairs = []
+      this.instanceTypes.forEach((i) => {
+        cores.push(i.core)
+        mems.push(i.memory)
+        pairs.push([i.core, i.memory])
+      })
+      this.cores = _.uniq(cores)
+      this.mems = _.uniq(mems)
+      this.pairs = _.uniqWith(pairs, _.isEqual)
     },
     async submit() {
       let network_config
@@ -911,11 +1071,11 @@ export default {
           charge_type: this.charge_config.charge_type
         }
       }
-      const image = this.images.find(i => i.ImageId === this.cluster.image)
+      const image = this.images.find(i => i.image_id === this.cluster.image)
       const image_config = {
         type: this.image_config.type,
-        id: image.ImageId,
-        name: image.OsName
+        id: image.image_id,
+        name: image.os_name
       }
       const disks = {}
       if (this.system_disk.size !== '') {
@@ -930,6 +1090,7 @@ export default {
           size: +i.size
         }))
       }
+      const instanceType = this.instanceTypes.find(i => i.instance_type === this.cluster.instance_type)
       const data = {
         ...this.cluster,
         network_config,
@@ -937,7 +1098,12 @@ export default {
         storage_config: {
           disks
         },
-        charge_config
+        charge_config,
+        extend_config: {
+          core: instanceType.core || this.instance_type_config.core,
+          memory: instanceType.memory || this.instance_type_config.mem,
+          cpu_type: instanceType.is_gpu ? 'GPU' : 'CPU' || this.instance_type_config.computing_power_type
+        }
       }
       let res
       let text = '创建成功'
@@ -1030,16 +1196,18 @@ export default {
       const res = await vpcCreate(this.cluster.provider, this.cluster.region_id, this.vpc.cidr_block, this.vpc.vpc_name, this.cluster.account_key)
       if (res.code === 200) {
         this.$message.success('创建成功!')
+        this.network_config.vpc = res.data
       }
-      await this.loadZoneAndVpc()
+      await this.loadVpc()
       this.vpcAddVisible = false
     },
     async submitSubnet() {
       const res = await subnetCreate(this.cluster.provider, this.cluster.zone_id, this.subnet.cidr_block, this.subnet.vpc_id, this.subnet.switch_name, this.subnet.gateway_ip)
       if (res.code === 200) {
         this.$message.success('创建成功!')
+        this.network_config.subnet_id = res.data
       }
-      await this.loadCloud()
+      this.subnets = await subnetDescribe(this.network_config.vpc, this.cluster.zone_id)
       this.subnetAddVisible = false
     },
     addSecurityRule() {
@@ -1057,16 +1225,37 @@ export default {
       })))
       if (res.code === 200) {
         this.$message.success('创建成功!')
+        this.network_config.security_group = res.data
       }
-      await this.loadCloud()
+      this.securityGroups = await securityGroupDescribe(this.network_config.vpc)
       this.securityGroupsAddVisible = false
     },
     checkPassword() {
       this.passwordIllegal = !passwordLegitimacy(this.cluster.password)
     }
+    // refreshVPC() {
+    //   console.log('vpc')
+    // },
+    // refreshSubnet() {
+    //   console.log('subnet')
+    // },
+    // refreshSecurityGroup() {
+    //   console.log('sercurity group')
+    // }
   }
 }
 </script>
+
+<style lang="less">
+  .select-customize {
+    li:not(:last-child) {
+      border-bottom: 2px solid #e3e3e5;
+    }
+    .el-select-dropdown__item {
+      height: 140px !important;
+    }
+  }
+</style>
 
 <style lang="less" scoped>
 .cluster-container {
