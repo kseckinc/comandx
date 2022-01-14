@@ -15,7 +15,8 @@ import pathToRegexp from 'path-to-regexp'
 export default {
   data() {
     return {
-      levelList: null
+      levelList: null,
+      serverNameList: ['serviceMonitor', 'templateList', 'createRule', 'updateRule']
     }
   },
   watch: {
@@ -30,6 +31,14 @@ export default {
     getBreadcrumb() {
       const matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
+      if (this.serverNameList.includes(this.$route.name)) {
+        this.levelList = [...this.levelList, {
+          path: `${this.$route.path}`,
+          meta: {
+            title: this.$route.params.service_name
+          }
+        }]
+      }
     },
     isDashboard(route) {
       const name = route && route.name
@@ -47,6 +56,10 @@ export default {
       const { redirect, path } = item
       if (redirect) {
         this.$router.push(redirect)
+        return
+      }
+      if (item.meta.title === '服务列表') {
+        this.$router.push({ name: 'serviceList' })
         return
       }
       this.$router.push(this.pathCompile(path))

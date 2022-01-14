@@ -212,4 +212,18 @@ routerApi.get('/service/breathrecord', async(ctx) => {
   }
 })
 
+routerApi.get('/service/cluster_list', async(ctx) => {
+  try {
+    ctx.body = await request({
+      headers: {
+        authorization: ctx.header.authorization
+      },
+      url: `${host.getSchedulxHost()}${prefix}/service/cluster_list`,
+      qs: ctx.query
+    })
+  } catch (e) {
+    ctx.body = e.error
+  }
+})
+
 module.exports = routerApi

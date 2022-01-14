@@ -45,7 +45,6 @@
                   size="medium"
                   placeholder="请输入模板名称"
                   maxlength="20"
-                  show-word-limit
                 />
               </el-col>
             </el-row>
@@ -53,9 +52,10 @@
               <el-col :span="5"><div style="height: 16px" /></el-col>
               <el-col
                 :span="19"
-              ><div class="note">
+              ><div class="note" :class="{ 'text-red': !tmplNameValidate }">
                 支持中文、英文、数字，限制20字符
-              </div></el-col>
+              </div>
+              </el-col>
             </el-row>
           </div>
           <div class="form-container">
@@ -295,6 +295,7 @@
 import {
   templateCreate, getBridgXClusterList
 } from '@/api/service'
+import { validInput } from '@/utils/validate'
 
 export default {
   name: 'Create',
@@ -329,6 +330,15 @@ export default {
       bridgXCluster: []
     }
   },
+  computed: {
+    tmplNameValidate() {
+      if (this.form.tmpl_info.tmpl_name === '') {
+        return true
+      }
+      const res = validInput(this.form.tmpl_info.tmpl_name)
+      return res.type && res.count <= 20
+    }
+  },
   created() {
     this.step = 0
     this.loadData()
@@ -351,6 +361,10 @@ export default {
         }
         if (this.form.tmpl_info.tmpl_name === '') {
           this.$message.warning('请输入模板名称')
+          return false
+        }
+        if (!this.tmplNameValidate) {
+          this.$message.warning('模板名称不合规')
           return false
         }
       }
@@ -486,6 +500,9 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+  }
+  .text-red {
+    color: red !important;
   }
 }
 </style>

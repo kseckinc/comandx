@@ -7,6 +7,8 @@ export function filterCloudProvider(string) {
       return '阿里云'
     case 'HuaweiCloud':
       return '华为云'
+    case 'TencentCloud':
+      return '腾讯云'
     default:
       return '未知云厂商'
   }
@@ -120,7 +122,8 @@ export function formatMoment(date, format) {
 }
 
 export function formatMomentZone(date, format) {
-  const str = moment(new Date(date)).utcOffset(-6).format(format)
+  const dateFormat = date ? date.split('+0800')[0].replaceAll('-', '/') : date
+  const str = moment(new Date(dateFormat)).format(format)
   return str === 'Invalid date' ? '--' : str
 }
 
