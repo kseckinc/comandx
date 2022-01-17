@@ -102,7 +102,7 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 授权
 -----
 
-ComandX使用[Apache License 2.0](https://github.com/galaxy-future/comandx/blob/main/LICENSE)授权协议进行授权
+ComandX使用[Elastic License 2.0](https://github.com/galaxy-future/comandx/blob/main/LICENSE)授权协议进行授权
 
 
 
