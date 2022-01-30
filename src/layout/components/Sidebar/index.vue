@@ -3,6 +3,7 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
+        ref="menus"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
@@ -12,6 +13,7 @@
         :collapse-transition="false"
         mode="vertical"
         @open="handleOpen"
+        @select="handleSelect"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
@@ -28,11 +30,20 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      preIdx: ''
+    }
+  },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'userType'
     ]),
     routes() {
+      if (this.userType !== 'ADMIN') {
+        return this.$router.options.routes.filter(i => !i.isAdmin)
+      }
       return this.$router.options.routes
     },
     activeMenu() {
@@ -59,6 +70,10 @@ export default {
     handleOpen(key) {
       const route = constantRoutes.find(i => i.path === key)
       this.$router.push({ name: route.children[0].name })
+      this.preIdx = key
+    },
+    handleSelect() {
+      this.$refs.menus.close(this.preIdx)
     }
   }
 }

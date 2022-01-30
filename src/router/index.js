@@ -232,13 +232,13 @@ export const constantRoutes = [
     }, {
       path: '/service/:service_name/:service_cluster_id/template-create',
       name: 'templateCreate',
-      component: () => import('@/views/template/create'),
+      component: () => import('@/views/template/createOrEdit'),
       meta: { title: '创建扩缩容流程', icon: '' },
       hidden: true
     }, {
       path: '/service/template-edit/:service_name/:tmpl_expand_id',
       name: 'templateEdit',
-      component: () => import('@/views/template/edit'),
+      component: () => import('@/views/template/createOrEdit'),
       meta: { title: '编辑扩缩容流程', icon: '' },
       hidden: true
     }, {
@@ -268,8 +268,9 @@ export const constantRoutes = [
       path: 'provider',
       name: 'provider',
       component: () => import('@/views/cloudAccount/index'),
-      meta: { title: '云厂商账户', icon: 'cloudAccount' }
-    }]
+      meta: { title: '云厂商账户', icon: 'cloudAccount', isAdmin: true }
+    }],
+    isAdmin: true
   },
   {
     path: '/billing',
