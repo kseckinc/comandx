@@ -1,6 +1,15 @@
 ![image](https://user-images.githubusercontent.com/94337797/145354238-42473c28-a928-4ec5-84fb-7204db088283.png)
 =====
 
+
+Language
+----
+
+English | [中文](https://github.com/galaxy-future/comandx/blob/main/docs/CH-README.md)
+
+Introduction
+-----
+
 ComandX is an observable interface-based O&M solution. It is a web-based visual presentation interface for BridgX and SchedulX, providing a simple and easy-to-use operating experience.
 It has the following key features:
 1. cluster creation and management;
