@@ -7,7 +7,7 @@
 
 # 前置条件
 1、已经有云厂商账户，并且获得了AccessKey和AccessKey Secret信息，如果没有，请提前申请；<br>
-[阿里云申请入口链接](https://help.aliyun.com/document_detail/53045.html)<br>
+[阿里云申请入口链接](https://help.aliyun.com/document_detail/53045.html) | [华为云申请入口链接](https://console.huaweicloud.com/iam/?agencyId=5bd44fddfab541699d5eb3e2e49823e6&region=cn-north-4&locale=zh-cn#/mine/accessKey) | [腾讯云申请入口链接](https://console.cloud.tencent.com/cam/capi)
 
 2、已经获取了网址信息，以及用户名和密码信息；<br>
 如果是初次部署，可在浏览器中打开 http://127.0.0.1:80 登录系统,采用的认证方式是默认配置可用以下帐号登录<br>
