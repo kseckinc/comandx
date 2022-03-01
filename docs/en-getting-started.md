@@ -8,7 +8,7 @@ This article is a quick start guide to ComandX and includes four steps for the t
 
 # Prerequisites
 1.You already have a cloud vendor account and have obtained the AccessKey and AccessKey Secret information. If not, please sign-up in advance. <br>
-[Alibaba Cloud application portal link](https://help.aliyun.com/document_detail/53045.html)<br>
+[Alibaba Cloud ](https://help.aliyun.com/document_detail/53045.html) | [HUAWEI CLOUD](https://console.huaweicloud.com/iam/?agencyId=5bd44fddfab541699d5eb3e2e49823e6&region=cn-north-4&locale=zh-cn#/mine/accessKey) |[Tencent Cloud](https://console.cloud.tencent.com/cam/capi)
 
 2.You have obtained the URL information, as well as user name and password information. <br>
 If it is the first deployment, you can type http://127.0.0.1:80 into your browser to log in to the system. Using the default authentication method, log in with the 
