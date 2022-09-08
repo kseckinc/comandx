@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "file-saver": "2.0.1",
     "xlsx": "0.14.1",
-    "jszip": "3.2.1",
+    "jszip": "3.7.0",
     "less": "^2.3.1",
     "less-loader": "^4.0.5",
     "moment": "^2.29.1"
