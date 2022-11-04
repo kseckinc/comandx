@@ -10,7 +10,7 @@
 简介
 --------
 
-ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX的Web可视化展示界面，提供简洁易用的操作体验。
+ComandX是可观测的界面化的运维解决方案，它是BridgX的Web可视化展示界面，提供简洁易用的操作体验。
 
 它具有如下关键特性：
 
@@ -42,7 +42,6 @@ ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX�
 
 #### 1、环境依赖
 - [安装BridgX](https://github.com/galaxy-future/bridgx/blob/dev/README.md);
-- [安装SchedulX](https://github.com/galaxy-future/schedulx/blob/master/README.md)
 
 #### 2、安装部署  
 
