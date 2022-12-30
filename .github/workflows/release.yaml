@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/checkout@main
       - name: Build & Publish FE to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: galaxyfuture/comandx
           username: ${{ secrets.DOCKER_USERNAME }}
