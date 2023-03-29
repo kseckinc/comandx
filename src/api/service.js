@@ -189,3 +189,16 @@ export async function getBridgXClusterList(params) {
   return _.get(res, 'data', [])
 }
 
+export async function serviceClusterList(service_name) {
+  const token = getToken()
+  const res = await request({
+    url: '/api/v1/schedulx/service/cluster_list',
+    headers: {
+      Authorization: ` Bearer ${token}`
+    },
+    params: {
+      service_name
+    }
+  })
+  return _.get(res, 'data', [])
+}

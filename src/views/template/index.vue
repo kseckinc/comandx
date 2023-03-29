@@ -1,13 +1,40 @@
 <template>
   <div class="container">
-    <div class="header">
-      {{ service_name }}
-    </div>
     <div class="content">
       <div>
         <el-tabs v-model="activeName">
-          <el-tab-pane label="扩缩容流程" name="first">
-            <div class="content">
+          <el-tab-pane label="关联集群" name="clusters">
+            <el-table
+              :data="clusters"
+              border
+              fit
+              highlight-current-row
+              size="medium"
+            >
+              <el-table-column label="ID" prop="service_cluster_id" align="center" />
+              <el-table-column label="集群名称" prop="bridgx_cluster" align="center" />
+              <el-table-column label="在线机器数" prop="instance_count" align="center" />
+              <el-table-column label="集群机型" prop="instance_type_desc" align="center" />
+              <el-table-column label="云厂商" align="center">
+                <template slot-scope="{ row }">
+                  {{ row.provider | filterCloudProvider }}
+                </template>
+              </el-table-column>
+              <el-table-column label="付费方式" align="center">
+                <template slot-scope="{ row }">
+                  {{ row.charge_type | parsePaidType }}
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template slot-scope="{ row }">
+                  <el-button type="text" @click="goToMonitor(row)">集群监控</el-button>
+                  <el-button type="text" @click="elastic(row)">扩缩容</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="扩缩容模板" name="template">
+            <div>
               <div class="buttons">
                 <el-button
                   size="medium"
@@ -80,6 +107,12 @@
                 />
               </div>
             </div>
+          </el-tab-pane>
+          <el-tab-pane label="扩缩容规则" name="rule">
+            <rule-list :tmplExpandId="tmpl_expand_id" />
+          </el-tab-pane>
+          <el-tab-pane label="扩缩容历史" name="history">
+            <history />
           </el-tab-pane>
           <!-- <el-tab-pane label="自动扩缩容" name="second">
             <div class="content">
@@ -170,23 +203,28 @@
         >取消</el-button>
       </div>
     </el-dialog>
+    <elastic :cluster="dialog.cluster" :dialog-visible="dialog.visible" @close="closeDialog" />
   </div>
 </template>
 
 <script>
 import {
   getTemplateList,
+  serviceClusterList,
   // decisionUpdate,
   // getDecisionRule,
   templateDeletes
 } from '@/api/service'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
+import History from '@/views/template/history'
+import Elastic from '@/views/template/components/elastic'
+import RuleList from '@/views/template/ruleList'
 import _ from 'lodash'
 
 export default {
   name: 'Template',
-  components: { Pagination },
+  components: { Pagination, History, RuleList, Elastic },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -200,6 +238,10 @@ export default {
   },
   data() {
     return {
+      dialog: {
+        visible: false,
+        cluster: {}
+      },
       form: {
         tmpl_decision_rule: {
           id: '',
@@ -209,7 +251,7 @@ export default {
           is_valid: 1
         }
       },
-      activeName: 'first',
+      activeName: 'clusters',
       listLoading: false,
       total: 0,
       listQuery: {
@@ -231,7 +273,9 @@ export default {
         'tmpl_decision_rule.expand_size': [
           { required: true, message: '请输入扩容步长', trigger: 'blur' }
         ]
-      }
+      },
+      clusters: [],
+      tmpl_expand_id: 0
     }
   },
   created() {
@@ -241,6 +285,8 @@ export default {
   methods: {
     async getList() {
       this.listLoading = true
+      const cRes = await serviceClusterList(this.$route.params.service_name)
+      this.clusters = _.get(cRes, 'cluster_list', [])
       const serviceName = this.$route.params.service_name
       const serviceClusterId = this.$route.params.service_cluster_id
       const params = {
@@ -251,10 +297,29 @@ export default {
 
       const res = await getTemplateList(params)
       this.templateList = _.get(res, 'tmpl_expand_list', [])
+      this.tmpl_expand_id = _.get(this.templateList, '0.tmpl_expand_id') || 0
       this.total = res.pager.total
       this.listLoading = false
       this.service_name = serviceName
       this.service_cluster_id = serviceClusterId
+    },
+    goToMonitor(cluster) {
+      this.$router.push({
+        name: 'serviceMonitor',
+        params: {
+          service_name: this.$route.params.service_name
+        },
+        query: {
+          cluster: cluster.bridgx_cluster
+        }
+      })
+    },
+    elastic(cluster) {
+      this.dialog.visible = true
+      this.dialog.cluster = cluster
+    },
+    closeDialog() {
+      this.dialog.visible = false
     },
     // async submit() {
     //   this.$refs['form'].validate(async(valid) => {
@@ -350,15 +415,9 @@ export default {
     }
   }
   .content {
-    margin-top: 20px;
     background-color: #ffffff;
     padding: 20px;
     box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.08);
-    .buttons {
-      button {
-        margin-right: 40px;
-      }
-    }
     .table {
       margin-top: 10px;
     }

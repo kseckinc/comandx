@@ -15,9 +15,11 @@
           v-model="form.service_info.service_name"
           size="medium"
           placeholder="请输入服务名称"
+          maxlength="32"
+          show-word-limit
           style="width: 400px"
         />
-        <div class="note">支持中文、英文、数字，限制32字符</div>
+        <div class="note" :class="{'text-red': !serviceNameValidate}">仅支持英文大小写、数字、下划线“_”、“.”,限制32字符</div>
       </el-form-item>
       <el-form-item label="服务描述" prop="service_info.description">
         <el-input
@@ -127,7 +129,6 @@
       title="服务创建成功"
       :visible="tipDialogVisible"
       width="20%"
-      @close="cancel"
     >
       <div style="text-align:center">
         <svg-icon
@@ -155,13 +156,11 @@
 <script>
 import { languages } from '@/config/service'
 import { getTemplateList, serviceCreate } from '@/api/service'
-import createPng from '@/assets/create.png'
 import _ from 'lodash'
 export default {
   name: 'ServiceCreate',
   data() {
     return {
-      createPng: createPng,
       form: {
         service_info: {
           service_name: '',
@@ -189,11 +188,6 @@ export default {
           {
             required: true,
             message: '请输入服务名称',
-            trigger: ['blur', 'change']
-          },
-          {
-            pattern: /^[0-9a-zA-Z\u4E00-\u9FA5.]{1,32}$/,
-            message: '支持中文、英文、数字，限制32字符',
             trigger: ['blur', 'change']
           }
         ],
@@ -247,6 +241,14 @@ export default {
       }
     }
   },
+  computed: {
+    serviceNameValidate() {
+      if (this.form.service_info.service_name === '') {
+        return true
+      }
+      return /^[0-9a-zA-Z_.]{1,32}$/.test(this.form.service_info.service_name)
+    }
+  },
   mounted() {
     this.getTemplateList()
   },
@@ -260,34 +262,39 @@ export default {
     },
     async submit() {
       this.$refs['form'].validate(async(valid) => {
-        if (valid) {
-          this.form.decision_rule.metric_value = Number(
-            this.form.decision_rule.metric_value
-          )
-          this.form.decision_rule.redundancy = Number(
-            this.form.decision_rule.redundancy
-          )
-          this.form.decision_rule.expand_size = Number(
-            this.form.decision_rule.expand_size
-          )
-          const res = await serviceCreate(this.form)
-          if (res.data.code === 200) {
-            this.$message.success('创建成功')
-            this.serviceClusterId = res.data.data.service_cluster_id
-            this.tipDialogVisible = true
-            const _this = this
-            this.timer = window.setInterval(function() {
-              --_this.seconds
-              if (_this.seconds === 0) {
-                window.clearInterval(_this.timer)
-                _this.tipDialogVisible = false
-                _this.goTemplateCreate()
-              }
-            }, 1000)
+        try {
+          if (valid && this.serviceNameValidate) {
+            this.form.decision_rule.metric_value = Number(
+              this.form.decision_rule.metric_value
+            )
+            this.form.decision_rule.redundancy = Number(
+              this.form.decision_rule.redundancy
+            )
+            this.form.decision_rule.expand_size = Number(
+              this.form.decision_rule.expand_size
+            )
+            const res = await serviceCreate(this.form)
+            if (res.data.code === 200) {
+              this.$message.success('创建成功')
+              this.serviceClusterId = res.data.data.service_cluster_id
+              this.tipDialogVisible = true
+              const _this = this
+              this.timer = window.setInterval(function() {
+                --_this.seconds
+                if (_this.seconds === 0) {
+                  window.clearInterval(_this.timer)
+                  _this.tipDialogVisible = false
+                  _this.goTemplateCreate()
+                }
+              }, 1000)
+            } else {
+              this.$message.error('创建失败')
+            }
           } else {
-            this.$message.error('创建失败')
+            this.$message.warning('参数不合规')
           }
-          // this.$router.push({ name: "serviceList" });
+        } catch (e) {
+          this.$message.warning('参数不合规')
         }
       })
     },
@@ -297,7 +304,11 @@ export default {
     goTemplateCreate() {
       this.clearTimer()
       this.$router.push({
-        path: `/service/${this.form.service_info.service_name}/${this.serviceClusterId}/template-create`
+        name: 'templateCreate',
+        params: {
+          service_name: this.form.service_info.service_name,
+          service_cluster_id: this.serviceClusterId
+        }
       })
     },
     goServiceList() {
@@ -329,5 +340,8 @@ export default {
       line-height: 10px;
     }
   }
+}
+.text-red {
+  color: red!important;
 }
 </style>

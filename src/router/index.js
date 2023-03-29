@@ -65,7 +65,7 @@ export const constantRoutes = [
       path: '/cluster/create',
       name: 'clusterCreate',
       component: () => import('@/views/cluster/createOrEdit'),
-      meta: { title: '创建公有云集群', icon: '' }
+      meta: { title: '创建标准集群', icon: '' }
     }, {
       path: '/cluster/list',
       name: 'clusterList',
@@ -206,27 +206,39 @@ export const constantRoutes = [
       component: () => import('@/views/service/list'),
       meta: { title: '服务列表', icon: '' }
     }, {
-      path: '/service/history/:service_name/:service_cluster_id',
-      name: 'serviceHistory',
-      component: () => import('@/views/service/history'),
-      meta: { title: '扩缩容记录', icon: '' },
+      path: '/service/:service_name/monitor',
+      name: 'serviceMonitor',
+      component: () => import('@/views/service/monitor'),
+      meta: { title: '服务列表', icon: '' },
       hidden: true
     }, {
       path: '/service/:service_name/:service_cluster_id/template',
       name: 'templateList',
       component: () => import('@/views/template/index'),
-      meta: { title: '扩缩容流程列表', icon: '' },
+      meta: { title: '服务列表', icon: '' },
+      hidden: true
+    }, {
+      path: '/service/:service_name/:service_cluster_id/create',
+      name: 'createRule',
+      component: () => import('@/views/template/createOrEditRule'),
+      meta: { title: '服务列表', icon: '' },
+      hidden: true
+    }, {
+      path: '/service/:service_name/:service_cluster_id/update/:rule_id',
+      name: 'updateRule',
+      component: () => import('@/views/template/createOrEditRule'),
+      meta: { title: '服务列表', icon: '' },
       hidden: true
     }, {
       path: '/service/:service_name/:service_cluster_id/template-create',
       name: 'templateCreate',
-      component: () => import('@/views/template/create'),
+      component: () => import('@/views/template/createOrEdit'),
       meta: { title: '创建扩缩容流程', icon: '' },
       hidden: true
     }, {
       path: '/service/template-edit/:service_name/:tmpl_expand_id',
       name: 'templateEdit',
-      component: () => import('@/views/template/edit'),
+      component: () => import('@/views/template/createOrEdit'),
       meta: { title: '编辑扩缩容流程', icon: '' },
       hidden: true
     }, {
@@ -256,8 +268,9 @@ export const constantRoutes = [
       path: 'provider',
       name: 'provider',
       component: () => import('@/views/cloudAccount/index'),
-      meta: { title: '云厂商账户', icon: 'cloudAccount' }
-    }]
+      meta: { title: '云厂商账户', icon: 'cloudAccount', isAdmin: true }
+    }],
+    isAdmin: true
   },
   {
     path: '/billing',

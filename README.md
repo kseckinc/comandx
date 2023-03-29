@@ -2,107 +2,99 @@
 =====
 
 
-语言(language)
+Language
 ----
 
-[English](https://github.com/galaxy-future/comandx/blob/main/docs/EN-README.md)
+English | [中文](https://github.com/galaxy-future/comandx/blob/main/docs/CH-README.md)
 
-简介
---------
-
-ComandX是可观测的界面化的运维解决方案，它是BridgX和SchedulX的Web可视化展示界面，提供简洁易用的操作体验。
-
-它具有如下关键特性：
-
-
-1、支持集群创建和管理；
-
-2、支持扩缩容任务；
-
-3、支持K8s集群创建和管理；
-
-4、支持服务部署和编排；
-
-5、支持云服务器管理；
-
-6、支持云账户管理；
-
-7、支持费用管理；
-
-8、支持Dashboard全局展示；
-
-联系我们
-----
-[微博](https://weibo.com/galaxyfuture) | [知乎](https://www.zhihu.com/org/xing-yi-wei-lai) | [B站](https://space.bilibili.com/2057006251)
-| [微信公众号](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat_official_account.md)
-| [企业微信交流群](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat.md)
-
-上手指南
-----
-
-#### 1、环境依赖
-- [安装BridgX](https://github.com/galaxy-future/bridgx/blob/dev/README.md);
-- [安装SchedulX](https://github.com/galaxy-future/schedulx/blob/master/README.md)
-
-#### 2、安装部署  
-
-* (1)源码下载
-  - 前端工程：
-  > git clone https://github.com/galaxy-future/comandx.git
-
-* (2)macOS系统部署
-  - 前端部署,在ComandX目录下运行
-    > make docker-run-mac
-   
-  - 系统运行，在浏览器中输入 http://127.0.0.1 可以看到管理控制台界面,初始用户名root和密码为123456。
-
-* (3)Linux安装部署
-  - 以下步骤请使用 root用户 或有sudo权限的用户 sudo su - 切换到root用户后执行。
-  - 1）针对使用者
-    - 前端部署,在ComandX目录下运行
-      > make docker-run-linux
-    - 系统运行，浏览器输入 http://127.0.0.1 可以看到管理控制台界面,初始用户名root和密码为123456。
-
-  - 2）针对开发者
-    - 前端部署
-      - 如果跟后端同机部署，可以直接进入下一步;如果后端单独部署，则到 `cd conf` 下修改对应的配置ip和port信息。
-      - 进入ComandX目录下，然后使用以下命令
-        > docker-compose up -d //启动BridgX前端服务 <br>
-        > docker-compose down //停止BridgX前端服务  <br>
-
-      - 系统运行，浏览器输入 http://127.0.0.1 可以看到管理控制台界面,初始用户名root和密码为123456。
-
-    
-#### 3、快速上手  
-通过[快速上手指南](https://github.com/galaxy-future/comandx/blob/main/docs/getting-started.md)，可以掌握基本的集群创建、快速扩缩容、K8s集群等操作流程。  
-
-
-#### 4、用户手册  
-通过[用户手册](https://github.com/galaxy-future/comandx/blob/main/docs/user-manual.md)，用户可以掌握BridgX的功能使用全貌，方便快速查找使用感兴趣的功能。
-
-视频教程
-------
-[ComandX安装](https://www.bilibili.com/video/BV1n34y167o8/) <br>
-[添加云账户](https://www.bilibili.com/video/BV1Jr4y1S7q4/)  <br>
-[创建集群](https://www.bilibili.com/video/BV1Wb4y1v7jw/)   <br>
-[手动扩缩容](https://www.bilibili.com/video/BV1bm4y197QD/)  <br>
-[K8s集群创建与Pod切割](https://www.bilibili.com/video/BV1FY411p7rE/)<br>
-
-
-技术文章
-------
-[《云原生技术如何每分钟级迁移TB级数据》](https://zhuanlan.zhihu.com/p/442746588)<br>
-[《企业迁移到K8s的最佳实践》](https://zhuanlan.zhihu.com/p/445131885) <br>
-[《来自一线大厂的十大云原生成本优化手段》](https://zhuanlan.zhihu.com/p/448405809)<br>
-
-行为准则
-------
-[贡献者公约](https://github.com/galaxy-future/comandx/blob/main/CODE_OF_CONDUCT)
-
-授权
+Introduction
 -----
 
-ComandX使用[Apache License 2.0](https://github.com/galaxy-future/comandx/blob/main/LICENSE)授权协议进行授权
+ComandX is an observable interface-based O&M solution. It is a web-based visual presentation interface for BridgX, providing a simple and easy-to-use operating experience.
+It has the following key features:
+1. cluster creation and management;
+2. scaling up and scaling down tasks;
+3. K8s cluster creation and management;
+4. service deployment and orchestration;
+5. cloud server management;
+6. cloud account management;
+7. fees management;
+8. Dashboard global display.
 
+
+
+Contact Us
+----
+
+[Weibo](https://weibo.com/galaxyfuture) | [Zhihu](https://www.zhihu.com/org/xing-yi-wei-lai) | [Bilibili](https://space.bilibili.com/2057006251)
+| [WeChat Official Account](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat_official_account.md)
+| [WeCom Communication Group](https://github.com/galaxy-future/comandx/blob/main/docs/resource/wechat.md)
+
+Getting Started Guide
+----
+
+#### 1. Environmental Dependence
+
+- [Install BridgX](https://github.com/galaxy-future/bridgx/blob/dev/docs/EN-README.md);
+
+#### 2. Installation and Deployment
+
+* (1)Download source code
+
+  - Front-end work：
+  > git clone https://github.com/galaxy-future/comandx.git
+
+* (2)macOS Deloyment
+  - For front-end deployment, run the following command in the ComandX directory:
+    > make docker-run-mac
+   
+  - When the system is running, type http://127.0.0.1 into your browser to see the management console interface, with the default username root and password 123456.
+
+* (3)Linux Installation and Deployment
+
+  - The following steps should be performed with the root user or a user with sudo privileges sudo su - after switching to the root user.
+  - 1）For users
+    - For front-end deployment, run the following command in the ComandX directory:
+      > make docker-run-linux
+    -	When the system is running, type http://127.0.0.1 into your browser to see the management console interface, with the default username root and password 123456.
+
+  - 2）For develops
+    - Front-end deployment
+      - If you are deploying on the same machine as the back-end, you can go directly to the next step; if the back-end is deployed separately, go to `cd conf` and modify the corresponding configuration ip and port information.
+      - Go to the ComandX directory, and then use the following command
+        > docker-compose up -d //Start BridgX service <br>
+        > docker-compose down //Stop BridgX service  <br>
+
+      - When the system is running, type http://127.0.0.1 into your browser to see the management console interface, with the default username root and password 123456.
+#### 3.Quick Start  
+
+The [Quick Start Guide](https://github.com/galaxy-future/comandx/blob/main/docs/en-getting-started.md) allows you to master the basic cluster creation, rapid scale-up and scale-down, K8s clustering, and other operational processes.
+
+#### 4.User Manual  
+The [User Manual](https://github.com/galaxy-future/comandx/blob/main/docs/en-user-manual.md) allows users to get a complete overview of BridgX 's features and to quickly identify which features they are interested in using.
+
+Video Tutorial
+------
+[ComandX Installation](https://www.bilibili.com/video/BV1n34y167o8/) <br>
+[Adding The Cloud Vendor Account](https://www.bilibili.com/video/BV1Jr4y1S7q4/)  <br>
+[Create Cluster](https://www.bilibili.com/video/BV1Wb4y1v7jw/)   <br>
+[Manual Scaling](https://www.bilibili.com/video/BV1bm4y197QD/)  <br>
+[K8s Cluster Creation and Pod cutting](https://www.bilibili.com/video/BV1FY411p7rE/) <br>
+
+
+Technical Articles
+------
+[《How does cloud-native technology migrate TB data per minute?》](https://zhuanlan.zhihu.com/p/442746588)<br>
+[《Best practices for enterprise migration to K8s》](https://zhuanlan.zhihu.com/p/445131885) <br>
+[《Top ten methods of cloud-native cost optimization 》](https://zhuanlan.zhihu.com/p/448405809)<br>
+
+Code of Conduct
+------
+[Contributor Convention](https://github.com/galaxy-future/comandx/blob/main/CODE_OF_CONDUCT)
+
+Authorization
+-----
+
+ComandX is licensed under the [Apache License 2.0](https://github.com/galaxy-future/comandx/blob/main/LICENSE).
 
 
